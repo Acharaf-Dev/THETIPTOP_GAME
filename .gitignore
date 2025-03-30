@@ -4,8 +4,8 @@ node_modules/
 /yarn.lock
 
 # Environnement
-#.env
+.env
 
-./backend/node_modules/
-./frontend/node_modules/
-#./backend/.env
+./BACKEND/node_modules/
+./FRONTEND/node_modules/
+./BACKEND/.env
