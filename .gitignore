@@ -6,6 +6,6 @@ node_modules/
 # Environnement
 .env
 
-./BACKEND/node_modules/
-./FRONTEND/node_modules/
-./BACKEND/.env
+./backend/node_modules/
+./frontend/node_modules/
+# ./backend/.env
