@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Thé Tip Top - Jeu Concours 🎡
 
 ## 📌 Description
@@ -100,3 +99,60 @@ git branch -d Ticket-01
 git push origin --delete Ticket-01
 - Je crée une nouvelle branche si je dois developper une nouvelle fonctionnalité "git checkout -b Ticket-02"
 - Répétez ce processus pour chaque nouvelle fonctionnalité. 
+
+**Arborescence projet**
+thetiptop-project/
+│── backend/
+│   ├── config/
+│   │   ├── auth.js
+│   │   ├── db.js
+│   ├── controllers/
+│   │   ├── userController.js
+│   │   ├── gameController.js
+│   ├── middleware/
+│   │   ├── authMiddleware.js
+│   │   ├── errorHandler.js
+│   ├── models/
+│   │   ├── User.js
+│   │   ├── Game.js
+│   ├── routes/
+│   │   ├── userRoutes.js
+│   │   ├── gameRoutes.js
+│   ├── tests/
+│   │   ├── user.test.js
+│   │   ├── game.test.js
+│   ├── Dockerfile
+│   ├── Jenkinsfile
+│   ├── package.json
+│   ├── server.js
+│
+│── frontend/
+│   ├── public/
+│   │   ├── index.html
+│   ├── src/
+│   │   ├── assets/
+│   │   │   ├── images/
+│   │   │   ├── icons/
+│   │   ├── components/
+│   │   │   ├── Navbar.jsx
+│   │   │   ├── Footer.jsx
+│   │   ├── pages/
+│   │   │   ├── Home.jsx
+│   │   │   ├── Game.jsx
+│   │   │   ├── Login.jsx
+│   │   │   ├── Register.jsx
+│   │   │   ├── Dashboard.jsx
+│   │   ├── styles/
+│   │   │   ├── style.css
+│   │   ├── App.jsx
+│   │   ├── index.jsx
+│   ├── Dockerfile
+│   ├── Jenkinsfile
+│   ├── package.json
+│
+│── workflow/
+│   ├── prometheus.yml   #Configuration de Prometheus pour la collecte des métriques.
+│   ├── traefik.yml      #Configuration du reverse proxy.
+│
+│── docker-compose.yml
+│── README.md
