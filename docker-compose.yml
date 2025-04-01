@@ -1,11 +1,11 @@
-version: '3.8'
-
 services:
+ 
   traefik:
     image: traefik:v2.5
     container_name: traefik
     restart: unless-stopped
     command:
+      - "--api.dashboard=true"
       - "--api.insecure=false"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
@@ -13,7 +13,9 @@ services:
       - "--entryPoints.websecure.address=:443"
       - "--certificatesResolvers.myresolver.acme.email=contact.developeur@gmail.com"
       - "--certificatesResolvers.myresolver.acme.storage=/letsencrypt/acme.json"
-      - "--certificatesResolvers.myresolver.acme.tlsChallenge=true"
+      - "--certificatesResolvers.myresolver.acme.httpChallenge.entryPoint=web"
+      - "--entryPoints.web.http.redirections.entryPoint.to=websecure"
+      - "--entryPoints.web.http.redirections.entryPoint.scheme=https"
     ports:
       - "80:80"
       - "443:443"
@@ -22,7 +24,7 @@ services:
       - "./letsencrypt:/letsencrypt"
     networks:
       - web
-
+ 
   jenkins:
     image: jenkins/jenkins:lts
     container_name: jenkins
@@ -39,13 +41,11 @@ services:
       - "traefik.http.services.jenkins.loadbalancer.server.port=8080"
     networks:
       - web
-
+ 
   frontend:
     build:
       context: ./frontend
     container_name: tip_top_frontend
-    ports:
-      - "4200:4200"
     environment:
       - PORT=4200
     labels:
@@ -58,15 +58,13 @@ services:
       - web
     depends_on:
       - backend
-
+ 
   backend:
     build:
       context: ./backend
     container_name: tip_top_backend
-    ports:
-      - "4000:4000"
-    env_file:
-      - ./backend/.env
+    environment:
+      - PORT=4000
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.backend.rule=Host(`www.backend.dsp5-archi-f24a-15m-g8.fr`)"
@@ -75,7 +73,35 @@ services:
       - "traefik.http.services.backend.loadbalancer.server.port=4000"
     networks:
       - web
-
+ 
+  mongodb:
+    image: mongo:latest
+    container_name: tip_top_mongodb
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: tip_top_game
+    ports:
+      - "27017:27017"
+    volumes:
+      - db_data:/data/db
+    networks:
+      - web
+ 
+  mongo-express:
+    image: mongo-express
+    container_name: mongo-express
+    restart: always
+    ports:
+      - "8084:8081"
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: password
+      ME_CONFIG_MONGODB_SERVER: mongodb
+    networks:
+      - web
+ 
   grafana:
     image: grafana/grafana:latest
     container_name: grafana
@@ -91,12 +117,9 @@ services:
       - "traefik.http.services.grafana.loadbalancer.server.port=3000"
     depends_on:
       - prometheus
-    restart: unless-stopped
     networks:
       - web
-    volumes:
-      - grafana_data:/var/lib/grafana
-
+ 
   prometheus:
     image: prom/prometheus:latest
     container_name: prometheus
@@ -115,7 +138,7 @@ services:
       - jenkins
     networks:
       - web
-
+ 
   sonarqube_db:
     image: postgres:latest
     container_name: sonarqube_db
@@ -127,7 +150,7 @@ services:
       - sonarqube_db_data:/var/lib/postgresql/data
     networks:
       - web
-
+ 
   sonarqube:
     image: sonarqube:latest
     container_name: sonarqube
@@ -145,22 +168,37 @@ services:
       - "traefik.http.routers.sonarqube.entrypoints=websecure"
       - "traefik.http.routers.sonarqube.tls.certresolver=myresolver"
       - "traefik.http.services.sonarqube.loadbalancer.server.port=9000"
-    networks:
-      - web
     volumes:
       - sonarqube_data:/opt/sonarqube/data
       - sonarqube_extensions:/opt/sonarqube/extensions
       - sonarqube_logs:/opt/sonarqube/logs
-
+    networks:
+      - web
+ 
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    container_name: cadvisor
+    restart: unless-stopped
+    ports:
+      - "8083:8080"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    networks:
+      - web
+ 
 networks:
   web:
     driver: bridge
-
+ 
 volumes:
+  db_data:
   jenkins_data:
   grafana_data:
   prometheus_data:
   sonarqube_data:
+  sonarqube_db_data:
   sonarqube_extensions:
   sonarqube_logs:
-  sonarqube_db_data:
