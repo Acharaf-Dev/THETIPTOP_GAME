@@ -23,7 +23,7 @@ services:
       - "443:443"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
-      - "./letsencrypt:/letsencrypt"
+      - "letsencrypt:/letsencrypt"
     networks:
       - web
  
@@ -204,3 +204,4 @@ volumes:
   sonarqube_db_data:
   sonarqube_extensions:
   sonarqube_logs:
+  letsencrypt:
