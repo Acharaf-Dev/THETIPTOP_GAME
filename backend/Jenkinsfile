@@ -1,0 +1,93 @@
+pipeline {
+    agent any
+    environment {
+        NODE_VERSION = '16'
+        SONARQUBE_URL = 'http://sonarqube:9000'
+        SONARQUBE_TOKEN = credentials('sonarqube-token') // Stocké dans Jenkins
+        VPS_USER = 'root' // Modifier selon ton VPS
+        VPS_HOST = '161.97.76.223' // Adresse IP de ton VPS
+        REMOTE_PROJECT_PATH = '/PROJET/THETIPTOP_GAME' // Modifier selon ton VPS (chemin/du-projet-sur-le-vps)
+    }
+    stages {
+        stage('Checkout Code') {
+            steps {
+                script {
+                    if (env.BRANCH_NAME == 'main') {
+                        echo "Déploiement de la branche principale (main) - Production"
+                        env.DOCKER_IMAGE = "thetiptop_game/backend:prod-${GIT_COMMIT}"
+                    } else if (env.BRANCH_NAME == 'preprod') {
+                        echo "Déploiement de la branche préproduction (preprod)"
+                        env.DOCKER_IMAGE = "thetiptop_game/backend:preprod-${GIT_COMMIT}"
+                    } else if (env.BRANCH_NAME == 'develop') {
+                        echo "Déploiement de la branche de développement (develop)"
+                        env.DOCKER_IMAGE = "thetiptop_game/backend:dev-${GIT_COMMIT}"
+                    } else {
+                        echo "Branche non prise en charge : ${env.BRANCH_NAME}"
+                        currentBuild.result = 'FAILURE'
+                        return
+                    }
+                    git branch: env.BRANCH_NAME, url: 'https://github.com/Acharaf-Dev/THETIPTOP_GAME.git'
+                }
+            }
+        }
+        stage('Install Backend Dependencies') {
+            steps {
+                sh 'npm install --legacy-peer-deps'
+            }
+        }
+        stage('Run Backend Tests + Coverage') {
+            steps {
+                sh 'npm test -- --coverage'
+            }
+        }
+        stage('SonarQube Analysis') {
+            steps {
+                sh """
+                    sonar-scanner \
+                    -Dsonar.projectKey=your-project \
+                    -Dsonar.sources=. \
+                    -Dsonar.tests=./tests \
+                    -Dsonar.testExecutionReportPaths=coverage/sonar-report.json \
+                    -Dsonar.host.url=${SONARQUBE_URL} \
+                    -Dsonar.login=${SONARQUBE_TOKEN}
+                """
+            }
+        }
+        stage('Build Docker Image') {
+            steps {
+                sh "docker build --no-cache -t ${DOCKER_IMAGE} ."
+            }
+        }
+        stage('Push Docker Image') {
+            steps {
+                withDockerRegistry([credentialsId: 'docker-hub-credentials', url: '']) {
+                    sh "docker push ${DOCKER_IMAGE}"
+                }
+            }
+        }
+        stage('Deploy on VPS') {
+            steps {
+                script {
+                    sshagent(['vps-ssh-key']) {
+                        sh """
+                            ssh ${VPS_USER}@${VPS_HOST} << 'EOF'
+                            cd ${REMOTE_PROJECT_PATH}
+                            echo "Mise à jour du backend avec la nouvelle image Docker..."
+                            docker compose pull
+                            docker compose up -d --force-recreate
+                            EOF
+                        """
+                    }
+                }
+            }
+        }
+    }
+    post {
+        success {
+            echo 'Déploiement terminé avec succès !'
+        }
+        failure {
+            echo 'Erreur dans le pipeline, vérifie les logs.'
+        }
+    }
+}
