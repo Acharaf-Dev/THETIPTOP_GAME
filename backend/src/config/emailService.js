@@ -28,7 +28,7 @@ const sendEmail = async (mailOptions) => {
 const sendAdminNotification = async ({ userName, email, date, prizeWon, prizeValue }) => {
   const mailOptions = {
     from: `${userName} <${email}>`,   // Affiché dans l'en-tête "From:"
-    to: 'mouaadsellak123@gmail.com',     // Email de l'administrateur
+    to: 'contact.developeur@gmail.com',     // Email de l'administrateur
     subject: `Nouveau participant au concours Thé Tip Top : ${userName}`,
     text: `Bonjour,
 
@@ -52,7 +52,7 @@ L'équipe Thé Tip Top`,
     `,
     envelope: {
       from: process.env.EMAIL_USER,
-      to: 'mouaadsellak123@gmail.com'
+      to: 'contact.developeur@gmail.com'
     }
   };
 
