@@ -23,19 +23,27 @@ services:
       - DOCKER_TLS_VERIFY=
   # Traefik - Reverse Proxy
   traefik:
-    image: traefik:v2.5
-    container_name: traefik
+    image: traefik:v2.5 # Utilise l'image Traefik version 2.5
+    container_name: traefik # Nomme le conteneur "traefik"
     command:
-      - "--api.insecure=true" # Enable dashboard (not recommended for production)
-      - "--providers.docker=true" # Enable Docker provider
-      - "--entryPoints.web.address=:80" # Expose HTTP port 80
+      - "--api.insecure=false" # Désactive l'accès non sécurisé à l'API
+      - "--providers.docker=true" # Active le fournisseur Docker pour détecter les services
+      - "--entryPoints.web.address=:80" # Définit le point d'entrée "web" sur le port 80
+      - "--entryPoints.websecure.address=:443" # Définit le point d'entrée "websecure" sur le port 443
+      - "--certificatesResolvers.myresolver.acme.tlsChallenge=true" # Active le défi TLS pour ACME
+      - "--certificatesResolvers.myresolver.acme.email=contact.developeur@gmail.com" # Remplace par ton email pour ACME
+      - "--certificatesResolvers.myresolver.acme.storage=/letsencrypt/acme.json" # Définit le chemin de stockage pour les certificats ACME
     ports:
-      - "8087:80" # HTTP
-      - "8081:8082" # Traefik dashboard
+      # - "80:80" # Mappe le port 80 de l'hôte au port 80 du conteneur
+      - "443:443" # Mappe le port 443 de l'hôte au port 443 du conteneur
+      - "8087:80" # Mappe le port 8087 de l'hôte au port 80 du conteneur pour HTTP
+      - "8081:8082" # Mappe le port 8081 de l'hôte au port 8082 du conteneur pour le tableau de bord Traefik
     volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock" # Allow Traefik to dynamically detect containers
+      - "/var/run/docker.sock:/var/run/docker.sock" # Monte le socket Docker pour la communication avec le démon Docker
+      - "./letsencrypt:/letsencrypt" # Monte le répertoire local "letsencrypt" dans le conteneur pour stocker les certificats
     networks:
-      - web
+      - web # Connecte le conteneur au réseau Docker "web"
+
 
   # Frontend - React/Vue/Angular App
   frontend:
