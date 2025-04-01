@@ -19,6 +19,7 @@ pipeline {
         stage('Checkout Code') {
             steps {
                 script {
+                     env.BRANCH_NAME = env.BRANCH_NAME ?: 'develop'
                     switch (env.BRANCH_NAME) {
                         case 'main':
                             echo "Déploiement en Production"
