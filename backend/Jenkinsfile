@@ -1,5 +1,10 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'node:16'  // Utilisation de l'image Docker avec Node.js et npm installés
+            args '-u root:root'  // Assure que le processus s'exécute en tant que root
+        }
+    }
     environment {
         NODE_VERSION = '16'
         NODE_ENV = 'production'
@@ -31,11 +36,11 @@ pipeline {
                             currentBuild.result = 'FAILURE'
                             return
                     }
-                    checkout([
-                        $class: 'GitSCM',
+                    checkout([ 
+                        $class: 'GitSCM', 
                         branches: [[name: "*/${env.BRANCH_NAME}"]],
-                        doGenerateSubmoduleConfigurations: false,
-                        extensions: [[$class: 'CleanBeforeCheckout']],
+                        doGenerateSubmoduleConfigurations: false, 
+                        extensions: [[$class: 'CleanBeforeCheckout']], 
                         userRemoteConfigs: [[url: 'https://github.com/Acharaf-Dev/THETIPTOP_GAME.git']]
                     ])
                 }
