@@ -13,6 +13,7 @@ pipeline {
         VPS_USER = 'root'
         VPS_HOST = '161.97.76.223'
         REMOTE_PROJECT_PATH = '/PROJET/THETIPTOP_GAME'
+          HUSKY = '0' //  Désactive husky en CI
     }
     stages {
         stage('Checkout Code') {
