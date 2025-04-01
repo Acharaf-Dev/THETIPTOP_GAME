@@ -7,7 +7,7 @@ services:
     command:
       - "--api.dashboard=true"
       - "--api.insecure=false"
-      - "--ping=true"  # 🔥 Active le healthcheck
+      - "--ping=true"  # 🔥 Active le healthcheck //
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--entryPoints.web.address=:80"
