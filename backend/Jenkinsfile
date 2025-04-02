@@ -8,6 +8,7 @@ pipeline {
         VPS_USER = 'root'
         VPS_HOST = '161.97.76.223'
         REMOTE_PROJECT_PATH = '/PROJET/THETIPTOP_GAME'
+        system.debug = 'true'
     }
     stages {
         stage('Checkout Code') {
@@ -52,9 +53,14 @@ pipeline {
                 }
             }
         }
+        stage('Verify Dependencies') {
+            steps {
+                sh 'npm audit'
+            }
+        }
         stage('Run Backend Tests + Coverage') {
             steps {
-                sh 'npm test -- --coverage'
+                sh 'npm test -- --coverage --verbose'
             }
         }
         stage('SonarQube Analysis') {
