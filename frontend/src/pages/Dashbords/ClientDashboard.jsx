@@ -8,8 +8,8 @@ const ClientDashboard = () => {
         <h2>Client</h2>
         <ul>
           <li><a href="#">Tableau de bord</a></li>
-          <li><a href="#">Mes Commandes</a></li>
-          <li><a href="#">Mes Produits</a></li>
+          <li><a href="#">Mes Gains</a></li>
+          <li><a href="#">Mes Tickets</a></li>
           <li><a href="#">Support</a></li>
           <li><a href="#">Déconnexion</a></li>
         </ul>
@@ -22,12 +22,12 @@ const ClientDashboard = () => {
 
         <section className="orders">
           <div className="order-card">
-            <h3>Commandes récentes</h3>
-            <p>Suivi de vos dernières commandes</p>
+            <h3>Dernier jeu</h3>
+            <p>Suivi de vos dernières participations</p>
           </div>
           <div className="order-card">
-            <h3>Produits</h3>
-            <p>Liste de vos produits achetés</p>
+            <h3>Lots</h3>
+            <p>Liste de vos lots gagnés</p>
           </div>
         </section>
       </div>
