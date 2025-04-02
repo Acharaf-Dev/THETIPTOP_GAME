@@ -37,6 +37,7 @@
 /* Bouton de la roue */
 .spinButton {
     margin-top: 20px;
+    margin-bottom: 20px;
     padding: 12px 20px;
     font-size: 18px;
     cursor: pointer;

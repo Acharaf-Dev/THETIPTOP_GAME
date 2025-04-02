@@ -16,8 +16,8 @@ const Header = () => {
           <li><Link to="/reglement">Règles du jeu</Link></li>
           <li><Link to="/game">Espace de jeu</Link></li>
           <li><Link to="/clientdashboard">Espace Client</Link></li>
-          <li><Link to="/employeedashboard">Espace Employé</Link></li>
-          <li><Link to="/admindashboard">Espace Administrateur</Link></li>
+          {/* <li><Link to="/employeedashboard">Espace Employé</Link></li> */}
+          {/* <li><Link to="/admindashboard">Espace Administrateur</Link></li> */}
           <li><Link to="/contact">Contact</Link></li>
           <li><Link to="/login">Connexion</Link></li>
           <li className="profile">

@@ -1,6 +1,7 @@
 pipeline {
     agent any
     environment {
+        sh 'HUSKY=0 npm ci'
         NODE_VERSION = '16'
         NODE_ENV = 'production'
         SONARQUBE_URL = 'http://sonarqube:9000'
