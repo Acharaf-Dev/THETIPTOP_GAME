@@ -9,7 +9,7 @@ const path = require('path');
 
 function generateSitemap() {
   const sitemap = new Sitemap(router)
-    .build('https://www.dsp5-archi-f24a-15m-g2.com')  // Replace with your actual domain
+    .build('https://www.dsp5-archi-f24a-15m-g8.fr')  // Replace with your actual domain
     .save(path.resolve(__dirname, 'public', 'sitemap.xml'));
 }
 
