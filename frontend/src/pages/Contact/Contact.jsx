@@ -1,8 +1,5 @@
-import { Link } from "react-router-dom";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
 import React, { useState } from "react";
-import "../styles/style.css";
+import "../Contact/Contact.css";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -21,9 +18,9 @@ const Contact = () => {
   const validateForm = () => {
     let newErrors = {};
     if (!formData.email.trim()) {
-      newErrors.email = "L'adresse email est obligatoire.";
+      newErrors.email = "L&apos;adresse email est obligatoire.";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Format d'email invalide.";
+      newErrors.email = "Format d&apos;email invalide.";
     }
 
     if (!formData.message.trim()) {
@@ -105,4 +102,3 @@ const Contact = () => {
 };
 
 export default Contact;
-
