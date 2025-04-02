@@ -1,0 +1,27 @@
+/* PAGE POLITIQUE DE CONFIDENTIALITE */
+.politique-confidentialite {
+    text-align: center;
+    padding: 50px 20px;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+  
+  h1 {
+    color: #39590A;
+  }
+  
+  p {
+    margin: 10px 0;
+    font-size: 16px;
+    line-height: 1.6;
+    color: #000000;
+  }
+  
+  a {
+    color: #39590A;
+    text-decoration: none;
+  }
+  
+  a:hover {
+    text-decoration: underline;
+  }
+  

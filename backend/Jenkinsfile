@@ -1,25 +1,19 @@
 pipeline {
-    agent {
-        docker {
-            image 'node:lts'
-            args '-u root:root'  // Assure que le processus s'exécute en tant que root
-        }
-    }
+    agent any
     environment {
-        NODE_VERSION = '18'
+        NODE_VERSION = '16'
         NODE_ENV = 'production'
         SONARQUBE_URL = 'http://sonarqube:9000'
         SONARQUBE_TOKEN = credentials('sonarqube-token')
         VPS_USER = 'root'
         VPS_HOST = '161.97.76.223'
         REMOTE_PROJECT_PATH = '/PROJET/THETIPTOP_GAME'
-          HUSKY = '0' //  Désactive husky en CI
+        system.debug = 'true'
     }
     stages {
         stage('Checkout Code') {
             steps {
                 script {
-                     env.BRANCH_NAME = env.BRANCH_NAME ?: 'develop'
                     switch (env.BRANCH_NAME) {
                         case 'main':
                             echo "Déploiement en Production"
@@ -38,11 +32,11 @@ pipeline {
                             currentBuild.result = 'FAILURE'
                             return
                     }
-                    checkout([ 
-                        $class: 'GitSCM', 
+                    checkout([
+                        $class: 'GitSCM',
                         branches: [[name: "*/${env.BRANCH_NAME}"]],
-                        doGenerateSubmoduleConfigurations: false, 
-                        extensions: [[$class: 'CleanBeforeCheckout']], 
+                        doGenerateSubmoduleConfigurations: false,
+                        extensions: [[$class: 'CleanBeforeCheckout']],
                         userRemoteConfigs: [[url: 'https://github.com/Acharaf-Dev/THETIPTOP_GAME.git']]
                     ])
                 }
@@ -59,9 +53,14 @@ pipeline {
                 }
             }
         }
+        stage('Verify Dependencies') {
+            steps {
+                sh 'npm audit'
+            }
+        }
         stage('Run Backend Tests + Coverage') {
             steps {
-                sh 'npm test -- --coverage'
+                sh 'npm test -- --coverage --verbose'
             }
         }
         stage('SonarQube Analysis') {

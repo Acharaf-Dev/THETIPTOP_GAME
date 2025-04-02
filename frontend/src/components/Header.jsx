@@ -1,6 +1,6 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import "./headerFooter.css";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import './headerFooter.css';
 
 const Header = () => {
   return (
@@ -21,7 +21,7 @@ const Header = () => {
           <li><Link to="/contact">Contact</Link></li>
           <li><Link to="/login">Connexion</Link></li>
           <li className="profile">
-            <Link to="/profil"><i className="fas fa-user-circle"></i>Mon Profil</Link>
+            <Link to="/profil"><i className="fas fa-user-circle"></i>Profil</Link>
           </li>
         </ul>
       </nav>
