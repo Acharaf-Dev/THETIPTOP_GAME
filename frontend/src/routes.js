@@ -1,23 +1,29 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
-import Home from './containers/Home';
-import About from './containers/About';
-import Contact from './containers/Contact';
-import Game from './containers/Game';
-import Rules from './containers/Rules';
-import Profile from './containers/Profile';
-import Prize from './containers/Prize';
-import Legalites from './containers/Legalites';
+import Home from './pages/Home';
+import Login from './pages/Login';
+import Profile from './pages/Profile';
+import Contact from './pages/Contact';
+import Register from './pages/Register';
+import ClientDashboard from './pages/Dashbords/ClientDashboard';
+import EmployeeDashboard from './pages/Dashbords/EmployeeDashboard';
+import AdminDashboard from './pages/Dashbords/AdminDashboard';
+import Regle from './pages/Regle';
+import Game from './pages/Game/Game';
+import About from './pages/About';
 
 const routes = [
   <Route key="/" path="/" element={<Home />} />,
-  <Route key="/about" path="/about" element={<About />} />,
+  <Route key="/login" path="/login" element={<Login />} />,
+  <Route key="/profil" path="/profil" element={<Profile />} />,
   <Route key="/contact" path="/contact" element={<Contact />} />,
+  <Route key="/register" path="/register" element={<Register />} />,
+  <Route key="/clientdashboard" path="/clientdashboard" element={<ClientDashboard />} />,
+  <Route key="/employeedashboard" path="/employeedashboard" element={<EmployeeDashboard />} />,
+  <Route key="/admindashboard" path="/admindashboard" element={<AdminDashboard />} />,
+  <Route key="/reglement" path="/reglement" element={<Regle />} />,
   <Route key="/game" path="/game" element={<Game />} />,
-  <Route key="/rules" path="/rules" element={<Rules />} />,
-  <Route key="/profile" path="/profile" element={<Profile />} />,
-  <Route key="/prize" path="/prize" element={<Prize />} />,
-  <Route key="/legalites" path="/legalites" element={<Legalites />} />,
+  <Route key="/about" path="/about" element={<About />} />,
 ];
 
 export default routes;
