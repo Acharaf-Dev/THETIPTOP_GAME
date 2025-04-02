@@ -22,7 +22,7 @@ describe('User Registration API with Dedicated Test DB', () => {
   test('should register a user successfully', async () => {
     const newUser = {
       userName: "cw24",
-      email: "cw24@gmail.com",
+      email: "cw234@gmail.com",
       password: "Test@1993",
       phone: "06 06 06 06 06",
       address: ["Vincennes", "Paris"],
@@ -43,7 +43,7 @@ describe('User Registration API with Dedicated Test DB', () => {
 
   test('should fail when required fields are missing', async () => {
     const incompleteUser = {
-      email: "cw24@gmail.com",
+      email:  "cw234@gmail.com",
       password: "Test@1993",
       phone: "06 06 06 06 06",
       address: ["Vincennes", "Paris"],
@@ -63,7 +63,7 @@ describe('User Registration API with Dedicated Test DB', () => {
   describe('Login User', () => {
     test('should login an existing user successfully', async () => {
       const credentials = {
-        email: "ief2I@gmail.com",
+        email:  "cw234@gmail.com",
         password: "Test@1993"
       };
 
@@ -80,7 +80,7 @@ describe('User Registration API with Dedicated Test DB', () => {
 
     test('should fail to login with incorrect credentials', async () => {
       const credentials = {
-        email: "ief2I@gmail.com",
+        email: "cw234@gmail.com",
         password: "WrongPassword"
       };
 
