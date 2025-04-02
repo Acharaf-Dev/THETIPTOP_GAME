@@ -1,5 +1,5 @@
 services:
- 
+
   traefik:
     image: traefik:v2.5
     container_name: traefik
@@ -7,8 +7,8 @@ services:
     command:
       - "--api.dashboard=true"
       - "--api.insecure=false"
-      - "--ping=true"  # Active le healthcheck //
-      - "--log.level=DEBUG" # Activer les logs détaillés
+      - "--ping=true"
+      - "--log.level=DEBUG"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--entryPoints.web.address=:80"
@@ -26,7 +26,7 @@ services:
       - "letsencrypt:/letsencrypt"
     networks:
       - web
- 
+
   jenkins:
     image: jenkins/jenkins:lts
     container_name: jenkins
@@ -43,7 +43,7 @@ services:
       - "traefik.http.services.jenkins.loadbalancer.server.port=8080"
     networks:
       - web
- 
+
   frontend:
     build:
       context: ./frontend
@@ -60,7 +60,7 @@ services:
       - web
     depends_on:
       - backend
- 
+
   backend:
     build:
       context: ./backend
@@ -75,7 +75,7 @@ services:
       - "traefik.http.services.backend.loadbalancer.server.port=4000"
     networks:
       - web
- 
+
   mongodb:
     image: mongo:latest
     container_name: tip_top_mongodb
@@ -90,7 +90,7 @@ services:
       - db_data:/data/db
     networks:
       - web
- 
+
   mongo-express:
     image: mongo-express
     container_name: mongo-express
@@ -103,9 +103,10 @@ services:
       ME_CONFIG_MONGODB_SERVER: mongodb
     networks:
       - web
- 
+
   grafana:
     image: grafana/grafana:latest
+    platform: linux/amd64
     container_name: grafana
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=admin
@@ -121,9 +122,10 @@ services:
       - prometheus
     networks:
       - web
- 
+
   prometheus:
     image: prom/prometheus:latest
+    platform: linux/amd64
     container_name: prometheus
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
@@ -140,7 +142,7 @@ services:
       - jenkins
     networks:
       - web
- 
+
   sonarqube_db:
     image: postgres:latest
     container_name: sonarqube_db
@@ -152,7 +154,7 @@ services:
       - sonarqube_db_data:/var/lib/postgresql/data
     networks:
       - web
- 
+
   sonarqube:
     image: sonarqube:latest
     container_name: sonarqube
@@ -176,7 +178,7 @@ services:
       - sonarqube_logs:/opt/sonarqube/logs
     networks:
       - web
- 
+
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:latest
     container_name: cadvisor
@@ -190,11 +192,11 @@ services:
       - /var/lib/docker/:/var/lib/docker:ro
     networks:
       - web
- 
+
 networks:
   web:
     driver: bridge
- 
+
 volumes:
   db_data:
   jenkins_data:
