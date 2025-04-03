@@ -3,10 +3,10 @@
     "pre-commit": "npm run lint:frontend && npm run lint:backend",
     "lint:frontend": "cd frontend && npm run lint",
     "lint:backend": "cd backend && npm run lint"
-    
   },
   "devDependencies": {
-    "lint-staged": "^15.4.3"
+    "lint-staged": "^15.4.3",
+    "supertest": "^7.1.0"
   },
   "lint-staged": {
     "frontend/src/**/*.{js,jsx,ts,tsx}": [

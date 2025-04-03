@@ -1,5 +1,4 @@
 services:
-
   traefik:
     image: traefik:v2.5
     container_name: traefik
@@ -7,8 +6,8 @@ services:
     command:
       - "--api.dashboard=true"
       - "--api.insecure=false"
-      - "--ping=true"
-      - "--log.level=DEBUG"
+      - "--ping=true" # Active le healthcheck //
+      - "--log.level=DEBUG" # Activer les logs détaillés
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--entryPoints.web.address=:80"
@@ -30,6 +29,7 @@ services:
   jenkins:
     image: jenkins/jenkins:lts
     container_name: jenkins
+    platform: linux/amd64
     user: root
     volumes:
       - jenkins_data:/var/jenkins_home
@@ -50,6 +50,8 @@ services:
     container_name: tip_top_frontend
     environment:
       - PORT=4200
+    ports:
+      - "4200:4200"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.frontend.rule=Host(`www.dsp5-archi-f24a-15m-g8.fr`)"
@@ -67,6 +69,8 @@ services:
     container_name: tip_top_backend
     environment:
       - PORT=4000
+    ports:
+      - "4000:4000"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.backend.rule=Host(`www.backend.dsp5-archi-f24a-15m-g8.fr`)"
@@ -94,6 +98,7 @@ services:
   mongo-express:
     image: mongo-express
     container_name: mongo-express
+    platform: linux/amd64
     restart: always
     ports:
       - "8084:8081"
@@ -106,8 +111,8 @@ services:
 
   grafana:
     image: grafana/grafana:latest
-    platform: linux/amd64
     container_name: grafana
+    platform: linux/amd64
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=admin
     ports:
@@ -125,8 +130,8 @@ services:
 
   prometheus:
     image: prom/prometheus:latest
-    platform: linux/amd64
     container_name: prometheus
+    platform: linux/amd64
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus_data:/prometheus
@@ -146,6 +151,7 @@ services:
   sonarqube_db:
     image: postgres:latest
     container_name: sonarqube_db
+    platform: linux/amd64
     environment:
       POSTGRES_USER: sonar
       POSTGRES_PASSWORD: sonar
@@ -158,6 +164,7 @@ services:
   sonarqube:
     image: sonarqube:latest
     container_name: sonarqube
+    platform: linux/amd64
     environment:
       SONARQUBE_JDBC_URL: jdbc:postgresql://sonarqube_db:5432/sonarqube
       SONARQUBE_JDBC_USERNAME: sonar
@@ -182,6 +189,7 @@ services:
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:latest
     container_name: cadvisor
+    platform: linux/amd64
     restart: unless-stopped
     ports:
       - "8083:8080"

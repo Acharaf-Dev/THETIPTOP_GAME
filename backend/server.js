@@ -1,7 +1,7 @@
 require('dotenv').config();
-const cors = require('cors');
 const express = require('express');
-const {connectDB} = require('./src/db');
+const cors = require('cors');
+const connectDB = require('./src/config/db');
 
 const authRoutes = require('./src/routes/authRoute');
 const userRoutes = require('./src/routes/userRoute');
@@ -11,30 +11,46 @@ const contactRoutes = require('./src/routes/contactRoute');
 const app = express();
 const PORT = process.env.PORT || 4000;
 
-const serverInit = async () => {
-  await connectDB();
+connectDB();
 
-  // Middlewares
-  app.use(express.json());
-  app.use(cors());
+// Middleware de log
+app.use((req, res, next) => {
+  console.log(`📥 Incoming Request: ${req.method} ${req.path}`);
+  next();
+});
 
-  // Routes
-  app.get('/api/hello', (req, res) => {
-    res.status(200).json({ message: 'Hello, World!' });
-  });
+// Liste des origines autorisées (mettre à jour si besoin)
+const allowedOrigins = [
+  'http://localhost:4200',
+  'http://frontend.game-main2.orb.local',
+  'http://www.dsp5-archi-f24a-15m-g8.fr',
+  'https://www.dsp5-archi-f24a-15m-g8.fr'
+];
 
-  app.use('/auth', authRoutes);
-  app.use('/user', userRoutes);
-  app.use('/game', gameRoutes);
-  app.use('/contact', contactRoutes);
-
-  if (process.env.NODE_ENV !== 'test') {
-    app.listen(PORT, () => {
-      console.log(`🚀 Serveur lancé sur port ${PORT} derrière Traefik`);
-    });
-  }
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    console.log(`❌ CORS refusé pour l’origine : ${origin}`);
+    return callback(new Error('Not allowed by CORS'));
+  },
+  credentials: true,
 };
 
-serverInit(); // démarre la config et connexion DB
+app.use(cors(corsOptions));
+app.use(express.json());
+
+// Routes API
+app.use('/api/auth', authRoutes);
+app.use('/api/user', userRoutes);
+app.use('/api/game', gameRoutes);
+app.use('/api/contact', contactRoutes);
+
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(PORT, () => {
+    console.log(`🚀 Serveur lancé sur port ${PORT} derrière Traefik`);
+  });
+}
 
 module.exports = app;

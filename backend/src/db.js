@@ -6,15 +6,14 @@ const connectDB = async () => {
     const uri = process.env.NODE_ENV === 'test' ? process.env.MONGO_URI_TEST : process.env.MONGO_URI;
 
     await mongoose.connect(uri, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      serverSelectionTimeoutMS: 5000,
+      serverSelectionTimeoutMS: 5000, // Timeout pour éviter les blocages
     });
 
     console.log('✅ MongoDB connecté avec succès !');
   } catch (err) {
     console.error('❌ Erreur de connexion à MongoDB :', err.message);
 
+    // En mode test, on lève l'erreur pour Jest
     if (process.env.NODE_ENV === 'test') {
       throw err;
     } else {
@@ -23,13 +22,4 @@ const connectDB = async () => {
   }
 };
 
-// ✅ Fermeture propre de la connexion Mongo (utile pour Jest)
-const disconnectDB = async () => {
-  await mongoose.connection.close();
-  console.log('🛑 Connexion MongoDB fermée proprement');
-};
-
-module.exports = {
-  connectDB,
-  disconnectDB,
-};
+module.exports = connectDB;

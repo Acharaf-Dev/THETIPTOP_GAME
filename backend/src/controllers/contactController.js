@@ -32,7 +32,7 @@ const sendContactEmail = async (req, res) => {
   // Configuration de l'email à envoyer
   const mailOptions = {
     from: `${nom} <${adresse_mail}>`, // Qui envoie le mail (affiché dans le "From:")
-    to: 'azizeolougbokiki93@gmail.com',  // Adresse de destination
+    to: 'mouaadsellak123@gmail.com',  // Adresse de destination
     subject: `Nouveau contact de ${nom}`,
     text: message,  // Corps du mail en texte brut
     html: `
@@ -41,7 +41,7 @@ const sendContactEmail = async (req, res) => {
     `,
     envelope: {
       from: process.env.EMAIL_USER,  // Adresse utilisée pour l'authentification SMTP
-      to: 'azizeolougbokiki93@gmail.com'
+      to: 'mouaadsellak123@gmail.com'
     }
   };
 
