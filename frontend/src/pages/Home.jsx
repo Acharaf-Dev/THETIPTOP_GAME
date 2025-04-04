@@ -14,9 +14,9 @@ const Home = () => {
     <main className='bg-gray-100 min-h-screen py-12'>
       <div className='container mx-auto px-4'>
         <div className="bg-gradient-to-r from-teal-500 to-green-600 text-white p-10 rounded-xl shadow-xl mb-16 text-center">
-          <h1 className='text-5xl font-bold mb-4 drop-shadow-lg'>Jeu Concours Thé Tip Top ! 🍵</h1>
+          <h1 className='text-5xl font-bold mb-4 drop-shadow-lg'>Jeu Concours Thé Tip Top 100 % gagnant ! 🍵</h1>
           <h2 className='text-2xl mb-8 font-light'>
-            100 % gagnant - Participez et remportez des cadeaux exclusifs !
+             Participez et remportez des cadeaux exclusifs !
           </h2>
           <Link to='/game'> 
             <button className='bg-yellow-400 hover:bg-yellow-500 text-green-900 font-semibold py-3 px-10 rounded-full transition duration-300 ease-in-out shadow-lg transform hover:scale-105 text-xl'>

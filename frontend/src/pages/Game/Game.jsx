@@ -67,7 +67,7 @@ const Game = () => {
             }
 
             const response = await axios.post(
-                "https://www.backend.dsp5-archi-f24a-15m-g8.fr/api/game/play",
+                "http://localhost:4000/api/game/play",
                 { ticketNumber },
                 {
                     headers: {
