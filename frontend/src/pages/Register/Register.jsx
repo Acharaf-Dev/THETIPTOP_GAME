@@ -112,8 +112,8 @@ const Register = () => {
             email: formData.email,
             password: formData.password,
         };
-        //const response = await axios.post('http://localhost:4000/api/auth/register', payload);
-        const response = await axios.post('https://www.backend.dsp5-archi-f24a-15m-g8.fr/api/auth/register', payload);
+        const response = await axios.post('http://localhost:4000/api/auth/register', payload);
+        // const response = await axios.post('https://www.backend.dsp5-archi-f24a-15m-g8.fr/api/auth/register', payload);
         
         if (response.data.success) {
              alert("Inscription réussie ! Vous pouvez maintenant vous connecter.");
