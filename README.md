@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Thé Tip Top - Jeu Concours 🎡
 
 ## 📌 Description
@@ -7,7 +6,7 @@ Les utilisateurs peuvent s'inscrire, jouer à une roue de la fortune et gagner d
 
 ## 🚀 Installation
 1. **Cloner le projet**  
-git clone https://github.com/Laminaacharaf/TheTipTop.git
+git clone https://github.com/Acharaf-Dev/THETIPTOP_GAME.git
 cd thetiptop
 
 2. **Installer les dépendances**  
@@ -35,7 +34,7 @@ npm start
 
 **En Localhost**
 - FRONTEND : http://localhost:3001/
-- BACKEND : http://localhost:5000/
+- BACKEND : http://localhost:4000/
 - MONGODB : http://localhost:27017/
 - JENKINS : http://localhost:8080/
 - SONARQUBE : http://localhost:9000/
@@ -46,7 +45,7 @@ npm start
 
 **SUR VPS**
 - FRONTEND : http://161.97.76.223:3001/
-- BACKEND : http://161.97.76.223:5000/
+- BACKEND : http://161.97.76.223:4000/
 - MONGODB : http://161.97.76.223:27017/
 - JENKINS : http://161.97.76.223:8080/
 - SONARQUBE : http://161.97.76.223:9000/
@@ -56,13 +55,13 @@ npm start
 - TRAEFIK : http://161.97.76.223:8081/
 
 **SOUS NOM DE DOMAINE DU WORKFLOW**
-- JENKINS : https://jenkins.wk-archi-f24a-15M-G8.fr 
-- SONARQUBE : https://sonarqube.wk-archi-f24a-15M-G8.fr
-- PROMETHEUS : https://prometheus.wk-archi-f24a-15M-G8.fr
-- GRAFANA : https://grafana.wk-archi-f24a-15M-G8.fr
+- JENKINS : https://www.jenkins.wk-archi-f24a-15M-G8.fr 
+- SONARQUBE : https://www.sonarqube.wk-archi-f24a-15M-G8.fr
+- PROMETHEUS : https://www.prometheus.wk-archi-f24a-15M-G8.fr
+- GRAFANA : https://www.grafana.wk-archi-f24a-15M-G8.fr
 
 **NOM DE DOMAINE DU SITE WEB**
- https://dsp5-archi-f24a-15M.G8.fr
+ https://www.dsp5-archi-f24a-15M.G8.fr
 
 **NOM DES BRANCHES**
 - main "la branche par défaut ou principale qui est notre branche de production"
@@ -100,3 +99,60 @@ git branch -d Ticket-01
 git push origin --delete Ticket-01
 - Je crée une nouvelle branche si je dois developper une nouvelle fonctionnalité "git checkout -b Ticket-02"
 - Répétez ce processus pour chaque nouvelle fonctionnalité. 
+
+**Arborescence projet**
+thetiptop-project/
+│── backend/
+│   ├── config/
+│   │   ├── auth.js
+│   │   ├── db.js
+│   ├── controllers/
+│   │   ├── userController.js
+│   │   ├── gameController.js
+│   ├── middleware/
+│   │   ├── authMiddleware.js
+│   │   ├── errorHandler.js
+│   ├── models/
+│   │   ├── User.js
+│   │   ├── Game.js
+│   ├── routes/
+│   │   ├── userRoutes.js
+│   │   ├── gameRoutes.js
+│   ├── tests/
+│   │   ├── user.test.js
+│   │   ├── game.test.js
+│   ├── Dockerfile
+│   ├── Jenkinsfile
+│   ├── package.json
+│   ├── server.js
+│
+│── frontend/
+│   ├── public/
+│   │   ├── index.html
+│   ├── src/
+│   │   ├── assets/
+│   │   │   ├── images/
+│   │   │   ├── icons/
+│   │   ├── components/
+│   │   │   ├── Navbar.jsx
+│   │   │   ├── Footer.jsx
+│   │   ├── pages/
+│   │   │   ├── Home.jsx
+│   │   │   ├── Game.jsx
+│   │   │   ├── Login.jsx
+│   │   │   ├── Register.jsx
+│   │   │   ├── Dashboard.jsx
+│   │   ├── styles/
+│   │   │   ├── style.css
+│   │   ├── App.jsx
+│   │   ├── index.jsx
+│   ├── Dockerfile
+│   ├── Jenkinsfile
+│   ├── package.json
+│
+│── workflow/
+│   ├── prometheus.yml   #Configuration de Prometheus pour la collecte des métriques.
+│   ├── traefik.yml      #Configuration du reverse proxy.
+│
+│── docker-compose.yml
+│── README.md
