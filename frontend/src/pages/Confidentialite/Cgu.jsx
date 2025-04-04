@@ -1,10 +1,10 @@
 import React from 'react';
-import '../Confidentialite/Cgu.css';
+import StaticPageLayout from '../../components/StaticPageLayout'; // Adjust path if needed
+// Removed: import '../Confidentialite/Cgu.css';
 
 const CGU = () => {
   return (
-    <main className='cgu'>
-      <h1>Conditions Générales d&apos;Utilisation</h1>
+    <StaticPageLayout title="Conditions Générales d'Utilisation">
       <p>
         <strong>Objet :</strong> Les présentes conditions générales d&apos;utilisation (CGU) ont pour objet de définir les modalités et conditions dans lesquelles les utilisateurs peuvent accéder et utiliser le site Thé Tip Top.
       </p>
@@ -17,7 +17,7 @@ const CGU = () => {
       <p>
         <strong>Modification des CGU :</strong> Thé Tip Top se réserve le droit de modifier les présentes CGU à tout moment. Les utilisateurs sont invités à consulter régulièrement cette page pour prendre connaissance des éventuelles modifications.
       </p>
-    </main>
+    </StaticPageLayout>
   );
 };
 

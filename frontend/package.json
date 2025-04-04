@@ -10,6 +10,7 @@
     "@mui/icons-material": "^6.4.7",
     "@mui/material": "^6.4.7",
     "@react-oauth/google": "^0.12.1",
+    "@heroicons/react": "^1.0.6",
     "axios": "^1.8.4",
     "cross-env": "^7.0.3",
     "mock-css-modules": "^2.0.0",
@@ -27,7 +28,8 @@
     "tailwind": "^4.0.0",
     "vue": "^3.5.13",
     "vue-router": "^4.5.0",
-    "web-vitals": "^4.2.4"
+    "web-vitals": "^4.2.4",
+    "@testing-library/jest-dom": "^5.17.0"
   },
   "scripts": {
     "start": "cross-env PORT=4200 react-scripts start",
@@ -60,7 +62,6 @@
     "@babel/preset-env": "^7.26.9",
     "@babel/preset-react": "^7.26.3",
     "@eslint/js": "^9.22.0",
-    "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.2.0",
     "@vitest/coverage-v8": "^3.0.8",
     "@vitest/ui": "^3.0.8",
