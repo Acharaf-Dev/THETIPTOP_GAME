@@ -43,7 +43,8 @@ const ClientDashboard = () => {
       }
 
       try {
-        const response = await axios.get('http://localhost:4000/api/user/me', {
+        const response = await axios.get('http://localhost:4000/api/user/me', {  //local
+        // const response = await axios.get('https://www.backend.dsp5-archi-f24a-15m-g8.fr/api/user/me', { //VPS
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -86,7 +87,8 @@ const ClientDashboard = () => {
     }
 
     try {
-        const response = await axios.get('http://localhost:4000/api/user/my-gains', {
+        // const response = await axios.get('https://www.backend.dsp5-archi-f24a-15m-g8.fr/api/user/my-gains', {
+          const response = await axios.get('http://localhost:4000/api/user/my-gains', {
             headers: { 'Authorization': `Bearer ${token}` }
         });
 
