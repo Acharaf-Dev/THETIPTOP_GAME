@@ -14,7 +14,8 @@ const Login = () => {
     setError(null);
 
     try {
-      const response = await axios.post("http://localhost:4000/api/auth/login", {
+      //const response = await axios.post("http://localhost:4000/api/auth/login", {
+      const response = await axios.post("https://www.backend.dsp5-archi-f24a-15m-g8.fr/api/auth/login", {
         email,
         password,
       });
