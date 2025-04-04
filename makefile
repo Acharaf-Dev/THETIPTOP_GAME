@@ -17,3 +17,9 @@ back:
 	   
 logs:
 	docker compose logs -f
+
+down:
+	docker-compose down
+
+config:
+	docker-compose config
