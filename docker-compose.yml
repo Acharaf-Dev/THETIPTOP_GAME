@@ -211,14 +211,3 @@ volumes:
   sonarqube_extensions:
   sonarqube_logs:
   letsencrypt:
-
-http:
-  middlewares:
-    websocket:
-      headers:
-        customRequestHeaders:
-          X-Forwarded-Proto: "https"
-        customResponseHeaders:
-          Access-Control-Allow-Origin: "*"
-          Access-Control-Allow-Methods: "GET, POST, OPTIONS"
-          Access-Control-Allow-Headers: "*"

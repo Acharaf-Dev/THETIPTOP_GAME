@@ -1,7 +1,12 @@
 # Configuration Traefik
+
 entryPoints:
   web:
     address: ":80"
+  websecure:
+    address: ":443"
+    forwardedHeaders:
+      trustedIPs: ["127.0.0.1"] # Ajout pour les en-têtes
 
 providers:
   docker:
@@ -9,6 +14,17 @@ providers:
 
 api:
   dashboard: true
+
+http:
+  middlewares:
+    websocket:
+      headers:
+        customRequestHeaders:
+          X-Forwarded-Proto: "https"
+        customResponseHeaders:
+          Access-Control-Allow-Origin: "*"
+          Access-Control-Allow-Methods: "GET, POST, OPTIONS"
+          Access-Control-Allow-Headers: "*"
 
 # Traefik écoute sur le port 80.
 # Se base sur Docker pour récupérer les conteneurs.
