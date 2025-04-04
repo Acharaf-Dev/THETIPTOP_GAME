@@ -1,29 +1,35 @@
 import React from 'react';
-import '../Confidentialite/Cgv.css';
+import StaticPageLayout from '../../components/StaticPageLayout'; // Adjust path if needed
+// Removed: import '../Confidentialite/Cgv.css';
 
 const CGV = () => {
   return (
-    <main className='cgv'>
-      <h1>Conditions Générales de Vente</h1>
+    <StaticPageLayout title="Conditions Générales de Vente">
       <p>
-        <strong>Objet :</strong> Les présentes conditions générales de vente (CGV) ont pour objet de définir les modalités et conditions de vente des produits Thé Tip Top.
+        <strong>Article 1 : Objet</strong><br />
+        Les présentes conditions régissent les ventes par la société Thé Tip Top de ses produits (thés, infusions, accessoires) via son site internet ou en boutique dans le cadre du jeu-concours.
       </p>
       <p>
-        <strong>Prix :</strong> Les prix des produits sont indiqués en euros, toutes taxes comprises. Thé Tip Top se réserve le droit de modifier ses prix à tout moment.
+        <strong>Article 2 : Prix</strong><br />
+        Les prix de nos produits sont indiqués en euros toutes taxes comprises (TVA et autres taxes applicables au jour de la commande), sauf indication contraire et hors frais de traitement et d&apos;expédition.
       </p>
       <p>
-        <strong>Commande :</strong> Les commandes sont effectuées en ligne sur le site Thé Tip Top. La validation de la commande implique l&apos;acceptation des présentes CGV.
+        <strong>Article 3 : Commandes</strong><br />
+        Vous pouvez passer commande sur Internet via le site www.thetiptop.com ou directement en boutique. Les informations contractuelles sont présentées en langue française et feront l&apos;objet d&apos;une confirmation au plus tard au moment de la validation de votre commande.
       </p>
       <p>
-        <strong>Paiement :</strong> Le paiement des commandes s&apos;effectue par carte bancaire via un système sécurisé.
+        <strong>Article 4 : Validation de votre commande</strong><br />
+        Toute commande figurant sur le site Internet suppose l&apos;adhésion aux présentes Conditions Générales. Toute confirmation de commande entraîne votre adhésion pleine et entière aux présentes conditions générales de vente, sans exception ni réserve.
       </p>
       <p>
-        <strong>Livraison :</strong> Les produits sont livrés à l&apos;adresse indiquée par le client lors de la commande. Thé Tip Top s&apos;engage à expédier les commandes dans les meilleurs délais.
+        <strong>Article 5 : Paiement</strong><br />
+        Le fait de valider votre commande implique pour vous l&apos;obligation de payer le prix indiqué. Le règlement de vos achats s&apos;effectue par carte bancaire grâce au système sécurisé Stripe ou par PayPal.
       </p>
-      <p>
-        <strong>Retour :</strong> Les clients disposent d&apos;un délai de 14 jours pour retourner les produits non conformes ou défectueux. Les frais de retour sont à la charge du client.
+       <p>
+        <strong>Article 6 : Rétractation</strong><br />
+        Conformément aux dispositions de l&apos;article L.121-21 du Code de la Consommation, vous disposez d&apos;un délai de rétractation de 14 jours à compter de la réception de vos produits pour exercer votre droit de rétraction sans avoir à justifier de motifs ni à payer de pénalité.
       </p>
-    </main>
+    </StaticPageLayout>
   );
 };
 
