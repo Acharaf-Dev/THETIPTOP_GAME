@@ -12,7 +12,7 @@ services:
       - "--providers.docker.exposedbydefault=false"
       - "--entryPoints.web.address=:80"
       - "--entryPoints.websecure.address=:443"
-      - "--entryPoints.websecure.forwardedHeaders.trustedIPs=127.0.0.1"
+      - "--entryPoints.websecure.forwardedHeaders.trustedIPs=127.0.0.1,161.97.76.223" # IP Local & Publique ajoutées pour les headers sécurisés
       - "--certificatesResolvers.myresolver.acme.email=contact.developeur@gmail.com"
       - "--certificatesResolvers.myresolver.acme.storage=/letsencrypt/acme.json"
       - "--certificatesResolvers.myresolver.acme.httpChallenge.entryPoint=web"
@@ -24,6 +24,7 @@ services:
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "letsencrypt:/letsencrypt"
+      - "./workflow/traefik.yml:/etc/traefik/traefik.yml" # Chemin mis à jour
     networks:
       - web
 
@@ -58,7 +59,7 @@ services:
       - "traefik.http.routers.frontend.entrypoints=websecure"
       - "traefik.http.routers.frontend.tls.certresolver=myresolver"
       - "traefik.http.services.frontend.loadbalancer.server.port=4200"
-      - "traefik.http.routers.frontend.middlewares=websocket"
+      - "traefik.http.routers.frontend.middlewares=websocket" # Middleware WebSocket
     networks:
       - web
     depends_on:
@@ -78,7 +79,7 @@ services:
       - "traefik.http.routers.backend.entrypoints=websecure"
       - "traefik.http.routers.backend.tls.certresolver=myresolver"
       - "traefik.http.services.backend.loadbalancer.server.port=4000"
-      - "traefik.http.routers.backend.middlewares=websocket"
+      - "traefik.http.routers.backend.middlewares=websocket" # Middleware WebSocket ajouté
     networks:
       - web
 

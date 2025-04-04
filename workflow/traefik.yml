@@ -1,12 +1,14 @@
 # Configuration Traefik
-
 entryPoints:
   web:
     address: ":80"
   websecure:
     address: ":443"
     forwardedHeaders:
-      trustedIPs: ["127.0.0.1"] # Ajout pour les en-têtes
+      trustedIPs:
+        - "127.0.0.1"          # Boucle locale Localhost
+        - "161.97.76.223"      # IP publique de mon VPS
+        # Ajout d'autres IP si nécessaires (par exemple, des proxys ou CDN).
 
 providers:
   docker:
