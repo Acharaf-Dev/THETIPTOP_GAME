@@ -1,27 +1,28 @@
 import React from 'react';
-import '../Confidentialite/Politique.css';
+import StaticPageLayout from '../../components/StaticPageLayout'; // Adjust path if needed
+// Removed: import '../Confidentialite/Politique.css';
 
-const Politique= () => {
+const PolitiqueConfidentialite = () => {
   return (
-    <main className='politique-confidentialite'>
-      <h1>Politique de Confidentialité</h1>
-      <p>
-        <strong>Collecte des données :</strong> Nous collectons des données personnelles dans le cadre des commandes, des inscriptions aux newsletters et des comptes utilisateurs.
+    <StaticPageLayout title="Politique de Confidentialité">
+       {/* Content remains largely the same, wrapped by layout */}
+       <p>
+        <strong>Introduction :</strong> Thé Tip Top s&apos;engage à protéger la vie privée de ses utilisateurs. Cette politique de confidentialité décrit comment nous collectons, utilisons et protégeons vos informations personnelles.
       </p>
       <p>
-        <strong>Utilisation des données :</strong> Les données collectées sont utilisées pour traiter les commandes, fournir des services et personnaliser l&apos;expérience utilisateur.
+        <strong>Collecte des informations :</strong> Nous collectons les informations que vous nous fournissez lors de votre inscription, de votre participation au jeu-concours ou de vos achats (nom, email, adresse, etc.). Nous collectons également des informations automatiquement via les cookies.
       </p>
       <p>
-        <strong>Partage des données :</strong> Les données peuvent être partagées avec des prestataires tiers (livraison, paiement) pour assurer le bon déroulement des commandes.
+        <strong>Utilisation des informations :</strong> Vos informations sont utilisées pour gérer votre compte, traiter vos commandes, vous informer des résultats du jeu-concours, améliorer nos services et vous envoyer des communications marketing si vous y consentez.
       </p>
       <p>
-        <strong>Droit d&apos;accès et de rectification :</strong> Conformément à la loi informatique et libertés, vous avez un droit d&apos;accès, de rectification et de suppression des données vous concernant.
+        <strong>Protection des informations :</strong> Nous mettons en œuvre des mesures de sécurité techniques et organisationnelles pour protéger vos données contre l&apos;accès non autorisé, la modification, la divulgation ou la destruction.
       </p>
       <p>
-        <strong>Cookies :</strong> Le site utilise des cookies pour améliorer la navigation et analyser le trafic. Vous pouvez configurer votre navigateur pour refuser les cookies.
+        <strong>Vos droits :</strong> Conformément à la réglementation, vous disposez d&apos;un droit d&apos;accès, de rectification, de suppression et d&apos;opposition concernant vos données personnelles. Vous pouvez exercer ces droits en nous contactant.
       </p>
-    </main>
+    </StaticPageLayout>
   );
 };
 
-export default Politique;
+export default PolitiqueConfidentialite;

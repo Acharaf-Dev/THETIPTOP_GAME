@@ -1,10 +1,10 @@
 import React from 'react';
-import '../Confidentialite/Mention.css';
+import StaticPageLayout from '../../components/StaticPageLayout'; // Adjust path if needed
+// Removed: import '../Confidentialite/Mention.css';
 
 const MentionsLegales = () => {
   return (
-    <main className='mentions-legales'>
-      <h1>Mentions Légales</h1>
+    <StaticPageLayout title="Mentions Légales">
       <p>
         <strong>Éditeur du site :</strong> Thé Tip Top, SARL au capital de 10 000€, immatriculée au RCS de Nice sous le numéro 123 456 789, dont le siège social est situé au 10 Rue de Nice, 06000 Nice.
       </p>
@@ -20,7 +20,7 @@ const MentionsLegales = () => {
       <p>
         <strong>Contact :</strong> Pour toute question, vous pouvez nous contacter à l&apos;adresse suivante : <a href='mailto:contact.developeur@gmail.com'>contact.developeur@gmail.com</a> ou par téléphone au +33 1 23 45 67 89.
       </p>
-    </main>
+    </StaticPageLayout>
   );
 };
 
