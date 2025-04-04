@@ -1,23 +1,15 @@
-# Utiliser Node.js comme image de base
-FROM node:18
-
-# Définir le répertoire de travail
+# Étape 1 : Build React
+FROM node:18 AS build
 WORKDIR /app
-
-# Copier les fichiers package.json et package-lock.json pour optimiser le cache Docker
 COPY package*.json ./
-
-# Installer les dépendances
 RUN npm install
-
-# Installer Nodemon globalement pour le hot reload
-RUN npm install -g nodemon
-
-# Copier le reste du code source
 COPY . .
+ARG REACT_APP_API_URL
+ENV REACT_APP_API_URL=$REACT_APP_API_URL
+RUN npm run build
 
-# Exposer le port sur lequel l'application tourne
-EXPOSE 4200
-
-# Lancer le serveur de développement avec Nodemon
-CMD ["nodemon", "start"]
+# Étape 2 : Nginx statique
+FROM nginx:alpine
+COPY --from=build /app/build /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
