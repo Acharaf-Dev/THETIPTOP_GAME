@@ -6,7 +6,6 @@ import Regle from './pages/Reglement/Regle';
 import Login from './pages/Login/Login';
 import Register from './pages/Register/Register';
 import Contact from './pages/Contact/Contact';
-import Profile from './pages/Profils/Profile';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import AdminDashboard from './pages/Dashbords/AdminDashboard';
@@ -18,7 +17,7 @@ import CGV from './pages/Confidentialite/Cgv';
 import Mention from './pages/Confidentialite/Mention';
 import Politique from './pages/Confidentialite/Politique';
 import ForgotPassword from './pages/Password/ForgotPassword';
-
+import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   return (
@@ -28,12 +27,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/profil" element={<Profile />} />
-          <Route path="/contact" element={<Contact />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/clientdashboard" element={<ClientDashboard />} />
-          <Route path="/employeedashboard" element={<EmployeeDashboard />} />
-          <Route path="/admindashboard" element={<AdminDashboard />} />
+          <Route path="/contact" element={<Contact />} />
           <Route path="/reglement" element={<Regle />} />
           <Route path="/about" element={<About />} />
           <Route path="/cgu" element={<CGU />} />
@@ -41,7 +36,17 @@ function App() {
           <Route path="/mention" element={<Mention />} />
           <Route path="/politique" element={<Politique />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/game" element={<Game />} /> {/* Chemin ajouté pour Game */}
+          <Route path="/clientdashboard" element={<ProtectedRoute><ClientDashboard /></ProtectedRoute>} />
+          <Route path="/employeedashboard" element={<ProtectedRoute><EmployeeDashboard /></ProtectedRoute>} />
+          <Route path="/admindashboard" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+          <Route 
+            path="/game" 
+            element={
+              <ProtectedRoute>
+                <Game />
+              </ProtectedRoute>
+            } 
+          />
         </Routes>
         <Footer />
       </div>
