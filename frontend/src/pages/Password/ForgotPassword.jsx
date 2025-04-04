@@ -25,6 +25,8 @@ const ForgotPassword = () => {
       // TODO: Implement actual API call to send reset link
       // Example:
       // const response = await axios.post('http://localhost:4000/api/auth/forgot-password', { email });
+      //const response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/forgot-password`, { email });
+
       // if (response.data.success) {
       //   setMessage("Si un compte existe pour cet email, un lien de réinitialisation a été envoyé.");
       // } else {
