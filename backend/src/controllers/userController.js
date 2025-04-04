@@ -515,7 +515,8 @@ const forgotPasswordController = async (req, res) => {
     // Construire l'URL de réinitialisation
     // process.env.CLIENT_URL peut être défini dans votre .env pour pointer vers votre front-end
     const resetUrl = `${
-      process.env.CLIENT_URL || "http://46.202.168.187:5000"
+      // process.env.CLIENT_URL || "http://161.97.76.223:4000"
+      process.env.CLIENT_URL || "https://www.backend.dsp5-archi-f24a-15m-g8.fr/"
     }/resetpassword/${resetToken}`;
 
     // Configuration de l'email à envoyer
