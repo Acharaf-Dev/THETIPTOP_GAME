@@ -1,15 +1,35 @@
-# Étape 1 : Build de l'app React
-FROM --platform=linux/arm64 node:18 AS builder
+# Dockerfile de production pour application React (multi-stage build)
+
+# Étape 1 : Build de l'application React avec Node (étape "builder")
+
+FROM node:18 AS builder
+
 WORKDIR /app
-COPY package*.json ./
-RUN npm install
-COPY . .
+
+# Copier uniquement les fichiers de dépendances d'abord (pour la mise en cache)
+
+COPY package*.json ./ 
+
+RUN npm install       
+
+# Copier le reste des sources de l'application
+
+COPY . .             
+
+# Lancer la construction de l'application (génère le dossier build/)
+
 RUN npm run build
-# Étape 2 : Serveur Nginx pour le build React
-FROM --platform=linux/arm64 nginx:alpine
-# Copie de la config Nginx personnalisée
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-# Copie du build React
+
+# Étape 2 : Image finale basée sur Nginx pour servir les fichiers statiques
+
+FROM nginx:stable-alpine
+
+# Copier les fichiers build générés depuis l'étape builder
+
 COPY --from=builder /app/build /usr/share/nginx/html
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+
+# Copier la configuration Nginx personnalisée (assurez-vous qu'elle est en LF)
+
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Astuce: Nginx exposera par défaut le port 80 (pas besoin de redéfinir CMD ou EXPOSE ici) 
