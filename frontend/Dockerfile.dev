@@ -1,8 +1,13 @@
-# Dockerfile.dev
-FROM node:18
+# Dockerfile.dev (React - Développement)
+FROM --platform=linux/arm64 node:18
+# Répertoire de travail
 WORKDIR /app
+# Copie des dépendances
 COPY package*.json ./
 RUN npm install
+# Copie du code source
 COPY . .
+# Port utilisé en dev (React dev server)
 EXPOSE 4200
+# Lancement du serveur de dev
 CMD ["npm", "start"]
