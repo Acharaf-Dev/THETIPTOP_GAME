@@ -43,7 +43,9 @@ const ClientDashboard = () => {
       }
 
       try {
-        const response = await axios.get('http://localhost:4000/api/user/me', {  //local
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/user/me`, {  //local
+          // axios.post(`${process.env.REACT_APP_API_URL}/auth/register`, payload);
+
         // const response = await axios.get('https://www.backend.dsp5-archi-f24a-15m-g8.fr/api/user/me', { //VPS
           headers: {
             'Authorization': `Bearer ${token}`
@@ -88,7 +90,7 @@ const ClientDashboard = () => {
 
     try {
         // const response = await axios.get('https://www.backend.dsp5-archi-f24a-15m-g8.fr/api/user/my-gains', {
-          const response = await axios.get('http://localhost:4000/api/user/my-gains', {
+          const response = await axios.get(`${process.env.REACT_APP_API_URL}/user/my-gains`, {
             headers: { 'Authorization': `Bearer ${token}` }
         });
 
@@ -159,7 +161,7 @@ const ClientDashboard = () => {
     // Add any other fields that should NEVER be sent from the client
 
     try {
-      const response = await axios.put('http://localhost:4000/api/user/updateprofile', payload, {
+      const response = await axios.put(`${process.env.REACT_APP_API_URL}/user/updateprofile`, payload, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
 
