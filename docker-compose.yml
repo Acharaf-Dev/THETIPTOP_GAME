@@ -54,7 +54,6 @@ services:
       args:
         - REACT_APP_API_URL=https://www.backend.dsp5-archi-f24a-15m-g8.fr/api
     container_name: tip_top_frontend
-    platform: linux/arm64
     environment:
       - REACT_APP_API_URL=https://www.backend.dsp5-archi-f24a-15m-g8.fr/api
     #   - PORT=4200
