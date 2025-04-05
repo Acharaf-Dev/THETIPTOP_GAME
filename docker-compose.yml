@@ -1,18 +1,20 @@
+version: '3.8'
+
 services:
   traefik:
     image: traefik:v2.5
     container_name: traefik
     restart: unless-stopped
+    platform: linux/arm64
     command:
       - "--api.dashboard=true"
       - "--api.insecure=false"
-      - "--ping=true" # Active le healthcheck
-      - "--log.level=DEBUG" # Activer les logs détaillés
+      - "--ping=true"
+      - "--log.level=DEBUG"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--entryPoints.web.address=:80"
       - "--entryPoints.websecure.address=:443"
-      # - "--entryPoints.websecure.forwardedHeaders.trustedIPs=127.0.0.1,161.97.76.223" # IP Local & Publique ajoutées pour les headers sécurisés
       - "--certificatesResolvers.myresolver.acme.email=contact.developeur@gmail.com"
       - "--certificatesResolvers.myresolver.acme.storage=/letsencrypt/acme.json"
       - "--certificatesResolvers.myresolver.acme.httpChallenge.entryPoint=web"
@@ -24,7 +26,6 @@ services:
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "letsencrypt:/letsencrypt"
-      # - "./workflow/traefik.yml:/etc/traefik/traefik.yml" # Chemin mis à jour
     networks:
       - web
 
@@ -49,11 +50,16 @@ services:
   frontend:
     build:
       context: ./frontend
+      dockerfile: Dockerfile.prod
       args:
         - REACT_APP_API_URL=https://www.backend.dsp5-archi-f24a-15m-g8.fr/api
     container_name: tip_top_frontend
+    platform: linux/arm64
     environment:
       - REACT_APP_API_URL=https://www.backend.dsp5-archi-f24a-15m-g8.fr/api
+    #   - PORT=4200
+    # ports:
+    #   - "4200:4200"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.frontend.rule=Host(`www.dsp5-archi-f24a-15m-g8.fr`)"
@@ -69,6 +75,7 @@ services:
     build:
       context: ./backend
     container_name: tip_top_backend
+    platform: linux/arm64
     environment:
       - PORT=4000
     ports:
@@ -79,13 +86,13 @@ services:
       - "traefik.http.routers.backend.entrypoints=websecure"
       - "traefik.http.routers.backend.tls.certresolver=myresolver"
       - "traefik.http.services.backend.loadbalancer.server.port=4000"
-      # - "traefik.http.routers.backend.middlewares=websocket" # Middleware WebSocket ajouté
     networks:
       - web
 
   mongodb:
     image: mongo:latest
     container_name: tip_top_mongodb
+    platform: linux/arm64
     restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
@@ -109,6 +116,12 @@ services:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
       ME_CONFIG_MONGODB_ADMINPASSWORD: password
       ME_CONFIG_MONGODB_SERVER: mongodb
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.mongoexpress.rule=Host(`www.database.dsp5-archi-f24a-15m-g8.fr`)"
+      - "traefik.http.routers.mongoexpress.entrypoints=websecure"
+      - "traefik.http.routers.mongoexpress.tls.certresolver=myresolver"
+      - "traefik.http.services.mongoexpress.loadbalancer.server.port=8081"
     networks:
       - web
 
@@ -204,10 +217,6 @@ services:
     networks:
       - web
 
-networks:
-  web:
-    driver: bridge
-
 volumes:
   db_data:
   jenkins_data:
@@ -218,3 +227,7 @@ volumes:
   sonarqube_extensions:
   sonarqube_logs:
   letsencrypt:
+
+networks:
+  web:
+    driver: bridge
