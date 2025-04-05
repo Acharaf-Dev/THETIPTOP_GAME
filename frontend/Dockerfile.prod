@@ -2,7 +2,7 @@
 
 # Étape 1 : Build de l'application React avec Node (étape "builder")
 
-FROM node:18 AS builder
+FROM arm64v8/node:18 AS builder
 
 WORKDIR /app
 
