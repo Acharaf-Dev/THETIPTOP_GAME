@@ -1,7 +1,7 @@
 # Dockerfile de production pour application React (multi-stage build - ARM compatible)
 
 ### Étape 1 : Builder React avec Node (version ARM64 compatible)
-FROM arm64v8/node:18 AS builder
+FROM node:18 AS builder
 
 # Définir le répertoire de travail
 WORKDIR /app
@@ -19,7 +19,7 @@ COPY . .
 RUN npm run build
 
 ### Étape 2 : Utiliser une image Nginx ARM pour servir les fichiers buildés
-FROM arm64v8/nginx:stable-alpine
+FROM nginx:latest
 
 # Copier les fichiers build dans le répertoire servi par Nginx
 COPY --from=builder /app/build /usr/share/nginx/html
@@ -32,3 +32,6 @@ EXPOSE 80
 
 # Démarrer Nginx
 CMD ["nginx", "-g", "daemon off;"]
+
+
+#
