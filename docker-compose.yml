@@ -82,6 +82,7 @@ services:
 
   mongo-express:
     image: mongo-express
+    platform: linux/amd64
     container_name: mongo-express
     restart: always
     environment:
