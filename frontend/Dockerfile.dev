@@ -1,5 +1,5 @@
 # Dockerfile.dev (React - Développement)
-FROM --platform=linux/arm64 node:18
+FROM arm64v8/node:18 AS builder
 # Répertoire de travail
 WORKDIR /app
 # Copie des dépendances
