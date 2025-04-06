@@ -11,26 +11,27 @@ const contactRoutes = require("./src/routes/contactRoute");
 const app = express();
 const PORT = process.env.PORT || 4000;
 
-connectDB();
+// ✅ Évite la connexion à la DB en mode test
+if (process.env.NODE_ENV !== "test") {
+  connectDB();
+}
 
-// --- Request Logger Middleware (Add this first) ---
+// Logger de requêtes
 app.use((req, res, next) => {
   console.log(`Incoming Request: ${req.method} ${req.path}`);
   next();
 });
-// -----------------------------------------------
 
-// Define allowed origins
+// Origines autorisées
 const allowedOrigins = [
   "http://localhost:4200",
   "http://www.dsp5-archi-f24a-15m-g8.fr",
   "https://www.dsp5-archi-f24a-15m-g8.fr",
 ];
 
-// CORS Options
+// CORS
 const corsOptions = {
   origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
     if (allowedOrigins.indexOf(origin) === -1) {
       const msg =
@@ -44,9 +45,7 @@ const corsOptions = {
   optionsSuccessStatus: 204,
 };
 
-// Middlewares
 app.use(express.json());
-// Use the specific CORS options again
 app.use(cors(corsOptions));
 
 // Routes
@@ -54,12 +53,12 @@ app.get("/api/hello", (req, res) => {
   res.status(200).json({ message: "Hello, World!" });
 });
 
-// Adjust API base path
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/game", gameRoutes);
 app.use("/api/contact", contactRoutes);
 
+// ✅ Évite de lancer le serveur si test
 if (process.env.NODE_ENV !== "test") {
   app.listen(PORT, () => {
     console.log(`🚀 Serveur lancé sur port ${PORT} derrière Traefik`);
