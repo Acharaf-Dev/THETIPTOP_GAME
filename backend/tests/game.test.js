@@ -1,5 +1,6 @@
 const request = require("supertest");
 const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
 const app = require("../server");
 const userModel = require("../src/models/usersModel");
 const ticketModel = require("../src/models/winningTicket");
@@ -18,29 +19,36 @@ let clientToken;
 beforeAll(async () => {
   await mongoose.connect(process.env.MONGO_URI_TEST);
 
-  // Cleanup base test
+  // Nettoyage de la base
   await userModel.deleteMany({});
   await ticketModel.deleteMany({});
   await gainModel.deleteMany({});
 
-  // Créer un utilisateur client
-  const client = await userModel.create({
+  // Création de l'utilisateur client avec mot de passe hashé
+  const hashedPassword = await bcrypt.hash("Password123!", 10);
+  await userModel.create({
     userName: "GameClient",
     email: "gameclient@example.com",
-    password: "Password123!",
+    password: hashedPassword,
     userType: "client",
   });
 
+  // Connexion du client pour obtenir le token
   const res = await request(app).post("/api/auth/login").send({
     email: "gameclient@example.com",
     password: "Password123!",
   });
 
+  if (!res.body.token) {
+    console.error("❌ Login failed:", res.body);
+    throw new Error("Échec de l'authentification dans les tests.");
+  }
+
   clientToken = res.body.token;
 
-  // Créer un ticket gagnant valide
+  // Création d’un ticket gagnant au format string
   await ticketModel.create({
-    ticketNumber: 777,
+    ticketNumber: "3T-UOAR253",
     prizeWon: "Cadeau",
     prizeValue: 50,
     isUsed: false,
@@ -57,7 +65,7 @@ describe("🎲 Game API", () => {
     const res = await request(app)
       .post("/api/game/play")
       .set("Authorization", `Bearer ${clientToken}`)
-      .send({ ticketNumber: 777 });
+      .send({ ticketNumber: "3T-UOAR253" });
 
     expect(res.statusCode).toBe(200);
     expect(res.body).toHaveProperty("success", true);
@@ -68,7 +76,7 @@ describe("🎲 Game API", () => {
     const res = await request(app)
       .post("/api/game/play")
       .set("Authorization", `Bearer ${clientToken}`)
-      .send({ ticketNumber: 777 });
+      .send({ ticketNumber: "3T-UOAR253" });
 
     expect(res.statusCode).toBe(400);
     expect(res.body.message).toMatch(/déjà utilisé/i);
@@ -78,7 +86,7 @@ describe("🎲 Game API", () => {
     const res = await request(app)
       .post("/api/game/play")
       .set("Authorization", `Bearer ${clientToken}`)
-      .send({ ticketNumber: 999 });
+      .send({ ticketNumber: "INVALID-999" });
 
     expect(res.statusCode).toBe(400);
     expect(res.body.message).toMatch(/Ticket invalide/i);
