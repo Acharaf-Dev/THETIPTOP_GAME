@@ -66,13 +66,15 @@ services:
     networks:
       - web
 
-
   backend:
     build:
       context: ./backend
     container_name: tip_top_backend
+    platform: linux/arm64
     environment:
       - PORT=4000
+    depends_on:
+      - mongodb
     ports:
       - "4000:4000"
     labels:
