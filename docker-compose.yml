@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   traefik:
-    image: traefik:v2.5@sha256:e88226b3771f65d5569699c6de5a13275f456e1b86a2c25e20f1f83b9c1dbf2c
+    image: traefik:v2.10
     container_name: traefik
     restart: unless-stopped
     platform: linux/arm64
