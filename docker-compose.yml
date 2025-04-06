@@ -2,10 +2,9 @@ version: '3.8'
 
 services:
   traefik:
-    image: traefik/traefik:v2.10@sha256:a5c5d891504507e3ab5a90fbdc0c7a709d17394ab7ab9790b3fc419d1742fcd6
+    image: traefik:v2.10
     container_name: traefik
     restart: unless-stopped
-    platform: linux/arm64
     command:
       - "--api.dashboard=true"
       - "--api.insecure=false"
