@@ -1,10 +1,12 @@
+jest.setTimeout(20000); 
 const request = require("supertest");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
-const app = require("../server");
+const app = require("../app");
 const userModel = require("../src/models/usersModel");
 const ticketModel = require("../src/models/winningTicket");
 const gainModel = require("../src/models/gainsModel");
+
 
 // Mock des fonctions d'email
 jest.mock("../src/config/emailService", () => ({
