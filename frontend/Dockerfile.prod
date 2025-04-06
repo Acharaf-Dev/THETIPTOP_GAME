@@ -1,17 +1,13 @@
-# Étape 1 : Build React (avec Node ARM64 officiel)
-FROM arm64v8/node:18 AS builder
-
+# Étape 1 : Build React (ARM64)
+FROM node:18 AS builder
 WORKDIR /app
-
 COPY package*.json ./
 RUN npm install
-
 COPY . .
 RUN npm run build
 
-# Étape 2 : Utiliser Nginx ARM64
-FROM arm64v8/nginx:stable-alpine
-
+# Étape 2 : Serveur Nginx standard (il détecte arm64 tout seul)
+FROM nginx:stable-alpine
 COPY --from=builder /app/build /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 

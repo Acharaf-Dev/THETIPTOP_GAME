@@ -46,7 +46,6 @@ services:
       - "traefik.http.services.jenkins.loadbalancer.server.port=8080"
     networks:
       - web
-
   frontend:
     build:
       context: ./frontend
@@ -56,27 +55,22 @@ services:
     container_name: tip_top_frontend
     environment:
       - REACT_APP_API_URL=https://www.backend.dsp5-archi-f24a-15m-g8.fr/api
-    #   - PORT=4200
-    # ports:
-    #   - "4200:4200"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.frontend.rule=Host(`www.dsp5-archi-f24a-15m-g8.fr`)"
       - "traefik.http.routers.frontend.entrypoints=websecure"
       - "traefik.http.routers.frontend.tls.certresolver=myresolver"
       - "traefik.http.services.frontend.loadbalancer.server.port=80"
-      # Optionnel : redirection HTTP > HTTPS
-      - "traefik.http.routers.frontend.middlewares=redirect@file"
     depends_on:
       - backend
     networks:
       - web
 
+
   backend:
     build:
       context: ./backend
     container_name: tip_top_backend
-    platform: linux/arm64
     environment:
       - PORT=4000
     ports:
