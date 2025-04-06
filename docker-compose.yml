@@ -87,7 +87,7 @@ services:
       - web
 
   mongodb:
-    image: arm64v8/mongo:6.0
+    image:  bitnami/mongodb:6.0
     container_name: tip_top_mongodb
     restart: always
     platform: linux/arm64
