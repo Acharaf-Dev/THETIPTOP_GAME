@@ -62,7 +62,7 @@ const Contact = () => {
       
       try {
         // Use environment variable for API URL is better practice, but keeping localhost for now
-        const response = await axios.post('http://localhost:4000/api/contact/', payload); // Corrected URL: removed '/send' 
+        const response = await axios.post(`${process.env.REACT_APP_API_URL}/contact/`, payload); // Corrected URL: removed '/send' 
         //const response = await axios.post('https://www.backend.dsp5-archi-f24a-15m-g8.fr/api/contact/', payload); 
         
         console.log('Backend Response:', response.data); // <-- Log the actual response data
