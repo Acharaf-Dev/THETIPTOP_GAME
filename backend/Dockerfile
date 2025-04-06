@@ -22,3 +22,5 @@ EXPOSE 4000
 
 # Lancer l'application avec Nodemon pour le développement
 CMD ["nodemon", "server.js"]
+
+
