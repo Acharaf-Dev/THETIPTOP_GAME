@@ -5,20 +5,20 @@ const connectDB = async () => {
   try {
     const uri = process.env.NODE_ENV === 'test' ? process.env.MONGO_URI_TEST : process.env.MONGO_URI;
 
+    // Ferme la connexion existante si elle existe
+    if (mongoose.connection.readyState !== 0) {
+      await mongoose.disconnect();
+    }
+
     await mongoose.connect(uri, {
-      serverSelectionTimeoutMS: 5000, // Timeout pour éviter les blocages
+      serverSelectionTimeoutMS: 5000,
     });
 
     console.log('✅ MongoDB connecté avec succès !');
   } catch (err) {
     console.error('❌ Erreur de connexion à MongoDB :', err.message);
-
-    // En mode test, on lève l'erreur pour Jest
-    if (process.env.NODE_ENV === 'test') {
-      throw err;
-    } else {
-      process.exit(1);
-    }
+    if (process.env.NODE_ENV === 'test') throw err;
+    process.exit(1);
   }
 };
 
