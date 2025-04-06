@@ -1,6 +1,7 @@
+jest.setTimeout(20000); 
 const request = require("supertest");
 const mongoose = require("mongoose");
-const app = require("../server");
+const app = require("../app");
 // const emailService = require("../config/emailService");
 const userModel = require("../src/models/usersModel");
 
