@@ -87,16 +87,14 @@ services:
       - web
 
   mongodb:
-    image: mongo:latest
+    image: arm64v8/mongo:6.0
     container_name: tip_top_mongodb
-    platform: linux/arm64
     restart: always
+    platform: linux/arm64
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: password
       MONGO_INITDB_DATABASE: tip_top_game
-    ports:
-      - "27017:27017"
     volumes:
       - db_data:/data/db
     networks:
