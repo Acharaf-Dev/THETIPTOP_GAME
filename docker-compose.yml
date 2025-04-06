@@ -81,7 +81,7 @@ services:
       - web
 
   mongo-express:
-    image: mongo-express
+    image:  mongo-express:1.0.0-alpha.4
     platform: linux/amd64
     container_name: mongo-express
     restart: always
