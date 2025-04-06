@@ -1,5 +1,6 @@
 # Utiliser Node.js comme image de base
-FROM node:18
+# FROM node:18
+FROM --platform=linux/amd64 node:18
 
 # Définir le répertoire de travail
 WORKDIR /app
@@ -21,3 +22,5 @@ EXPOSE 4000
 
 # Lancer l'application avec Nodemon pour le développement
 CMD ["nodemon", "server.js"]
+
+
