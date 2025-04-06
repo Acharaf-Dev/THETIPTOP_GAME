@@ -32,6 +32,8 @@ services:
     build:
       context: ./backend
     container_name: tip_top_backend
+    env_file:
+      - ./backend/.env
     environment:
       - PORT=4000
     depends_on:
