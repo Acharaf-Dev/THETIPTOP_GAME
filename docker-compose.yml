@@ -2,10 +2,9 @@ version: '3.8'
 
 services:
   traefik:
-    image: traefik:v2.5
+    image: traefik:v2.11.2
     container_name: traefik
     restart: unless-stopped
-    platform: linux/arm64
     command:
       - "--api.dashboard=true"
       - "--api.insecure=false"
@@ -28,6 +27,7 @@ services:
       - "letsencrypt:/letsencrypt"
     networks:
       - web
+
 
   jenkins:
     image: jenkins/jenkins:lts
