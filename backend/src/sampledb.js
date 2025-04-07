@@ -2,13 +2,12 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 
 const connectDB = async () => {
-  try {
-    const uri = process.env.NODE_ENV === 'test' ? process.env.MONGO_URI_TEST : process.env.MONGO_URI;
+  if (mongoose.connection.readyState >= 1) return;
 
-    // Ferme la connexion existante si elle existe
-    if (mongoose.connection.readyState !== 0) {
-      await mongoose.disconnect();
-    }
+  try {
+    const uri = process.env.NODE_ENV === 'test'
+      ? process.env.MONGO_URI_TEST
+      : process.env.MONGO_URI;
 
     await mongoose.connect(uri, {
       serverSelectionTimeoutMS: 5000,

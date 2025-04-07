@@ -1,6 +1,8 @@
 // app.js
+require("dotenv").config();
 const cors = require("cors");
 const express = require("express");
+
 
 const authRoutes = require("./src/routes/authRoute");
 const userRoutes = require("./src/routes/userRoute");
@@ -9,11 +11,12 @@ const contactRoutes = require("./src/routes/contactRoute");
 
 const app = express();
 
-// Logger de requêtes
-app.use((req, res, next) => {
-  console.log(`Incoming Request: ${req.method} ${req.path}`);
-  next();
-});
+if (process.env.NODE_ENV !== "test") {
+  app.use((req, res, next) => {
+    console.log(`Incoming Request: ${req.method} ${req.path}`);
+    next();
+  });
+}
 
 const allowedOrigins = [
   "http://localhost:4200",
