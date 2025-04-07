@@ -21,11 +21,6 @@ pipeline {
         VPS_HOST = '161.97.76.223'
         CONTAINER_NAME = 'tip_top_frontend'
         PROJECT_PATH = '/root/THETIPTOP_GAME/frontend'
-        // Désactiver Husky dans Jenkins
-    }
-
-    triggers {
-        pollSCM('* * * * *') // Build à chaque push Git
     }
 
     stages {
@@ -35,20 +30,26 @@ pipeline {
             }
         }
 
-        stage('📦 Install Dependencies') {
+        stage('📦 Clean & Install Dependencies') {
             steps {
-                echo "🔥 Suppression de node_modules pour une installation propre"
-                sh 'rm -rf node_modules'
+                echo "🔥 Suppression de node_modules et de fichiers de verrouillage"
+                sh 'rm -rf node_modules package-lock.json'
 
-                echo "📦 Installation des dépendances sans Husky"
-                sh 'npm install' // Désactiver le script prepare
-
+                echo "📦 Réinstallation des dépendances"
+                sh 'npm install'
             }
         }
 
-        stage('🧪 Run Lint & Tests') {
+        stage('🧹 Lint Code') {
             steps {
-                sh 'npm run lint || true'
+                echo "🧹 Linting et correction automatique avec ESLint"
+                sh 'npm run lint'
+            }
+        }
+
+        stage('🧪 Run Tests') {
+            steps {
+                echo "🧪 Exécution des tests unitaires"
                 sh 'npm run test || true'
             }
         }
@@ -63,12 +64,14 @@ pipeline {
 
         stage('⚙️ Build React App') {
             steps {
+                echo "⚙️ Construction de l'application React"
                 sh 'npm run build'
             }
         }
 
         stage('🐳 Docker Build') {
             steps {
+                echo "🐳 Construction de l'image Docker"
                 sh "docker build -f Dockerfile.prod -t ${DOCKER_IMAGE} -t ${DOCKER_TAG_LATEST} ."
             }
         }
