@@ -2,7 +2,7 @@ pipeline {
     agent {
         docker {
             image 'node:18'
-            // Optionnel : ajoute '--user root' si besoin de permissions root
+            // Optionnel: args '--user root' si besoin de permissions supplémentaires
             // args '--user root'
         }
     }
@@ -52,8 +52,8 @@ pipeline {
         }
         stage('Install Backend Dependencies') {
             steps {
-                script {
-                    // Forcer l'installation des devDependencies afin que Husky soit installé
+                dir('backend') {
+                    // Forcer l'installation des devDependencies pour installer Husky et Jest
                     if (fileExists('package-lock.json')) {
                         sh 'npm ci --include=dev'
                     } else {
@@ -64,12 +64,13 @@ pipeline {
         }
         stage('Verify Dependencies') {
             steps {
-                sh 'npm audit'
+                dir('backend') {
+                    sh 'npm audit'
+                }
             }
         }
         stage('Run Backend Tests + Coverage') {
             steps {
-                // Se placer dans le dossier backend où se trouve le package.json et exécuter les tests
                 dir('backend') {
                     sh 'npm test -- --coverage --verbose --runInBand'
                 }
@@ -82,15 +83,17 @@ pipeline {
                         error("Erreur : SONARQUBE_TOKEN n'est pas défini")
                     }
                 }
-                sh """
-                    sonar-scanner \\
-                    -Dsonar.projectKey=your-project \\
-                    -Dsonar.sources=. \\
-                    -Dsonar.tests=./tests \\
-                    -Dsonar.testExecutionReportPaths=coverage/lcov.info \\
-                    -Dsonar.host.url=${SONARQUBE_URL} \\
-                    -Dsonar.login=${SONARQUBE_TOKEN}
-                """
+                dir('backend') {
+                    sh """
+                        sonar-scanner \\
+                        -Dsonar.projectKey=your-project \\
+                        -Dsonar.sources=. \\
+                        -Dsonar.tests=./tests \\
+                        -Dsonar.testExecutionReportPaths=coverage/lcov.info \\
+                        -Dsonar.host.url=${SONARQUBE_URL} \\
+                        -Dsonar.login=${SONARQUBE_TOKEN}
+                    """
+                }
             }
         }
         stage('Build Docker Image') {
