@@ -1,5 +1,11 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'node:16'
+            // Optionnel : ajoute '--user root' si besoin de permissions root
+            // args '--user root'
+        }
+    }
     environment {
         NODE_VERSION = '16'
         NODE_ENV = 'production'
@@ -73,12 +79,12 @@ pipeline {
                     }
                 }
                 sh """
-                    sonar-scanner \
-                    -Dsonar.projectKey=your-project \
-                    -Dsonar.sources=. \
-                    -Dsonar.tests=./tests \
-                    -Dsonar.testExecutionReportPaths=coverage/lcov.info \
-                    -Dsonar.host.url=${SONARQUBE_URL} \
+                    sonar-scanner \\
+                    -Dsonar.projectKey=your-project \\
+                    -Dsonar.sources=. \\
+                    -Dsonar.tests=./tests \\
+                    -Dsonar.testExecutionReportPaths=coverage/lcov.info \\
+                    -Dsonar.host.url=${SONARQUBE_URL} \\
                     -Dsonar.login=${SONARQUBE_TOKEN}
                 """
             }
