@@ -2,7 +2,7 @@ pipeline {
     agent {
         docker {
             image 'node:18'
-            // Optionnel : args '--user root' si besoin de permissions root
+            // Optionnel : ajoute '--user root' si besoin de permissions root
             // args '--user root'
         }
     }
@@ -69,7 +69,10 @@ pipeline {
         }
         stage('Run Backend Tests + Coverage') {
             steps {
-                sh 'npm test -- --coverage --verbose --runInBand'
+                // Se placer dans le dossier backend où se trouve le package.json et exécuter les tests
+                dir('backend') {
+                    sh 'npm test -- --coverage --verbose --runInBand'
+                }
             }
         }
         stage('SonarQube Analysis') {
