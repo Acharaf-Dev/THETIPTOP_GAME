@@ -1,13 +1,13 @@
 pipeline {
     agent {
         docker {
-            image 'node:16'
+            image 'node:18'
             // Optionnel : ajoute '--user root' si besoin de permissions root
             // args '--user root'
         }
     }
     environment {
-        NODE_VERSION = '16'
+        NODE_VERSION = '18'
         NODE_ENV = 'production'
         SONARQUBE_URL = 'http://sonarqube:9000'
         SONARQUBE_TOKEN = credentials('sonarqube-token')
