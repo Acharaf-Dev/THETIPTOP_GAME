@@ -2,7 +2,7 @@ pipeline {
     agent {
         docker {
             image 'node:18'
-            // Optionnel: args '--user root' si besoin de permissions supplémentaires
+            // Optionnel : ajoute '--user root' si tu as besoin de permissions supplémentaires
             // args '--user root'
         }
     }
@@ -53,11 +53,12 @@ pipeline {
         stage('Install Backend Dependencies') {
             steps {
                 dir('backend') {
-                    // Forcer l'installation des devDependencies pour installer Husky et Jest
-                    if (fileExists('package-lock.json')) {
-                        sh 'npm ci --include=dev'
-                    } else {
-                        sh 'npm install --include=dev'
+                    script {
+                        if (fileExists('package-lock.json')) {
+                            sh 'npm ci --include=dev'
+                        } else {
+                            sh 'npm install --include=dev'
+                        }
                     }
                 }
             }
