@@ -23,3 +23,18 @@ down:
 
 config:
 	docker-compose config
+
+local:
+	docker compose -f docker-compose.dev.yml up --build -d
+
+local-down:
+	docker compose -f docker-compose.dev.yml down
+
+local-logs:
+	docker compose -f docker-compose.dev.yml logs -f
+
+local-config:
+	docker compose -f docker-compose.dev.yml config
+
+local-build:
+	docker compose -f docker-compose.dev.yml build
