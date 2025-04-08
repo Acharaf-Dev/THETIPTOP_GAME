@@ -48,7 +48,7 @@ pipeline {
       steps {
         script {
           echo "🛠️ Lancement de MongoDB + Backend"
-          sh 'docker compose up -d mongodb backend'
+          sh 'docker compose up d mongodb backend' 
           sh 'sleep 10' // on attend que Mongo soit prêt
         }
       }
