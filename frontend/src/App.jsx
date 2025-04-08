@@ -2,6 +2,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home/Home';
 import Game from './pages/Game/Game'; 
+import Users from './pages/Users/users';
 import Regle from './pages/Reglement/Regle'; 
 import Login from './pages/Login/Login';
 import Register from './pages/Register/Register';
@@ -18,6 +19,8 @@ import Mention from './pages/Confidentialite/Mention';
 import Politique from './pages/Confidentialite/Politique';
 import ForgotPassword from './pages/Password/ForgotPassword';
 import ProtectedRoute from './components/ProtectedRoute';
+import GrandGagnant from './pages/Grandgagnant/Grandgagnant';
+
 
 function App() {
   return (
@@ -39,11 +42,18 @@ function App() {
           <Route path="/clientdashboard" element={<ProtectedRoute><ClientDashboard /></ProtectedRoute>} />
           <Route path="/employeedashboard" element={<ProtectedRoute><EmployeeDashboard /></ProtectedRoute>} />
           <Route path="/admindashboard" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+          <Route path="/big-game" element={<ProtectedRoute><GrandGagnant /></ProtectedRoute>} />
+          <Route path="/users" element={<Users />} />
+
+          <Route 
+            path="/users" 
+            element={<Users /> } />
           <Route 
             path="/game" 
             element={
               <ProtectedRoute>
                 <Game />
+
               </ProtectedRoute>
             } 
           />

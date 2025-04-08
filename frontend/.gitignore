@@ -8,6 +8,10 @@
 # testing
 /coverage
 
+# Fichiers d'environnement
+.env*
+!.env.example
+
 # production
 /build
 
