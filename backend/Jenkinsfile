@@ -49,7 +49,7 @@ pipeline {
             steps {
                 script {
                     echo "🛠️ Lancement de MongoDB + Backend avec docker-compose"
-                    sh 'docker-compose -f docker-compose.yml up -d mongodb backend'
+                    sh 'docker compose -f docker-compose.yml up -d mongodb backend'
                     sh 'sleep 10'
                 }
             }
