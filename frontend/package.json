@@ -25,6 +25,7 @@
     "react-router-dom": "^6.30.0",
     "react-scripts": "^5.0.1",
     "react-sitemap-generator": "^1.1.6",
+    "recharts": "^2.15.2",
     "styled-components": "^6.1.16",
     "tailwind": "^4.0.0",
     "vue": "^3.5.13",
@@ -40,7 +41,6 @@
     "eject": "react-scripts eject",
     "lint": "eslint src",
     "sonar": "sonar-scanner"
-
   },
   "eslintConfig": {
     "extends": [
