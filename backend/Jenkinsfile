@@ -71,7 +71,8 @@ pipeline {
         stage('Build Docker Image') {
             
             steps {
-                sh "docker compose docker-compose.yml up "
+                sh "apt install docker-compose"
+                sh "docker compose -f docker-compose.yml up "
                
             }
         }
