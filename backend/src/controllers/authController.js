@@ -9,7 +9,6 @@ const registerUserController = async (req, res) => {
     try {
       const { userName, email, password, googleId, facebookId, phone, address, userType, answer } = req.body;
   
-      // ✅ Vérification champs requis
       if (!userName || !email || !password) {
         return res.status(400).json({
           success: false,
@@ -23,8 +22,9 @@ const registerUserController = async (req, res) => {
           message: "Password must be at least 8 characters long and include uppercase, lowercase letters and a digit.",
         });
       }
+      const normalizedEmail = email.toLowerCase().trim();
   
-      const existingUser = await userModel.findOne({ email });
+      const existingUser = await userModel.findOne({ email: normalizedEmail });
       if (existingUser) {
         return res.status(409).json({
           success: false,
@@ -37,7 +37,7 @@ const registerUserController = async (req, res) => {
   
       const user = await userModel.create({
         userName,
-        email,
+        email: normalizedEmail,
         password: hashedPassword,
         googleId,
         facebookId,
@@ -75,7 +75,8 @@ const registerUserController = async (req, res) => {
         });
       }
   
-      const user = await userModel.findOne({ email });
+      const normalizedEmail = email.toLowerCase().trim();
+      const user = await userModel.findOne({ email: normalizedEmail });
       if (!user) {
         return res.status(404).json({
           success: false,
@@ -93,6 +94,11 @@ const registerUserController = async (req, res) => {
   
       const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
       user.password = undefined;
+      console.log("✅ Login réussi :", {
+        email: user.email,
+        userId: user._id,
+        token,
+      });
   
       res.status(200).json({
         success: true,

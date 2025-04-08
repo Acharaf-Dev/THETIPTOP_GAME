@@ -185,7 +185,7 @@ const ClientDashboard = () => {
     <DashboardLayout userType="client">
       {/* Page specific content removed, integrated below */}
       <h1 className="text-2xl font-semibold text-gray-900 mb-6">
-        Bienvenue sur votre Espace Client
+        Bienvenue sur votre Espace Profil
       </h1>
 
       {isLoadingProfile && !userData && <p className="text-gray-600">Chargement de vos informations...</p>}
