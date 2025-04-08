@@ -1,3 +1,4 @@
+jest.setTimeout(30000);
 process.env.NODE_ENV = "test";
 
 const request = require("supertest");
@@ -11,15 +12,19 @@ let ticketModel;
 let clientToken;
 
 beforeAll(async () => {
+  // Connecte à la base de données
   await connectDB();
   console.log("🧪 Base de test utilisée :", mongoose.connection.name);
 
+  // Import des modèles après connexion
   userModel = require("../src/models/usersModel");
   ticketModel = require("../src/models/winningTicket");
 
+  // Nettoyage des collections
   await userModel.deleteMany({});
   await ticketModel.deleteMany({});
 
+  // Création d'un ticket et d'un utilisateur
   const normalizedEmail = "gameclient@example.com";
   const rawPassword = "Gamepass123";
   const hashedPassword = await bcrypt.hash(rawPassword, 10);
@@ -44,6 +49,7 @@ beforeAll(async () => {
   const usersInDb = await userModel.find({}, "_id email");
   console.log("🔍 Tous les users en base après inscription :", usersInDb);
 
+  // Test de login pour récupérer un token
   const loginRes = await request(app).post("/api/auth/login").send({
     email: normalizedEmail,
     password: rawPassword,
