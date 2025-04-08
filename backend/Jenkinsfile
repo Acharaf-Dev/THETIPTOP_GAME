@@ -45,11 +45,28 @@ pipeline {
             }
         }
 
+        stage('Install Docker Compose if missing') {
+            steps {
+                script {
+                    sh '''
+                        if ! command -v docker-compose &> /dev/null; then
+                          echo "📥 Installation de docker-compose..."
+                          curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+                          chmod +x /usr/local/bin/docker-compose
+                        else
+                          echo "✅ docker-compose déjà installé"
+                        fi
+                        docker-compose --version
+                    '''
+                }
+            }
+        }
+
         stage('Start Services with Docker Compose') {
             steps {
                 script {
                     echo "🛠️ Lancement de MongoDB + Backend avec docker-compose"
-                    sh 'docker compose -f docker-compose.yml up -d mongodb backend'
+                    sh 'docker-compose -f docker-compose.yml up -d mongodb backend'
                     sh 'sleep 10'
                 }
             }
