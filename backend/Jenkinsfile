@@ -65,7 +65,7 @@ pipeline {
        stage('Start Containers on VPS') {
         steps {
             sshagent(['vps-ssh-key']) {
-                sh """
+                sh '''
                     echo "🔧 Connecting to VPS server..."
                     ssh -o StrictHostKeyChecking=no ${VPS_USER}@${VPS_HOST} 'bash -s' <<'EOF'
                     set -ex
@@ -84,7 +84,7 @@ pipeline {
                         echo "❌ SSH command failed!"
                         exit $SSH_STATUS
                     fi
-                """
+                '''
         }
     }
 }
