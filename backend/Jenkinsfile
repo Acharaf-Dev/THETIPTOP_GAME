@@ -30,7 +30,7 @@ pipeline {
                             env.DOCKER_IMAGE = "thetiptop_game/backend:preprod-${GIT_COMMIT}"
                             break
                         case 'develop':
-                        case 'test':
+                        case 'Test':
                         case 'testunit':
                             echo "Déploiement en Développement (ou branche de test)"
                             env.DOCKER_IMAGE = "thetiptop_game/backend:dev-${GIT_COMMIT}"
