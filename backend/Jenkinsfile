@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent any // Switched to run on Jenkins host with Docker access
 
     environment {
         NODE_ENV = 'test'
@@ -62,25 +62,19 @@ pipeline {
         //     }
         // }
 
-         // Déploiement uniquement pour main
-        stage('Build Docker Image') {
-            
+        stage('Deploy on VPS') {
             steps {
-              
-                sh "docker compose docker-compose.yml up "
-               
+                sshagent(['vps-ssh-key']) {
+                    sh """
+                        ssh ${VPS_USER}@${VPS_HOST} << 'EOF'
+                        cd ${REMOTE_PROJECT_PATH}
+                        docker compose pull
+                        docker compose up -d --force-recreate
+                        EOF
+                    """
+                }
             }
         }
-
-        // stage('Push Docker Image') {
-           
-        //     steps {
-        //         withDockerRegistry([credentialsId: 'docker-hub-credentials', url: '']) {
-        //             sh "docker push ${DOCKER_IMAGE}"
-        //         }
-        //     }
-        // }
-
 
         stage('Run Backend Tests + Coverage') {
             steps {
@@ -94,30 +88,13 @@ pipeline {
             steps {
                 dir('backend') {
                     sh """
-                        ./node_modules/.bin/sonar-scanner \\
-                        -Dsonar.projectKey=thetiptop_game \\
-                        -Dsonar.sources=. \\
-                        -Dsonar.tests=./tests \\
-                        -Dsonar.testExecutionReportPaths=coverage/lcov.info \\
-                        -Dsonar.host.url=${SONARQUBE_URL} \\
+                        ./node_modules/.bin/sonar-scanner \
+                        -Dsonar.projectKey=thetiptop_game \
+                        -Dsonar.sources=. \
+                        -Dsonar.tests=./tests \
+                        -Dsonar.testExecutionReportPaths=coverage/lcov.info \
+                        -Dsonar.host.url=${SONARQUBE_URL} \
                         -Dsonar.login=${SONARQUBE_TOKEN}
-                    """
-                }
-            }
-        }
-       
-        stage('Deploy on VPS') {
-            when {
-                branch 'main'
-            }
-            steps {
-                sshagent(['vps-ssh-key']) {
-                    sh """
-                        ssh ${VPS_USER}@${VPS_HOST} << 'EOF'
-                        cd ${REMOTE_PROJECT_PATH}
-                        docker compose pull
-                        docker compose up -d --force-recreate
-                        EOF
                     """
                 }
             }
@@ -133,251 +110,3 @@ pipeline {
         }
     }
 }
-
-
-//////////////////////////////////////////////option 2
-
-// pipeline {
-//     agent {
-//         docker {
-//             image 'node:18'
-//             args '-u root'
-//         }
-//     }
-
-//     environment {
-//         NODE_ENV = 'test'
-//         SONARQUBE_URL = 'http://sonarqube:9000'
-//         SONARQUBE_TOKEN = credentials('sonarqube-token')
-//         VPS_USER = 'root'
-//         VPS_HOST = '161.97.76.223'
-//         REMOTE_PROJECT_PATH = '/PROJET/THETIPTOP_GAME/backend'
-//         SYSTEM_DEBUG = 'true'
-//     }
-
-//     stages {
-//         stage('Checkout Code') {
-//             steps {
-//                 script {
-//                     checkout([
-//                         $class: 'GitSCM',
-//                         branches: [[name: "*/${env.BRANCH_NAME}"]],
-//                         extensions: [[$class: 'CleanBeforeCheckout']],
-//                         userRemoteConfigs: [[url: 'https://github.com/Acharaf-Dev/THETIPTOP_GAME.git']]
-//                     ])
-
-//                     switch (env.BRANCH_NAME) {
-//                         case 'main':
-//                             echo "🔴 Déploiement en Production"
-//                             env.DOCKER_IMAGE = "thetiptop_game/backend:prod-${GIT_COMMIT}"
-//                             break
-//                         case 'preprod':
-//                             echo "🟡 Déploiement en Préproduction"
-//                             env.DOCKER_IMAGE = "thetiptop_game/backend:preprod-${GIT_COMMIT}"
-//                             break
-//                         case 'develop':
-//                         case 'test':
-//                         case 'testunit':
-//                             echo "🟢 Branche de test/développement"
-//                             env.DOCKER_IMAGE = "thetiptop_game/backend:dev-${GIT_COMMIT}"
-//                             break
-//                         default:
-//                             error "❌ Branche non supportée : ${env.BRANCH_NAME}"
-//                     }
-//                 }
-//             }
-//         }
-
-//         stage('Audit Dependencies') {
-//             steps {
-//                 dir('backend') {
-//                     sh 'npm install --include=dev'
-//                     sh 'npm audit || true'
-//                 }
-//             }
-//         }
-
-//        stage('Run Backend Tests in Docker') {
-//   steps {
-//     echo "🧪 Lancement des tests avec docker-compose.test.yml"
-//     sh 'docker compose -f docker-compose.test.yml up --abort-on-container-exit --exit-code-from backend-test'
-//   }
-// }
-
-//         stage('SonarQube Analysis') {
-//             steps {
-//                 dir('backend') {
-//                     sh """
-//                         ./node_modules/.bin/sonar-scanner \\
-//                         -Dsonar.projectKey=thetiptop_game \\
-//                         -Dsonar.sources=. \\
-//                         -Dsonar.tests=./tests \\
-//                         -Dsonar.testExecutionReportPaths=coverage/lcov.info \\
-//                         -Dsonar.host.url=${SONARQUBE_URL} \\
-//                         -Dsonar.login=${SONARQUBE_TOKEN}
-//                     """
-//                 }
-//             }
-//         }
-
-//         stage('Build Docker Image') {
-//             when {
-//                 branch 'main'
-//             }
-//             steps {
-//                 sh "docker build -t ${DOCKER_IMAGE} ./backend"
-//             }
-//         }
-
-//         stage('Push Docker Image') {
-//             when {
-//                 branch 'main'
-//             }
-//             steps {
-//                 withDockerRegistry([credentialsId: 'docker-hub-credentials', url: '']) {
-//                     sh "docker push ${DOCKER_IMAGE}"
-//                 }
-//             }
-//         }
-
-//         stage('Deploy on VPS') {
-//             when {
-//                 branch 'main'
-//             }
-//             steps {
-//                 sshagent(['vps-ssh-key']) {
-//                     sh """
-//                         ssh ${VPS_USER}@${VPS_HOST} << 'EOF'
-//                         cd ${REMOTE_PROJECT_PATH}
-//                         docker compose pull
-//                         docker compose up -d --force-recreate
-//                         EOF
-//                     """
-//                 }
-//             }
-//         }
-//     }
-
-//     post {
-//         always {
-//             echo '🧹 Nettoyage de l’environnement de test'
-//           sh 'docker compose -f docker-compose.test.yml down -v'
-//         }
-//         success {
-//             echo '✅ Pipeline terminé avec succès.'
-//         }
-//         failure {
-//             echo '❌ Pipeline échoué. Vérifie les erreurs.'
-//         }
-//     }
-// }
-
-//////////////////////////////////////////////option 3
-// pipeline {
-//     agent any
-
-//     environment {
-//         NODE_ENV = 'test'
-//         SONARQUBE_URL = 'http://sonarqube:9000'
-//         SONARQUBE_TOKEN = credentials('sonarqube-token')
-//         VPS_USER = 'root'
-//         VPS_HOST = '161.97.76.223'
-//         REMOTE_PROJECT_PATH = '/PROJET/THETIPTOP_GAME/backend'
-//         SYSTEM_DEBUG = 'true'
-//     }
-
-//     stages {
-//         stage('Checkout Code') {
-//             steps {
-//                 script {
-//                     checkout([
-//                         $class: 'GitSCM',
-//                         branches: [[name: "*/${env.BRANCH_NAME}"]],
-//                         extensions: [[$class: 'CleanBeforeCheckout']],
-//                         userRemoteConfigs: [[url: 'https://github.com/Acharaf-Dev/THETIPTOP_GAME.git']]
-//                     ])
-
-//                     switch (env.BRANCH_NAME) {
-//                         case 'main':
-//                             echo "🔴 Déploiement en Production"
-//                             env.DOCKER_IMAGE = "thetiptop_game/backend:prod-${GIT_COMMIT}"
-//                             break
-//                         case 'preprod':
-//                             echo "🟡 Déploiement en Préproduction"
-//                             env.DOCKER_IMAGE = "thetiptop_game/backend:preprod-${GIT_COMMIT}"
-//                             break
-//                         case 'develop':
-//                         case 'test':
-//                         case 'testunit':
-//                             echo "🟢 Branche de test/développement"
-//                             env.DOCKER_IMAGE = "thetiptop_game/backend:dev-${GIT_COMMIT}"
-//                             break
-//                         default:
-//                             error "❌ Branche non supportée : ${env.BRANCH_NAME}"
-//                     }
-//                 }
-//             }
-//         }
-
-//         stage('Run Backend Tests in Docker') {
-//             steps {
-//                 echo "🧪 Lancement des tests avec docker-compose.test.yml"
-//                 sh 'docker-compose -f docker-compose.test.yml up --abort-on-container-exit --exit-code-from backend-test'
-
-              
-
-//             }
-//         }
-
-//         stage('Build Docker Image') {
-//             when {
-//                 branch 'main'
-//             }
-//             steps {
-//                 sh "docker build -t ${DOCKER_IMAGE} ./backend"
-//             }
-//         }
-
-//         stage('Push Docker Image') {
-//             when {
-//                 branch 'main'
-//             }
-//             steps {
-//                 withDockerRegistry([credentialsId: 'docker-hub-credentials', url: '']) {
-//                     sh "docker push ${DOCKER_IMAGE}"
-//                 }
-//             }
-//         }
-
-//         stage('Deploy on VPS') {
-//             when {
-//                 branch 'main'
-//             }
-//             steps {
-//                 sshagent(['vps-ssh-key']) {
-//                     sh """
-//                         ssh ${VPS_USER}@${VPS_HOST} << 'EOF'
-//                         cd ${REMOTE_PROJECT_PATH}
-//                         docker compose pull
-//                         docker compose up -d --force-recreate
-//                         EOF
-//                     """
-//                 }
-//             }
-//         }
-//     }
-
-//     post {
-//         always {
-//             echo '🧹 Nettoyage de l’environnement de test'
-//             sh 'docker-compose -f docker-compose.test.yml down -v || true'
-
-//         }
-//         success {
-//             echo '✅ Pipeline terminé avec succès.'
-//         }
-//         failure {
-//             echo '❌ Pipeline échoué. Vérifie les erreurs.'
-//         }
-//     }
-// }
