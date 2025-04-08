@@ -1,7 +1,6 @@
 const Gain = require("../models/gainsModel");
 const Ticket = require("../models/winningTicket");
 const User = require("../models/usersModel");
-const axios = require("axios");
 const {
   sendAdminNotification,
   sendPlayerNotification,
