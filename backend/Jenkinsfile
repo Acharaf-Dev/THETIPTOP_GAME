@@ -1,5 +1,10 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'node:18'
+            args '--user root'
+        }
+    }
 
     environment {
         NODE_VERSION = '18'
@@ -45,28 +50,11 @@ pipeline {
             }
         }
 
-        stage('Install Docker Compose if missing') {
+        stage('Start Backend Only') {
             steps {
                 script {
-                    sh '''
-                        if ! command -v docker-compose &> /dev/null; then
-                          echo "📥 Installation de docker-compose..."
-                          curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-                          chmod +x /usr/local/bin/docker-compose
-                        else
-                          echo "✅ docker-compose déjà installé"
-                        fi
-                        docker-compose --version
-                    '''
-                }
-            }
-        }
-
-        stage('Start Services with Docker Compose') {
-            steps {
-                script {
-                    echo "🛠️ Lancement de MongoDB + Backend avec docker-compose"
-                    sh 'docker-compose -f docker-compose.yml up -d mongodb backend'
+                    echo "🚀 Lancement du backend uniquement (MongoDB est sur le VPS)"
+                    sh 'docker compose -f docker-compose.yml up -d backend'
                     sh 'sleep 10'
                 }
             }
@@ -81,6 +69,31 @@ pipeline {
                         } else {
                             sh 'npm install --include=dev'
                         }
+                    }
+                }
+            }
+        }
+
+        stage('Check MongoDB Connection') {
+            steps {
+                dir('backend') {
+                    script {
+                        echo "🔍 Vérification de la connexion à MongoDB..."
+                        sh '''
+                          node -e "
+                            const mongoose = require('mongoose');
+                            const uri = process.env.MONGO_URI || 'mongodb://root:password@tip_top_mongodb:27017/tip_top_game_test?authSource=admin';
+                            mongoose.connect(uri)
+                              .then(() => {
+                                console.log('✅ Connexion MongoDB OK');
+                                process.exit(0);
+                              })
+                              .catch(err => {
+                                console.error('❌ Connexion MongoDB échouée :', err.message);
+                                process.exit(1);
+                              });
+                          "
+                        '''
                     }
                 }
             }
