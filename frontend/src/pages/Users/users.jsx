@@ -28,9 +28,9 @@ import {
 } from "react-icons/fi";
 
 
-const API_URL = process.env.REACT_APP_API_URL || "http://localhost:4000/api"; // Correction ici
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:4000/api";
 
-const AdminDashboard = () => {
+const Users = () => {
   // State variables for data
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -462,10 +462,7 @@ const AdminDashboard = () => {
     const userActivityData = [
       { name: "Jan", value: 28 },
       { name: "Fév", value: 45 },
-      { name: "Mar", value: 32 },
-      { name: "Avr", value: 56 },
-      { name: "Mai", value: 78 },
-      { name: "Juin", value: 63 },
+
     ];
 
     // Only use real ticket data if available
@@ -667,6 +664,8 @@ const AdminDashboard = () => {
                 Composition des Utilisateurs
               </h3>
             </div>
+
+            
             <div className="p-6">
               <div className="space-y-4">
                 {/* Admin users */}
@@ -1142,4 +1141,4 @@ const AdminDashboard = () => {
   );
 };
 
-export default AdminDashboard;
+export default Users;
