@@ -203,12 +203,12 @@ pipeline {
             }
         }
 
-        stage('Run Backend Tests + Coverage (in Docker)') {
-            steps {
-                echo '🧪 Lancement des tests dans un environnement isolé Docker'
-                sh 'docker compose -f docker-compose.test.yml up --abort-on-container-exit --exit-code-from backend-test'
-            }
-        }
+       stage('Run Backend Tests in Docker') {
+  steps {
+    echo "🧪 Lancement des tests avec docker-compose.test.yml"
+    sh 'docker-compose -f docker-compose.test.yml up --abort-on-container-exit --exit-code-from backend-test'
+  }
+}
 
         stage('SonarQube Analysis') {
             steps {
@@ -277,4 +277,3 @@ pipeline {
         }
     }
 }
-    
