@@ -1,11 +1,9 @@
 pipeline {
-    agent {
-       agent any
-    }
+    agent any
 
     environment {
         NODE_VERSION = '18'
-        NODE_ENV = 'production'
+        NODE_ENV = 'test'
         SONARQUBE_URL = 'http://sonarqube:9000'
         SONARQUBE_TOKEN = credentials('sonarqube-token')
         VPS_USER = 'root'
@@ -47,6 +45,16 @@ pipeline {
             }
         }
 
+        stage('Start Services with Docker Compose') {
+            steps {
+                script {
+                    echo "🛠️ Lancement de MongoDB + Backend avec docker-compose"
+                    sh 'docker-compose -f docker-compose.yml up -d mongodb backend'
+                    sh 'sleep 10'
+                }
+            }
+        }
+
         stage('Install Backend Dependencies') {
             steps {
                 dir('backend') {
@@ -65,16 +73,6 @@ pipeline {
             steps {
                 dir('backend') {
                     sh 'npm audit --audit-level=high || true'
-                }
-            }
-        }
-
-        stage('Start Services with Docker Compose') {
-            steps {
-                script {
-                    echo "🛠️ Lancement de MongoDB + Backend avec docker-compose"
-                    sh 'docker-compose -f docker-compose.yml up -d mongodb backend'
-                    sh 'sleep 10'
                 }
             }
         }
