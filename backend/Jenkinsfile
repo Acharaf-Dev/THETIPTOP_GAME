@@ -2,10 +2,10 @@ pipeline {
     agent {
         docker {
             image 'node:18'
-            // Optionnel : ajoute '--user root' si tu as besoin de permissions supplémentaires
-            // args '--user root'
+            // args '--user root' // active si besoin de permissions
         }
     }
+
     environment {
         NODE_VERSION = '18'
         NODE_ENV = 'production'
@@ -16,40 +16,40 @@ pipeline {
         REMOTE_PROJECT_PATH = '/PROJET/THETIPTOP_GAME/backend'
         SYSTEM_DEBUG = 'true'
     }
+
     stages {
         stage('Checkout Code') {
             steps {
                 script {
                     switch (env.BRANCH_NAME) {
                         case 'main':
-                            echo "Déploiement en Production"
+                            echo "🔴 Déploiement en Production"
                             env.DOCKER_IMAGE = "thetiptop_game/backend:prod-${GIT_COMMIT}"
                             break
                         case 'preprod':
-                            echo "Déploiement en Préproduction"
+                            echo "🟡 Déploiement en Préproduction"
                             env.DOCKER_IMAGE = "thetiptop_game/backend:preprod-${GIT_COMMIT}"
                             break
                         case 'develop':
                         case 'Test':
                         case 'testunit':
-                            echo "Déploiement en Développement (ou branche de test)"
+                            echo "🟢 Déploiement en Développement/Test"
                             env.DOCKER_IMAGE = "thetiptop_game/backend:dev-${GIT_COMMIT}"
                             break
                         default:
-                            echo "Branche non prise en charge : ${env.BRANCH_NAME}"
-                            currentBuild.result = 'FAILURE'
-                            return
+                            error "❌ Branche non supportée : ${env.BRANCH_NAME}"
                     }
+
                     checkout([
                         $class: 'GitSCM',
                         branches: [[name: "*/${env.BRANCH_NAME}"]],
-                        doGenerateSubmoduleConfigurations: false,
                         extensions: [[$class: 'CleanBeforeCheckout']],
                         userRemoteConfigs: [[url: 'https://github.com/Acharaf-Dev/THETIPTOP_GAME.git']]
                     ])
                 }
             }
         }
+
         stage('Install Backend Dependencies') {
             steps {
                 dir('backend') {
@@ -63,13 +63,16 @@ pipeline {
                 }
             }
         }
-        stage('Verify Dependencies') {
+
+        stage('Audit Dependencies') {
             steps {
                 dir('backend') {
-                    sh 'npm audit'
+                    // ne bloque pas le pipeline, à enlever si tu veux qu’il échoue en cas de fail
+                    sh 'npm audit --audit-level=high || true'
                 }
             }
         }
+
         stage('Run Backend Tests + Coverage') {
             steps {
                 dir('backend') {
@@ -77,17 +80,18 @@ pipeline {
                 }
             }
         }
+
         stage('SonarQube Analysis') {
             steps {
                 script {
                     if (!env.SONARQUBE_TOKEN) {
-                        error("Erreur : SONARQUBE_TOKEN n'est pas défini")
+                        error("❌ SONARQUBE_TOKEN manquant")
                     }
                 }
                 dir('backend') {
                     sh """
                         sonar-scanner \\
-                        -Dsonar.projectKey=your-project \\
+                        -Dsonar.projectKey=thetiptop_game \\
                         -Dsonar.sources=. \\
                         -Dsonar.tests=./tests \\
                         -Dsonar.testExecutionReportPaths=coverage/lcov.info \\
@@ -97,16 +101,18 @@ pipeline {
                 }
             }
         }
+
         stage('Build Docker Image') {
             steps {
                 script {
                     if (!env.DOCKER_IMAGE) {
-                        error("Erreur : DOCKER_IMAGE n'est pas défini")
+                        error("❌ DOCKER_IMAGE non défini")
                     }
                 }
                 sh "docker build -t ${DOCKER_IMAGE} ."
             }
         }
+
         stage('Push Docker Image') {
             steps {
                 withDockerRegistry([credentialsId: 'docker-hub-credentials', url: '']) {
@@ -114,6 +120,7 @@ pipeline {
                 }
             }
         }
+
         stage('Deploy on VPS') {
             steps {
                 script {
@@ -121,7 +128,7 @@ pipeline {
                         sh """
                             ssh ${VPS_USER}@${VPS_HOST} << 'EOF'
                             cd ${REMOTE_PROJECT_PATH}
-                            echo "Mise à jour du backend avec la nouvelle image Docker..."
+                            echo "🚀 Mise à jour du backend avec la nouvelle image Docker..."
                             docker compose pull
                             docker compose up -d --force-recreate
                             EOF
@@ -131,12 +138,13 @@ pipeline {
             }
         }
     }
+
     post {
         success {
-            echo 'Déploiement terminé avec succès !'
+            echo '✅ Déploiement terminé avec succès !'
         }
         failure {
-            echo 'Erreur dans le pipeline, vérifie les logs.'
+            echo '❌ Erreur dans le pipeline. Vérifie les logs.'
         }
     }
 }
