@@ -23,8 +23,8 @@ const DashboardLayout = ({ userType, children }) => {
             title = 'Espace Administrateur';
             navLinks = [
                 { path: '/admindashboard', icon: <FiHome />, label: 'Tableau de bord' },
-                // { path: '/users', icon: <FiUsers />, label: 'Utilisateurs' }, // Example paths
-                // { path: '/stats', icon: <FiGift />, label: 'Statistiques Jeu' }, // Example paths
+                { path: '/employeedashboard', icon: <FiUsers />, label: 'Utilisateurs' }, // Example paths
+                { path: '/big-game', icon: <FiGift />, label: 'Le Grand Jeu' }, // Example paths
                 { path: '', icon: <FiSettings />, label: 'Paramètres' },
             ];
             break;
