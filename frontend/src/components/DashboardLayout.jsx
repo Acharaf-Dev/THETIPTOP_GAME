@@ -20,7 +20,7 @@ const DashboardLayout = ({ userType, children }) => {
             sidebarTextColor = 'text-blue-100';
             sidebarHoverColor = 'hover:bg-blue-800 hover:text-white';
             activeLinkColor = 'bg-blue-950 text-white';
-            title = 'Admin Panel';
+            title = 'Espace Admin';
             navLinks = [
                 { path: '/admindashboard', icon: <FiHome />, label: 'Tableau de bord' },
                 { path: '/admin/users', icon: <FiUsers />, label: 'Utilisateurs' }, // Example paths
