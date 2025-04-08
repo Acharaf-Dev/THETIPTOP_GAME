@@ -1,149 +1,133 @@
 pipeline {
-    agent {
-        docker {
-            image 'node:18'
-            args '--user root'
+  agent any
+
+  environment {
+    NODE_ENV = 'test'
+    SONARQUBE_URL = 'http://sonarqube:9000'
+    SONARQUBE_TOKEN = credentials('sonarqube-token')
+    VPS_USER = 'root'
+    VPS_HOST = '161.97.76.223'
+    REMOTE_PROJECT_PATH = '/PROJET/THETIPTOP_GAME/backend'
+    SYSTEM_DEBUG = 'true'
+  }
+
+  stages {
+    stage('Checkout Code') {
+      steps {
+        script {
+          switch (env.BRANCH_NAME) {
+            case 'main':
+              echo "🔴 Déploiement en Production"
+              env.DOCKER_IMAGE = "thetiptop_game/backend:prod-${GIT_COMMIT}"
+              break
+            case 'preprod':
+              echo "🟡 Déploiement en Préproduction"
+              env.DOCKER_IMAGE = "thetiptop_game/backend:preprod-${GIT_COMMIT}"
+              break
+            case 'develop':
+            case 'Test':
+            case 'testunit':
+              echo "🟢 Déploiement en Développement/Test"
+              env.DOCKER_IMAGE = "thetiptop_game/backend:dev-${GIT_COMMIT}"
+              break
+            default:
+              error "❌ Branche non supportée : ${env.BRANCH_NAME}"
+          }
+
+          checkout([
+            $class: 'GitSCM',
+            branches: [[name: "*/${env.BRANCH_NAME}"]],
+            extensions: [[$class: 'CleanBeforeCheckout']],
+            userRemoteConfigs: [[url: 'https://github.com/Acharaf-Dev/THETIPTOP_GAME.git']]
+          ])
         }
+      }
     }
 
-    environment {
-        NODE_VERSION = '18'
-        NODE_ENV = 'test'
-        SONARQUBE_URL = 'http://sonarqube:9000'
-        SONARQUBE_TOKEN = credentials('sonarqube-token')
-        VPS_USER = 'root'
-        VPS_HOST = '161.97.76.223'
-        REMOTE_PROJECT_PATH = '/PROJET/THETIPTOP_GAME/backend'
-        SYSTEM_DEBUG = 'true'
+    stage('Start MongoDB + Backend') {
+      steps {
+        script {
+          echo "🛠️ Lancement de MongoDB + Backend"
+          sh 'docker compose -f docker-compose.yml up -d tip_top_mongodb tip_top_backend'
+          sh 'sleep 10' // on attend que Mongo soit prêt
+        }
+      }
     }
 
-    stages {
-        stage('Checkout Code') {
-            steps {
-                script {
-                    switch (env.BRANCH_NAME) {
-                        case 'main':
-                            echo "🔴 Déploiement en Production"
-                            env.DOCKER_IMAGE = "thetiptop_game/backend:prod-${GIT_COMMIT}"
-                            break
-                        case 'preprod':
-                            echo "🟡 Déploiement en Préproduction"
-                            env.DOCKER_IMAGE = "thetiptop_game/backend:preprod-${GIT_COMMIT}"
-                            break
-                        case 'develop':
-                        case 'Test':
-                        case 'testunit':
-                            echo "🟢 Déploiement en Développement/Test"
-                            env.DOCKER_IMAGE = "thetiptop_game/backend:dev-${GIT_COMMIT}"
-                            break
-                        default:
-                            error "❌ Branche non supportée : ${env.BRANCH_NAME}"
-                    }
-
-                    checkout([
-                        $class: 'GitSCM',
-                        branches: [[name: "*/${env.BRANCH_NAME}"]],
-                        extensions: [[$class: 'CleanBeforeCheckout']],
-                        userRemoteConfigs: [[url: 'https://github.com/Acharaf-Dev/THETIPTOP_GAME.git']]
-                    ])
-                }
+    stage('Install Dependencies') {
+      steps {
+        dir('backend') {
+          script {
+            if (fileExists('package-lock.json')) {
+              sh 'npm ci --include=dev'
+            } else {
+              sh 'npm install --include=dev'
             }
+          }
         }
-
-        stage('Install Backend Dependencies') {
-            steps {
-                dir('backend') {
-                    script {
-                        if (fileExists('package-lock.json')) {
-                            sh 'npm ci --include=dev'
-                        } else {
-                            sh 'npm install --include=dev'
-                        }
-                    }
-                }
-            }
-        }
-
-        stage('Audit Dependencies') {
-            steps {
-                dir('backend') {
-                    sh 'npm audit --audit-level=high || true'
-                }
-            }
-        }
-
-        stage('Run Backend Tests + Coverage') {
-            steps {
-                dir('backend') {
-                    sh 'npm test -- --coverage --verbose --runInBand'
-                }
-            }
-        }
-
-        stage('SonarQube Analysis') {
-            steps {
-                script {
-                    if (!env.SONARQUBE_TOKEN) {
-                        error("❌ SONARQUBE_TOKEN manquant")
-                    }
-                }
-                dir('backend') {
-                    sh """
-                        sonar-scanner \\
-                        -Dsonar.projectKey=thetiptop_game \\
-                        -Dsonar.sources=. \\
-                        -Dsonar.tests=./tests \\
-                        -Dsonar.testExecutionReportPaths=coverage/lcov.info \\
-                        -Dsonar.host.url=${SONARQUBE_URL} \\
-                        -Dsonar.login=${SONARQUBE_TOKEN}
-                    """
-                }
-            }
-        }
-
-        stage('Build Docker Image') {
-            steps {
-                script {
-                    if (!env.DOCKER_IMAGE) {
-                        error("❌ DOCKER_IMAGE non défini")
-                    }
-                }
-                sh "docker build -t ${DOCKER_IMAGE} ."
-            }
-        }
-
-        stage('Push Docker Image') {
-            steps {
-                withDockerRegistry([credentialsId: 'docker-hub-credentials', url: '']) {
-                    sh "docker push ${DOCKER_IMAGE}"
-                }
-            }
-        }
-
-        stage('Deploy on VPS') {
-            steps {
-                script {
-                    sshagent(['vps-ssh-key']) {
-                        sh """
-                            ssh ${VPS_USER}@${VPS_HOST} << 'EOF'
-                            cd ${REMOTE_PROJECT_PATH}
-                            echo "🚀 Mise à jour du backend avec la nouvelle image Docker..."
-                            docker-compose pull backend
-                            docker-compose up -d --force-recreate backend
-                            EOF
-                        """
-                    }
-                }
-            }
-        }
+      }
     }
 
-    post {
-        success {
-            echo '✅ Déploiement terminé avec succès !'
+    stage('Run Tests + Coverage') {
+      steps {
+        dir('backend') {
+          sh 'npm test -- --coverage --verbose --runInBand'
         }
-        failure {
-            echo '❌ Erreur dans le pipeline. Vérifie les logs.'
-        }
+      }
     }
+
+    stage('SonarQube Analysis') {
+      steps {
+        dir('backend') {
+          sh """
+            sonar-scanner \\
+              -Dsonar.projectKey=thetiptop_game \\
+              -Dsonar.sources=. \\
+              -Dsonar.tests=./tests \\
+              -Dsonar.testExecutionReportPaths=coverage/lcov.info \\
+              -Dsonar.host.url=${SONARQUBE_URL} \\
+              -Dsonar.login=${SONARQUBE_TOKEN}
+          """
+        }
+      }
+    }
+
+    stage('Build Docker Image') {
+      steps {
+        sh "docker build -t ${DOCKER_IMAGE} ./backend"
+      }
+    }
+
+    stage('Push Docker Image') {
+      steps {
+        withDockerRegistry([credentialsId: 'docker-hub-credentials', url: '']) {
+          sh "docker push ${DOCKER_IMAGE}"
+        }
+      }
+    }
+
+    stage('Deploy on VPS') {
+      steps {
+        sshagent(['vps-ssh-key']) {
+          sh """
+            ssh ${VPS_USER}@${VPS_HOST} << 'EOF'
+            cd ${REMOTE_PROJECT_PATH}
+            echo "🚀 Mise à jour du backend avec la nouvelle image Docker..."
+            docker compose pull
+            docker compose up -d --force-recreate
+            EOF
+          """
+        }
+      }
+    }
+  }
+
+  post {
+    success {
+      echo '✅ Déploiement terminé avec succès !'
+    }
+    failure {
+      echo '❌ Erreur dans le pipeline. Vérifie les logs.'
+    }
+  }
 }
