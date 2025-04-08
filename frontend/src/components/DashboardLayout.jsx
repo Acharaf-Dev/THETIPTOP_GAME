@@ -11,7 +11,7 @@ const DashboardLayout = ({ userType, children }) => {
     let sidebarTextColor = 'text-gray-300';
     let sidebarHoverColor = 'hover:bg-gray-700 hover:text-white';
     let activeLinkColor = 'bg-gray-900 text-white';
-    let title = 'Dashboard';
+    let title = 'Tableau de bord';
     let navLinks = [];
 
     switch (userType) {
@@ -20,12 +20,12 @@ const DashboardLayout = ({ userType, children }) => {
             sidebarTextColor = 'text-blue-100';
             sidebarHoverColor = 'hover:bg-blue-800 hover:text-white';
             activeLinkColor = 'bg-blue-950 text-white';
-            title = 'Espace Admin';
+            title = 'Espace Administrateur';
             navLinks = [
                 { path: '/admindashboard', icon: <FiHome />, label: 'Tableau de bord' },
-                { path: '/admin/users', icon: <FiUsers />, label: 'Utilisateurs' }, // Example paths
-                { path: '/admin/stats', icon: <FiGift />, label: 'Statistiques Jeu' }, // Example paths
-                { path: '/admin/settings', icon: <FiSettings />, label: 'Paramètres' },
+                // { path: '/users', icon: <FiUsers />, label: 'Utilisateurs' }, // Example paths
+                // { path: '/stats', icon: <FiGift />, label: 'Statistiques Jeu' }, // Example paths
+                { path: '', icon: <FiSettings />, label: 'Paramètres' },
             ];
             break;
         case 'client':
@@ -33,7 +33,7 @@ const DashboardLayout = ({ userType, children }) => {
             sidebarTextColor = 'text-teal-100';
             sidebarHoverColor = 'hover:bg-teal-700 hover:text-white';
             activeLinkColor = 'bg-teal-900 text-white';
-            title = 'Espace Client';
+            title = 'Espace Utilisateur';
             navLinks = [
                 { path: '/clientdashboard', icon: <FiHome />, label: 'Tableau de bord' },
                 { path: '/game', icon: <FiGift />, label: 'Jouer au jeu' },
@@ -47,8 +47,8 @@ const DashboardLayout = ({ userType, children }) => {
             title = 'Espace Employé';
             navLinks = [
                 { path: '/employeedashboard', icon: <FiHome />, label: 'Tableau de bord' },
-                { path: '/employee/tasks', icon: <FiTrello />, label: 'Mes Tâches' }, // Example paths
-                { path: '/employee/projects', icon: <FiBell />, label: 'Notifications' }, // Example paths
+                // { path: '/employee/tasks', icon: <FiTrello />, label: 'Mes Tâches' }, // Example paths
+                // { path: '/employee/projects', icon: <FiBell />, label: 'Notifications' }, // Example paths
             ];
             break;
         default:
