@@ -61,7 +61,7 @@ const AdminDashboard = () => {
       try {
         // First, check if user has admin permissions
         const userProfileResponse = await axios.get(
-          '${process.env.REACT_APP_API_URL}/user/userprofile',
+          "http://localhost:4000/api/user/userprofile",
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -84,12 +84,12 @@ const AdminDashboard = () => {
         // Only fetch data if user is an admin
         const [usersRes, clientsRes, employeesRes, gameStatsRes] =
           await Promise.all([
-            axios.get("${process.env.REACT_APP_API_URL}/user/allusers", { headers }),
-            axios.get("${process.env.REACT_APP_API_URL}/user/allclients", { headers }),
-            axios.get("${process.env.REACT_APP_API_URL}/user/allemployers", {
+            axios.get("http://localhost:4000/api/user/allusers", { headers }),
+            axios.get("http://localhost:4000/api/user/allclients", { headers }),
+            axios.get("http://localhost:4000/api/user/allemployers", {
               headers,
             }),
-            axios.get("${process.env.REACT_APP_API_URL}/user/usersgains", { headers }),
+            axios.get("http://localhost:4000/api/user/usersgains", { headers }),
           ]);
 
         // Set state variables with fetched data
@@ -127,7 +127,7 @@ const AdminDashboard = () => {
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        `${process.env.REACT_APP_API_URL}/user/logoutuser/${userId}`,
+        `http://localhost:4000/api/user/logoutuser/${userId}`,
         {},
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -157,7 +157,7 @@ const AdminDashboard = () => {
       const newAccess = !currentAccess;
 
       await axios.put(
-        `${process.env.REACT_APP_API_URL}/user/updateuser/${userId}`,
+        `http://localhost:4000/api/user/updateuser/${userId}`,
         { gameAccess: newAccess },
         {
           headers: { Authorization: `Bearer ${token}` },
