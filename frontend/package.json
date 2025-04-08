@@ -14,6 +14,7 @@
     "@testing-library/jest-dom": "^5.17.0",
     "axios": "^1.8.4",
     "cross-env": "^7.0.3",
+    "file-saver": "^2.0.5",
     "mock-css-modules": "^2.0.0",
     "mui": "^0.0.1",
     "react": "^18.3.1",
