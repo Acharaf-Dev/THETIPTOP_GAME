@@ -44,23 +44,23 @@ pipeline {
             }
         }
 
-        stage('Install Dependencies') {
-            steps {
-                dir('backend') {
-                    script {
-                        sh 'npm install --include=dev'
-                    }
-                }
-            }
-        }
+        // stage('Install Dependencies') {
+        //     steps {
+        //         dir('backend') {
+        //             script {
+        //                 sh 'npm install --include=dev'
+        //             }
+        //         }
+        //     }
+        // }
 
-        stage('Audit Dependencies') {
-            steps {
-                dir('backend') {
-                    sh 'npm audit || true'
-                }
-            }
-        }
+        // stage('Audit Dependencies') {
+        //     steps {
+        //         dir('backend') {
+        //             sh 'npm audit || true'
+        //         }
+        //     }
+        // }
 
          // Déploiement uniquement pour main
         stage('Build Docker Image') {
