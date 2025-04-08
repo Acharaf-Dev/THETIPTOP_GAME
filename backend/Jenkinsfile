@@ -7,7 +7,7 @@ pipeline {
         SONARQUBE_TOKEN = credentials('sonarqube-token')
         VPS_USER = 'root'
         VPS_HOST = '161.97.76.223'
-        REMOTE_PROJECT_PATH = '/PROJET/THETIPTOP_GAME/backend'
+        REMOTE_PROJECT_PATH = '/PROJET/THETIPTOP_GAME'
         SYSTEM_DEBUG = 'true'
     }
 
@@ -66,14 +66,14 @@ pipeline {
             steps {
                 sshagent(['vps-ssh-key']) {
                     sh """
-                        echo \"Connecting to VPS server\"
+                        echo "Connecting to VPS server"
                         ssh -o StrictHostKeyChecking=no ${VPS_USER}@${VPS_HOST} << 'EOF'
                         set -ex
-                        echo \"Navigating to project path\"
+                        echo "Navigating to project path"
                         cd ${REMOTE_PROJECT_PATH}
-                        echo \"Pulling Docker images\"
+                        echo "Pulling Docker images"
                         docker compose pull
-                        echo \"Starting containers\"
+                        echo "Starting containers"
                         docker compose up -d --force-recreate
                         EOF
                     """
