@@ -206,7 +206,7 @@ pipeline {
        stage('Run Backend Tests in Docker') {
   steps {
     echo "🧪 Lancement des tests avec docker-compose.test.yml"
-    sh 'docker-compose -f docker-compose.test.yml up --abort-on-container-exit --exit-code-from backend-test'
+    sh 'docker compose -f docker-compose.test.yml up --abort-on-container-exit --exit-code-from backend-test'
   }
 }
 
@@ -267,7 +267,7 @@ pipeline {
     post {
         always {
             echo '🧹 Nettoyage de l’environnement de test'
-            sh 'docker compose -f docker-compose.test.yml down -v || true'
+          sh 'docker compose -f docker-compose.test.yml down -v'
         }
         success {
             echo '✅ Pipeline terminé avec succès.'
