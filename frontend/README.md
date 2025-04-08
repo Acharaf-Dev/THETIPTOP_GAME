@@ -119,8 +119,8 @@ La méthode standard pour gérer ces différences d'URL est d'utiliser des varia
 En suivant ces étapes, votre application devrait utiliser les bonnes URL en production, résolvant ainsi les problèmes de communication entre le frontend et le backend.
 
 **Liens d'accès**
-## https://www.dsp5-archi-f24a-15m-g8.com/
-## https://www.jenkins.dsp5-archi-f24a-15m-g8.com/
-## https://www.grafana.dsp5-archi-f24a-15m-g8.com/
-## https://www.prometheus.dsp5-archi-f24a-15m-g8.com/
-## https://www.sonarqube.dsp5-archi-f24a-15m-g8.com/
+## https://www.dsp5-archi-f24a-15m-g8.fr/
+## https://www.jenkins.dsp5-archi-f24a-15m-g8.fr/
+## https://www.grafana.dsp5-archi-f24a-15m-g8.fr/
+## https://www.prometheus.dsp5-archi-f24a-15m-g8.fr/
+## https://www.sonarqube.dsp5-archi-f24a-15m-g8.fr/
