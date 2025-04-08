@@ -221,4 +221,4 @@ volumes:
 
 networks:
   web:
-    driver: bridge
+    driver: thetiptop_game_web
