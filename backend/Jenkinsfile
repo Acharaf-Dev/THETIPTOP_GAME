@@ -1,9 +1,6 @@
 pipeline {
     agent {
-        docker {
-            image 'node:18'
-            // args '--user root' // Active si besoin de permissions root
-        }
+       agent any
     }
 
     environment {
