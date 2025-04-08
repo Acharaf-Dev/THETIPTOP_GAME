@@ -50,16 +50,6 @@ pipeline {
             }
         }
 
-        stage('Start Backend Only') {
-            steps {
-                script {
-                    echo "🚀 Lancement du backend uniquement (MongoDB est sur le VPS)"
-                    sh 'docker compose -f docker-compose.yml up -d backend'
-                    sh 'sleep 10'
-                }
-            }
-        }
-
         stage('Install Backend Dependencies') {
             steps {
                 dir('backend') {
@@ -69,31 +59,6 @@ pipeline {
                         } else {
                             sh 'npm install --include=dev'
                         }
-                    }
-                }
-            }
-        }
-
-        stage('Check MongoDB Connection') {
-            steps {
-                dir('backend') {
-                    script {
-                        echo "🔍 Vérification de la connexion à MongoDB..."
-                        sh '''
-                          node -e "
-                            const mongoose = require('mongoose');
-                            const uri = process.env.MONGO_URI || 'mongodb://root:password@tip_top_mongodb:27017/tip_top_game_test?authSource=admin';
-                            mongoose.connect(uri)
-                              .then(() => {
-                                console.log('✅ Connexion MongoDB OK');
-                                process.exit(0);
-                              })
-                              .catch(err => {
-                                console.error('❌ Connexion MongoDB échouée :', err.message);
-                                process.exit(1);
-                              });
-                          "
-                        '''
                     }
                 }
             }
@@ -163,8 +128,8 @@ pipeline {
                             ssh ${VPS_USER}@${VPS_HOST} << 'EOF'
                             cd ${REMOTE_PROJECT_PATH}
                             echo "🚀 Mise à jour du backend avec la nouvelle image Docker..."
-                            docker compose pull
-                            docker compose up -d --force-recreate
+                            docker-compose pull backend
+                            docker-compose up -d --force-recreate backend
                             EOF
                         """
                     }
