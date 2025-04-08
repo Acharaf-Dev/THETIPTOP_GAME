@@ -2,7 +2,7 @@ pipeline {
     agent {
         docker {
             image 'node:18'
-            // args '--user root' // active si besoin
+            // args '--user root' // Active si besoin de permissions root
         }
     }
 
@@ -75,9 +75,9 @@ pipeline {
         stage('Start Services with Docker Compose') {
             steps {
                 script {
-                    echo "🛠️ Démarrage de MongoDB + Backend..."
-                    sh 'docker compose -f docker-compose.yml up -d mongodb backend'
-                    sh 'sleep 10' // attendre que Mongo soit prêt
+                    echo "🛠️ Lancement de MongoDB + Backend avec docker-compose"
+                    sh 'docker-compose -f docker-compose.yml up -d mongodb backend'
+                    sh 'sleep 10'
                 }
             }
         }
