@@ -1,15 +1,16 @@
-// pipeline {
-//     agent any
+pipeline {
+    agent any
 
-//     environment {
-//         NODE_ENV = 'test'
-//         SONARQUBE_URL = 'http://sonarqube:9000'
-//         SONARQUBE_TOKEN = credentials('sonarqube-token')
-//         VPS_USER = 'root'
-//         VPS_HOST = '161.97.76.223'
-//         REMOTE_PROJECT_PATH = '/PROJET/THETIPTOP_GAME'
-//         SYSTEM_DEBUG = 'true'
-//     }
+    environment {
+        NODE_ENV = 'test'
+        SONARQUBE_URL = 'http://sonarqube:9000'
+        SONARQUBE_TOKEN = credentials('sonarqube-token')
+        VPS_USER = 'root'
+        VPS_HOST = '161.97.76.223'
+        REMOTE_PROJECT_PATH = '/PROJET/THETIPTOP_GAME'
+        SYSTEM_DEBUG = 'true'
+    }
+
 
 //     stages {
 //         stage('Checkout Code') {
@@ -150,4 +151,5 @@ stage('Test SSH Connection to VPS') {
             """
         }
     }
+}
 }
