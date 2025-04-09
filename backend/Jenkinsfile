@@ -1,3 +1,4 @@
+try this
 pipeline {
     agent any
 
@@ -63,34 +64,19 @@ pipeline {
         //     }
         // }
 
-    stage('Check SSH Key Availability') {
-    steps {
-        sshagent(['vps-ssh-key']) {
+
+        stage('Start Containers on VPS') {
+        steps {
+        withCredentials([sshUserPrivateKey(credentialsId: 'vps-ssh-key', keyFileVariable: 'SSH_KEY')]) {
             sh """
-                echo "🔐 Checking loaded SSH keys..."
-                ssh-add -l || echo "❌ No SSH keys loaded in agent"
+                chmod 600 \$SSH_KEY
+                echo "Using private key at: \$SSH_KEY"
+                echo "Connecting to ${VPS_USER}@${VPS_HOST}..."
+                ssh -i \$SSH_KEY -o StrictHostKeyChecking=no ${VPS_USER}@${VPS_HOST} echo "✅ SSH worked!"
             """
         }
     }
 }
-
-        stage('Start Containers on VPS') {
-            steps {
-                sshagent(['vps-ssh-key']) {
-                    sh """
-                        echo "🔧 Testing SSH connectivity..."
-                        echo "Running: ssh -v -o StrictHostKeyChecking=no ${VPS_USER}@${VPS_HOST} echo 'Hello from VPS'"
-                        ssh -v -o StrictHostKeyChecking=no ${VPS_USER}@${VPS_HOST} echo "✅ SSH SUCCESSFUL"
-                        SSH_STATUS=\$?
-                        echo "SSH exit status: \$SSH_STATUS"
-                        if [ \$SSH_STATUS -ne 0 ]; then
-                            echo "❌ SSH failed"
-                            exit \$SSH_STATUS
-                        fi
-                    """
-                }
-            }
-        }
 
         stage('Run Backend Tests + Coverage') {
             steps {
