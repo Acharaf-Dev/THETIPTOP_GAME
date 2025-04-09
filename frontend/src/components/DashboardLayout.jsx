@@ -60,7 +60,7 @@ const DashboardLayout = ({ userType, children }) => {
         localStorage.removeItem('token'); // Clear token
         // TODO: Potentially call a logout API endpoint
         navigate('/login');
-        alert('Déconnexion réussie.');
+        // alert('Déconnexion réussie.');
     };
 
     // Helper to check if a link is active (can be improved with useLocation)
