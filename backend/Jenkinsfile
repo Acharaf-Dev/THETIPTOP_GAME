@@ -59,23 +59,25 @@ pipeline {
     }
 stage('SonarQube Analysis') {
   steps {
-    sshagent(['vps-ssh-key']) {
-      sh """
-        ssh -o StrictHostKeyChecking=no ${VPS_USER}@${VPS_HOST} << 'EOF'
-          cd ${REMOTE_PROJECT_PATH}/backend
-          sonar-scanner \\
-            -Dsonar.projectKey=thetiptop_game \\
-            -Dsonar.sources=. \\
-            -Dsonar.tests=./tests \\
-            -Dsonar.testExecutionReportPaths=coverage/lcov.info \\
-            -Dsonar.host.url=${SONARQUBE_URL} \\
-            -Dsonar.login=${SONARQUBE_TOKEN}
-            EOF
-          """
-        }
+    withCredentials([string(credentialsId: 'sonarqube-token', variable: 'SONAR_TOKEN')]) {
+      sshagent(['vps-ssh-key']) {
+        sh """
+          ssh -o StrictHostKeyChecking=no ${VPS_USER}@${VPS_HOST} << 'EOF'
+            cd ${REMOTE_PROJECT_PATH}/backend
+            export SONAR_SCANNER_OPTS="-server"
+            /opt/sonar-scanner/bin/sonar-scanner \\
+              -Dsonar.projectKey=thetiptop_game \\
+              -Dsonar.sources=. \\
+              -Dsonar.tests=./tests \\
+              -Dsonar.testExecutionReportPaths=coverage/lcov.info \\
+              -Dsonar.host.url=http://sonarqube:9000 \\
+              -Dsonar.login=$SONAR_TOKEN
+          EOF
+        """
       }
     }
-
+  }
+}
     // stage('Start or Restart Containers on VPS') {
     //   steps {
     //     sshagent(['vps-ssh-key']) {
