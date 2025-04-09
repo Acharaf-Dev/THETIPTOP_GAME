@@ -11,7 +11,7 @@ COPY package*.json ./
 # Installer les dépendances
 RUN npm install
 
-RUN npm install --save-dev jest-junit
+
 # Installer Nodemon globalement pour le hot reload
 RUN npm install -g nodemon
 
