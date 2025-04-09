@@ -3,8 +3,7 @@ pipeline {
 
   environment {
     NODE_ENV = 'test'
-    SONARQUBE_URL = 'http://sonarqube:9000'
-    SONARQUBE_TOKEN = credentials('sonarqube-token')
+    SONARQUBE_URL = 'https://www.sonarqube.dsp5-archi-f24a-15m-g8.fr'
     VPS_USER = 'root'
     VPS_HOST = '161.97.76.223'
     REMOTE_PROJECT_PATH = '/root/PROJET/THETIPTOP_GAME'
@@ -49,7 +48,7 @@ pipeline {
         sshagent(['vps-ssh-key']) {
           sh """
             echo "🚀 Connexion SSH à ${VPS_HOST} pour exécuter les tests..."
-            ssh -o StrictHostKeyChecking=no ${VPS_USER}@${VPS_HOST} << 'EOF'
+            ssh -o StrictHostKeyChecking=no ${VPS_USER}@${VPS_HOST} << EOF
               cd ${REMOTE_PROJECT_PATH}
               docker compose exec -T backend npm test
             EOF
@@ -57,26 +56,23 @@ pipeline {
         }
       }
     }
-stage('SonarQube Analysis') {
-  steps {
-    withCredentials([string(credentialsId: 'sonarqube-token', variable: 'SONAR_TOKEN')]) {
-      sshagent(['vps-ssh-key']) {
-        sh """
-          echo "🧼 Lancement de l'analyse SonarQube avec fichier sonar-project.properties..."
 
-          ssh -o StrictHostKeyChecking=no ${VPS_USER}@${VPS_HOST} << 'EOF'
-            cd ${REMOTE_PROJECT_PATH}
-            git pull origin ${BRANCH_NAME}  # <-- pour être sûr d'avoir le fichier à jour
-
-            cd backend
-
-            /opt/sonar-scanner/bin/sonar-scanner -Dsonar.token=\$SONAR_TOKEN
-          EOF
-        """
+    stage('SonarQube Analysis') {
+      steps {
+        withCredentials([string(credentialsId: 'sonarqube-token', variable: 'SONAR_TOKEN')]) {
+          sshagent(['vps-ssh-key']) {
+            sh """
+              echo "🧼 Lancement de l'analyse SonarQube avec fichier sonar-project.properties..."
+              ssh -o StrictHostKeyChecking=no ${VPS_USER}@${VPS_HOST} << EOF
+                cd ${REMOTE_PROJECT_PATH}/backend
+                /opt/sonar-scanner/bin/sonar-scanner -Dsonar.token=${SONAR_TOKEN}
+              EOF
+            """
+          }
+        }
       }
     }
-  }
-}
+
     stage('Deploy on VPS') {
       when {
         branch 'main'
@@ -84,7 +80,7 @@ stage('SonarQube Analysis') {
       steps {
         sshagent(['vps-ssh-key']) {
           sh """
-            ssh -o StrictHostKeyChecking=no ${VPS_USER}@${VPS_HOST} << 'EOF'
+            ssh -o StrictHostKeyChecking=no ${VPS_USER}@${VPS_HOST} << EOF
               cd ${REMOTE_PROJECT_PATH}
               docker compose pull
               docker compose up -d --force-recreate
