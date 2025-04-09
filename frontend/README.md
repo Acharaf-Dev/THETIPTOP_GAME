@@ -1,10 +1,3 @@
-<<<<<<< HEAD
-https://www.dsp5-archi-f24a-15m-g2.com/
-https://www.jenkins.dsp5-archi-f24a-15m-g2.com/
-https://www.grafana.dsp5-archi-f24a-15m-g2.com/
-https://www.prometheus.dsp5-archi-f24a-15m-g2.com/
-https://www.sonarqube.dsp5-archi-f24a-15m-g2.com/
-=======
 # Guide de Mise en Production - Thé Tip Top Game
 
 Ce document explique les étapes nécessaires pour configurer et déployer l'application Thé Tip Top Game en environnement de production, en se concentrant sur la gestion des URLs d'API et la configuration Docker.
@@ -131,4 +124,3 @@ En suivant ces étapes, votre application devrait utiliser les bonnes URL en pro
 ## https://www.grafana.dsp5-archi-f24a-15m-g8.fr/
 ## https://www.prometheus.dsp5-archi-f24a-15m-g8.fr/
 ## https://www.sonarqube.dsp5-archi-f24a-15m-g8.fr/
->>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345

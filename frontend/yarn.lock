@@ -2,11 +2,7 @@
 # yarn lockfile v1
 
 
-<<<<<<< HEAD
-"@adobe/css-tools@^4.4.0":
-=======
 "@adobe/css-tools@^4.0.1":
->>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345
   version "4.4.2"
   resolved "https://registry.npmjs.org/@adobe/css-tools/-/css-tools-4.4.2.tgz"
   integrity sha512-baYZExFpsdkBNuvGKTKWCwKH57HRZLVtycZS05WTQNVOiXVSeAki3nU35zlRbToeMW8aHlJfyS+1C4BOv27q0A==
@@ -1080,11 +1076,7 @@
     pirates "^4.0.6"
     source-map-support "^0.5.16"
 
-<<<<<<< HEAD
-"@babel/runtime@^7.11.2", "@babel/runtime@^7.12.5", "@babel/runtime@^7.16.3", "@babel/runtime@^7.18.3", "@babel/runtime@^7.26.0", "@babel/runtime@^7.5.5", "@babel/runtime@^7.8.4", "@babel/runtime@^7.8.7":
-=======
 "@babel/runtime@^7.11.2", "@babel/runtime@^7.12.5", "@babel/runtime@^7.16.3", "@babel/runtime@^7.18.3", "@babel/runtime@^7.26.0", "@babel/runtime@^7.5.5", "@babel/runtime@^7.8.4", "@babel/runtime@^7.8.7", "@babel/runtime@^7.9.2":
->>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345
   version "7.27.0"
   resolved "https://registry.npmjs.org/@babel/runtime/-/runtime-7.27.0.tgz"
   integrity sha512-VtPOkrdPHZsKc/clNqyi9WUA8TINkZ4cGk63UUE3u4pmB2k+ZMQRDuIOagv8UVd6j7k0T3+RRIb7beKTebNbcw==
@@ -1462,14 +1454,11 @@
   resolved "https://registry.npmjs.org/@greatsumini/react-facebook-login/-/react-facebook-login-3.4.0.tgz"
   integrity sha512-NJYqTOcDghZ6zLppC+LJVLep7Xi3gfx9ssQFRd7EhDTU07lC15SG/eZ3ZyvUPsuPBkbhVl6E/Py0w4M5m7Lh9Q==
 
-<<<<<<< HEAD
-=======
 "@heroicons/react@^1.0.6":
   version "1.0.6"
   resolved "https://registry.npmjs.org/@heroicons/react/-/react-1.0.6.tgz"
   integrity sha512-JJCXydOFWMDpCP4q13iEplA503MQO3xLoZiKum+955ZCtHINWnx26CUxVxxFQu/uLb4LW3ge15ZpzIkXKkJ8oQ==
 
->>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345
 "@humanwhocodes/config-array@^0.13.0":
   version "0.13.0"
   resolved "https://registry.npmjs.org/@humanwhocodes/config-array/-/config-array-0.13.0.tgz"
@@ -2358,19 +2347,6 @@
     lz-string "^1.5.0"
     pretty-format "^27.0.2"
 
-<<<<<<< HEAD
-"@testing-library/jest-dom@^6.6.3":
-  version "6.6.3"
-  resolved "https://registry.npmjs.org/@testing-library/jest-dom/-/jest-dom-6.6.3.tgz"
-  integrity sha512-IteBhl4XqYNkM54f4ejhLRJiZNqcSCoXUOG2CPK7qbD322KjQozM4kHQOfkG2oln9b9HTYqs+Sae8vBATubxxA==
-  dependencies:
-    "@adobe/css-tools" "^4.4.0"
-    aria-query "^5.0.0"
-    chalk "^3.0.0"
-    css.escape "^1.5.1"
-    dom-accessibility-api "^0.6.3"
-    lodash "^4.17.21"
-=======
 "@testing-library/jest-dom@^5.17.0":
   version "5.17.0"
   resolved "https://registry.npmjs.org/@testing-library/jest-dom/-/jest-dom-5.17.0.tgz"
@@ -2384,7 +2360,6 @@
     css.escape "^1.5.1"
     dom-accessibility-api "^0.5.6"
     lodash "^4.17.15"
->>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345
     redent "^3.0.0"
 
 "@testing-library/react@^16.2.0":
@@ -2477,8 +2452,6 @@
   dependencies:
     "@types/node" "*"
 
-<<<<<<< HEAD
-=======
 "@types/d3-array@^3.0.3":
   version "3.2.1"
   resolved "https://registry.npmjs.org/@types/d3-array/-/d3-array-3.2.1.tgz"
@@ -2530,7 +2503,6 @@
   resolved "https://registry.npmjs.org/@types/d3-timer/-/d3-timer-3.0.2.tgz"
   integrity sha512-Ps3T8E8dZDam6fUyNiMkekK3XUsaUEik+idO9/YjPtfj2qruF8tFBXS7XhtE4iIXBLxhmLjP3SXpLhVf21I9Lw==
 
->>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345
 "@types/eslint-scope@^3.7.7":
   version "3.7.7"
   resolved "https://registry.npmjs.org/@types/eslint-scope/-/eslint-scope-3.7.7.tgz"
@@ -2630,8 +2602,6 @@
   dependencies:
     "@types/istanbul-lib-report" "*"
 
-<<<<<<< HEAD
-=======
 "@types/jest@*":
   version "29.5.14"
   resolved "https://registry.npmjs.org/@types/jest/-/jest-29.5.14.tgz"
@@ -2640,7 +2610,6 @@
     expect "^29.0.0"
     pretty-format "^29.0.0"
 
->>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345
 "@types/jsdom@^20.0.0":
   version "20.0.1"
   resolved "https://registry.npmjs.org/@types/jsdom/-/jsdom-20.0.1.tgz"
@@ -2780,8 +2749,6 @@
   resolved "https://registry.npmjs.org/@types/stylis/-/stylis-4.2.5.tgz"
   integrity sha512-1Xve+NMN7FWjY14vLoY5tL3BVEQ/n42YLwaqJIPYhotZ9uBHt87VceMwWQpzmdEt2TNXIorIFG+YeCUUW7RInw==
 
-<<<<<<< HEAD
-=======
 "@types/testing-library__jest-dom@^5.9.1":
   version "5.14.9"
   resolved "https://registry.npmjs.org/@types/testing-library__jest-dom/-/testing-library__jest-dom-5.14.9.tgz"
@@ -2789,7 +2756,6 @@
   dependencies:
     "@types/jest" "*"
 
->>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345
 "@types/tough-cookie@*":
   version "4.0.5"
   resolved "https://registry.npmjs.org/@types/tough-cookie/-/tough-cookie-4.0.5.tgz"
@@ -4307,11 +4273,7 @@ clone-deep@^4.0.1:
     kind-of "^6.0.2"
     shallow-clone "^3.0.0"
 
-<<<<<<< HEAD
-clsx@^2.1.1:
-=======
 clsx@^2.0.0, clsx@^2.1.1:
->>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345
   version "2.1.1"
   resolved "https://registry.npmjs.org/clsx/-/clsx-2.1.1.tgz"
   integrity sha512-eYm0QWBtUrBWZWG0d386OGAw16Z995PiOVo2B7bjWSbHedGl5e0ZWaq65kOGgUSNesEIDkB9ISbTg/JK9dhCZA==
@@ -4860,8 +4822,6 @@ csstype@^3.0.2, csstype@^3.1.3, csstype@3.1.3:
   resolved "https://registry.npmjs.org/csstype/-/csstype-3.1.3.tgz"
   integrity sha512-M1uQkMl8rQK/szD0LNhtqxIPLpimGm8sOBwU7lLnCpSbTyY3yeU1Vc7l4KT5zT4s/yOxHH5O7tIuuLOCnLADRw==
 
-<<<<<<< HEAD
-=======
 d3-array@^3.1.6, "d3-array@2 - 3", "d3-array@2.10.0 - 3":
   version "3.2.4"
   resolved "https://registry.npmjs.org/d3-array/-/d3-array-3.2.4.tgz"
@@ -4933,7 +4893,6 @@ d3-timer@^3.0.1:
   resolved "https://registry.npmjs.org/d3-timer/-/d3-timer-3.0.1.tgz"
   integrity sha512-ndfJ/JxxMd3nw31uyKoY2naivF+r29V+Lc0svZxe1JvvIRmi8hUsrMvdOwgS1o6uBHmiz91geQ0ylPP0aj1VUA==
 
->>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345
 damerau-levenshtein@^1.0.8:
   version "1.0.8"
   resolved "https://registry.npmjs.org/damerau-levenshtein/-/damerau-levenshtein-1.0.8.tgz"
@@ -5029,14 +4988,11 @@ debug@2.6.9:
   dependencies:
     ms "2.0.0"
 
-<<<<<<< HEAD
-=======
 decimal.js-light@^2.4.1:
   version "2.5.1"
   resolved "https://registry.npmjs.org/decimal.js-light/-/decimal.js-light-2.5.1.tgz"
   integrity sha512-qIMFpTMZmny+MMIitAB6D7iVPEorVw6YQRWkvarTkT4tBeSLLiHzcwj6q0MmYSFCiVpiqPJTJEYIrpcPzVEIvg==
 
->>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345
 decimal.js@^10.2.1, decimal.js@^10.4.2, decimal.js@^10.4.3:
   version "10.5.0"
   resolved "https://registry.npmjs.org/decimal.js/-/decimal.js-10.5.0.tgz"
@@ -5193,23 +5149,11 @@ doctrine@^3.0.0:
   dependencies:
     esutils "^2.0.2"
 
-<<<<<<< HEAD
-dom-accessibility-api@^0.5.9:
-=======
 dom-accessibility-api@^0.5.6, dom-accessibility-api@^0.5.9:
->>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345
   version "0.5.16"
   resolved "https://registry.npmjs.org/dom-accessibility-api/-/dom-accessibility-api-0.5.16.tgz"
   integrity sha512-X7BJ2yElsnOJ30pZF4uIIDfBEVgF4XEBxL9Bxhy6dnrm5hkzqmsWHGTiHqRiITNhMyFLyAiWndIJP7Z1NTteDg==
 
-<<<<<<< HEAD
-dom-accessibility-api@^0.6.3:
-  version "0.6.3"
-  resolved "https://registry.npmjs.org/dom-accessibility-api/-/dom-accessibility-api-0.6.3.tgz"
-  integrity sha512-7ZgogeTnjuHbo+ct10G9Ffp0mif17idi0IyWNVA/wcwcm7NPOD/WEHVP3n7n3MhXqxoIYm8d6MuZohYWIZ4T3w==
-
-=======
->>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345
 dom-converter@^0.2.0:
   version "0.2.0"
   resolved "https://registry.npmjs.org/dom-converter/-/dom-converter-0.2.0.tgz"
@@ -5753,17 +5697,10 @@ eslint-plugin-react-hooks@^4.3.0:
   resolved "https://registry.npmjs.org/eslint-plugin-react-hooks/-/eslint-plugin-react-hooks-4.6.2.tgz"
   integrity sha512-QzliNJq4GinDBcD8gPB5v0wh6g8q3SUi6EFF0x8N/BL9PoVs0atuGc47ozMRyOWAKdwaZ5OnbOEa3WR+dSGKuQ==
 
-<<<<<<< HEAD
-eslint-plugin-react@^7.27.1, eslint-plugin-react@^7.37.4:
-  version "7.37.4"
-  resolved "https://registry.npmjs.org/eslint-plugin-react/-/eslint-plugin-react-7.37.4.tgz"
-  integrity sha512-BGP0jRmfYyvOyvMoRX/uoUeW+GqNj9y16bPQzqAHf3AYII/tDs+jMN0dBVkl88/OZwNGwrVFxE7riHsXVfy/LQ==
-=======
 eslint-plugin-react@^7.27.1, eslint-plugin-react@^7.37.5:
   version "7.37.5"
   resolved "https://registry.npmjs.org/eslint-plugin-react/-/eslint-plugin-react-7.37.5.tgz"
   integrity sha512-Qteup0SqU15kdocexFNAJMvCJEfa2xUKNV4CC1xsVMrIIqEy3SQ/rqyxCWNzfrd3/ldy6HMlD2e0JDVpDg2qIA==
->>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345
   dependencies:
     array-includes "^3.1.8"
     array.prototype.findlast "^1.2.5"
@@ -5775,11 +5712,7 @@ eslint-plugin-react@^7.27.1, eslint-plugin-react@^7.37.5:
     hasown "^2.0.2"
     jsx-ast-utils "^2.4.1 || ^3.0.0"
     minimatch "^3.1.2"
-<<<<<<< HEAD
-    object.entries "^1.1.8"
-=======
     object.entries "^1.1.9"
->>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345
     object.fromentries "^2.0.8"
     object.values "^1.2.1"
     prop-types "^15.8.1"
@@ -5969,14 +5902,11 @@ eventemitter3@^4.0.0:
   resolved "https://registry.npmjs.org/eventemitter3/-/eventemitter3-4.0.7.tgz"
   integrity sha512-8guHBZCwKnFhYdHr2ysuRWErTwhoN2X8XELRlrRwpmfeY2jjuUN4taQMsULKUVo1K4DvZl+0pgfyoysHxvmvEw==
 
-<<<<<<< HEAD
-=======
 eventemitter3@^4.0.1:
   version "4.0.7"
   resolved "https://registry.npmjs.org/eventemitter3/-/eventemitter3-4.0.7.tgz"
   integrity sha512-8guHBZCwKnFhYdHr2ysuRWErTwhoN2X8XELRlrRwpmfeY2jjuUN4taQMsULKUVo1K4DvZl+0pgfyoysHxvmvEw==
 
->>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345
 eventemitter3@^5.0.1:
   version "5.0.1"
   resolved "https://registry.npmjs.org/eventemitter3/-/eventemitter3-5.0.1.tgz"
@@ -6037,11 +5967,7 @@ expect@^27.5.1:
     jest-matcher-utils "^27.5.1"
     jest-message-util "^27.5.1"
 
-<<<<<<< HEAD
-expect@^29.7.0:
-=======
 expect@^29.0.0, expect@^29.7.0:
->>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345
   version "29.7.0"
   resolved "https://registry.npmjs.org/expect/-/expect-29.7.0.tgz"
   integrity sha512-2Zks0hf1VLFYI1kbh0I5jP3KHHyCHpkfyHBzsSXRFgl/Bg9mWYfMW8oD+PdMPlEwy5HNsR9JutYy6pMeOh61nw==
@@ -6135,14 +6061,11 @@ fast-deep-equal@^3.1.1, fast-deep-equal@^3.1.3:
   resolved "https://registry.npmjs.org/fast-deep-equal/-/fast-deep-equal-3.1.3.tgz"
   integrity sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==
 
-<<<<<<< HEAD
-=======
 fast-equals@^5.0.1:
   version "5.2.2"
   resolved "https://registry.npmjs.org/fast-equals/-/fast-equals-5.2.2.tgz"
   integrity sha512-V7/RktU11J3I36Nwq2JnZEM7tNm17eBJz+u25qdxBZeCKiX6BkVSZQjwWIr+IobgnZy+ag73tTZgZi7tr0LrBw==
 
->>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345
 fast-glob@^3.2.9, fast-glob@^3.3.2:
   version "3.3.3"
   resolved "https://registry.npmjs.org/fast-glob/-/fast-glob-3.3.3.tgz"
@@ -6215,14 +6138,11 @@ file-loader@^6.2.0:
     loader-utils "^2.0.0"
     schema-utils "^3.0.0"
 
-<<<<<<< HEAD
-=======
 file-saver@^2.0.5:
   version "2.0.5"
   resolved "https://registry.npmjs.org/file-saver/-/file-saver-2.0.5.tgz"
   integrity sha512-P9bmyZ3h/PRG+Nzga+rbdI4OEpNDzAVyy74uVO9ATgzLK6VtAsYybF/+TOCvrc0MO793d6+42lLyZTw7/ArVzA==
 
->>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345
 filelist@^1.0.4:
   version "1.0.4"
   resolved "https://registry.npmjs.org/filelist/-/filelist-1.0.4.tgz"
@@ -6962,14 +6882,6 @@ human-signals@^5.0.0:
   resolved "https://registry.npmjs.org/human-signals/-/human-signals-5.0.0.tgz"
   integrity sha512-AXcZb6vzzrFAUE61HnN4mpLqd/cSIwNQjtNWR0euPm6y0iqx3G4gOXaIDdtdDwZmhwe82LA6+zinmW4UBWVePQ==
 
-<<<<<<< HEAD
-husky@^9.1.7:
-  version "9.1.7"
-  resolved "https://registry.npmjs.org/husky/-/husky-9.1.7.tgz"
-  integrity sha512-5gs5ytaNjBrh5Ow3zrvdUUY+0VxIuWVL4i9irt6friV+BqdCfmV11CQTWMiBYWHbXhco+J1kHfTOUkePhCDvMA==
-
-=======
->>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345
 iconv-lite@^0.6.3, iconv-lite@0.6.3:
   version "0.6.3"
   resolved "https://registry.npmjs.org/iconv-lite/-/iconv-lite-0.6.3.tgz"
@@ -7076,14 +6988,11 @@ internal-slot@^1.1.0:
     hasown "^2.0.2"
     side-channel "^1.1.0"
 
-<<<<<<< HEAD
-=======
 "internmap@1 - 2":
   version "2.0.3"
   resolved "https://registry.npmjs.org/internmap/-/internmap-2.0.3.tgz"
   integrity sha512-5Hh7Y1wQbvY5ooGgPbDaL5iYLAPzMTUrjMulskHLH6wnv/A+1q5rgEaiuqEjB+oxGXIVZs1FF+R/KPN3ZSQYYg==
 
->>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345
 ipaddr.js@^2.0.1:
   version "2.2.0"
   resolved "https://registry.npmjs.org/ipaddr.js/-/ipaddr.js-2.2.0.tgz"
@@ -8816,11 +8725,7 @@ lodash.uniq@^4.5.0:
   resolved "https://registry.npmjs.org/lodash.uniq/-/lodash.uniq-4.5.0.tgz"
   integrity sha512-xfBaXQd9ryd9dlSDvnvI0lvxfLJlYAZzXomUYzLKtUeOQvOP5piqAWuGtrhWeqaXK9hhoM/iyJc5AV+XfsX3HQ==
 
-<<<<<<< HEAD
-lodash@^4.17.20, lodash@^4.17.21, lodash@^4.7.0:
-=======
 lodash@^4.17.15, lodash@^4.17.20, lodash@^4.17.21, lodash@^4.7.0:
->>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345
   version "4.17.21"
   resolved "https://registry.npmjs.org/lodash/-/lodash-4.17.21.tgz"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
@@ -9319,11 +9224,7 @@ object.assign@^4.1.4, object.assign@^4.1.7:
     has-symbols "^1.1.0"
     object-keys "^1.1.1"
 
-<<<<<<< HEAD
-object.entries@^1.1.8:
-=======
 object.entries@^1.1.9:
->>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345
   version "1.1.9"
   resolved "https://registry.npmjs.org/object.entries/-/object.entries-1.1.9.tgz"
   integrity sha512-8u/hfXFRBD1O0hPUjioLhoWFHRmt6tKA4/vZPyckBr18l1KE9uHrFaFaUi8MDRTpi4uak2goyPTSNJLXX2k2Hw==
@@ -10341,8 +10242,6 @@ pretty-format@^28.1.3:
     ansi-styles "^5.0.0"
     react-is "^18.0.0"
 
-<<<<<<< HEAD
-=======
 pretty-format@^29.0.0:
   version "29.7.0"
   resolved "https://registry.npmjs.org/pretty-format/-/pretty-format-29.7.0.tgz"
@@ -10352,7 +10251,6 @@ pretty-format@^29.0.0:
     ansi-styles "^5.0.0"
     react-is "^18.0.0"
 
->>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345
 pretty-format@^29.7.0:
   version "29.7.0"
   resolved "https://registry.npmjs.org/pretty-format/-/pretty-format-29.7.0.tgz"
@@ -10550,11 +10448,7 @@ react-device-detect@^2.2.3:
   dependencies:
     ua-parser-js "^1.0.33"
 
-<<<<<<< HEAD
-"react-dom@^17.0.0 || ^18.0.0 || ^19.0.0", "react-dom@^18.0.0 || ^19.0.0", react-dom@^18.3.1, "react-dom@>= 0.14.0", "react-dom@>= 16.8.0", react-dom@>=16.6.0, react-dom@>=16.8, react-dom@>=16.8.0:
-=======
 "react-dom@^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0", "react-dom@^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0", "react-dom@^17.0.0 || ^18.0.0 || ^19.0.0", "react-dom@^18.0.0 || ^19.0.0", react-dom@^18.3.1, "react-dom@>= 0.14.0", "react-dom@>= 16.8.0", react-dom@>=16.6.0, react-dom@>=16.8, react-dom@>=16.8.0:
->>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345
   version "18.3.1"
   resolved "https://registry.npmjs.org/react-dom/-/react-dom-18.3.1.tgz"
   integrity sha512-5m4nQKp+rZRb09LNH59GM4BxTh9251/ylbKIbpe7TpGxfJ+9kv6BLkLBXIjjspbgbnIBNqlI23tRnTWT0snUIw==
@@ -10597,14 +10491,11 @@ react-is@^18.0.0:
   resolved "https://registry.npmjs.org/react-is/-/react-is-18.3.1.tgz"
   integrity sha512-/LLMVyas0ljjAtoYiPqYiL8VWXzUUdThrmU5+n20DZv+a+ClRoevUzw5JxU+Ieh5/c87ytoTBV9G1FiKfNJdmg==
 
-<<<<<<< HEAD
-=======
 react-is@^18.3.1:
   version "18.3.1"
   resolved "https://registry.npmjs.org/react-is/-/react-is-18.3.1.tgz"
   integrity sha512-/LLMVyas0ljjAtoYiPqYiL8VWXzUUdThrmU5+n20DZv+a+ClRoevUzw5JxU+Ieh5/c87ytoTBV9G1FiKfNJdmg==
 
->>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345
 react-is@^19.0.0:
   version "19.1.0"
   resolved "https://registry.npmjs.org/react-is/-/react-is-19.1.0.tgz"
@@ -10692,8 +10583,6 @@ react-sitemap-generator@^1.1.6:
   dependencies:
     xmlbuilder2 "^3.1.1"
 
-<<<<<<< HEAD
-=======
 react-smooth@^4.0.4:
   version "4.0.4"
   resolved "https://registry.npmjs.org/react-smooth/-/react-smooth-4.0.4.tgz"
@@ -10703,7 +10592,6 @@ react-smooth@^4.0.4:
     prop-types "^15.8.1"
     react-transition-group "^4.4.5"
 
->>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345
 react-transition-group@^4.4.5:
   version "4.4.5"
   resolved "https://registry.npmjs.org/react-transition-group/-/react-transition-group-4.4.5.tgz"
@@ -10714,11 +10602,7 @@ react-transition-group@^4.4.5:
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
 
-<<<<<<< HEAD
-react@*, "react@^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0 || ^20.0.0 || ^21.0.0", "react@^16.3.0 || ^17.0.1 || ^18.0.0 || ^19.0.0", "react@^17.0.0 || ^18.0.0", "react@^17.0.0 || ^18.0.0 || ^19.0.0", "react@^18.0.0 || ^19.0.0", react@^18.3.1, "react@>= 0.14.0", "react@>= 16", "react@>= 16.8.0", react@>=16.6.0, react@>=16.8, react@>=16.8.0:
-=======
 react@*, "react@^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0", "react@^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0 || ^20.0.0 || ^21.0.0", "react@^16.3.0 || ^17.0.1 || ^18.0.0 || ^19.0.0", "react@^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0", "react@^17.0.0 || ^18.0.0", "react@^17.0.0 || ^18.0.0 || ^19.0.0", "react@^18.0.0 || ^19.0.0", react@^18.3.1, "react@>= 0.14.0", "react@>= 16", "react@>= 16.8.0", react@>=16.6.0, react@>=16.8, react@>=16.8.0:
->>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345
   version "18.3.1"
   resolved "https://registry.npmjs.org/react/-/react-18.3.1.tgz"
   integrity sha512-wS+hAgJShR0KhEvPJArfuPVN1+Hz1t0Y6n5jLrGQbkb4urgPE/0Rve+1kMB1v/oWgHgm4WIcV+i7F2pTVj+2iQ==
@@ -10780,8 +10664,6 @@ readdirp@~3.6.0:
   dependencies:
     picomatch "^2.2.1"
 
-<<<<<<< HEAD
-=======
 recharts-scale@^0.4.4:
   version "0.4.5"
   resolved "https://registry.npmjs.org/recharts-scale/-/recharts-scale-0.4.5.tgz"
@@ -10803,7 +10685,6 @@ recharts@^2.15.2:
     tiny-invariant "^1.3.1"
     victory-vendor "^36.6.8"
 
->>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345
 recursive-readdir@^2.2.2:
   version "2.2.3"
   resolved "https://registry.npmjs.org/recursive-readdir/-/recursive-readdir-2.2.3.tgz"
@@ -12218,14 +12099,11 @@ timer2@1.0.0:
   resolved "https://registry.npmjs.org/timer2/-/timer2-1.0.0.tgz"
   integrity sha512-UOZql+P2ET0da+B7V3/RImN3IhC5ghb+9cpecfUhmYGIm0z73dDr3A781nBLnFYmRzeT1AmoT4w9Lgr8n7n7xg==
 
-<<<<<<< HEAD
-=======
 tiny-invariant@^1.3.1:
   version "1.3.3"
   resolved "https://registry.npmjs.org/tiny-invariant/-/tiny-invariant-1.3.3.tgz"
   integrity sha512-+FbBPE1o9QAYvviau/qC5SE3caw21q3xkvWKBtja5vgqOWIHHJ3ioaq1VPfn/Szqctz2bU/oYeKd9/z5BL+PVg==
 
->>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345
 tinybench@^2.9.0:
   version "2.9.0"
   resolved "https://registry.npmjs.org/tinybench/-/tinybench-2.9.0.tgz"
@@ -12693,8 +12571,6 @@ vary@^1, vary@~1.1.2:
   resolved "https://registry.npmjs.org/vary/-/vary-1.1.2.tgz"
   integrity sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==
 
-<<<<<<< HEAD
-=======
 victory-vendor@^36.6.8:
   version "36.9.2"
   resolved "https://registry.npmjs.org/victory-vendor/-/victory-vendor-36.9.2.tgz"
@@ -12715,7 +12591,6 @@ victory-vendor@^36.6.8:
     d3-time "^3.0.0"
     d3-timer "^3.0.1"
 
->>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345
 vite-node@3.1.1:
   version "3.1.1"
   resolved "https://registry.npmjs.org/vite-node/-/vite-node-3.1.1.tgz"

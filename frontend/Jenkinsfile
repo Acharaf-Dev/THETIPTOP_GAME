@@ -1,23 +1,4 @@
 pipeline {
-<<<<<<< HEAD
-    agent any
-
-    environment {
-        IMAGE_NAME = "tip_top_frontend"
-        CONTAINER_NAME = "tip_top_frontend_container"
-        DOCKER_REGISTRY = "docker.io/your-dockerhub-username"
-    }
-
-    stages {
-        stage('Checkout Code') {
-            steps {
-                git branch: 'main', url: 'https://github.com/Laminaacharaf/TheTipTop.git'
-            }
-        }
-
-        stage('Install Dependencies') {
-            steps {
-=======
     tools {
         nodejs 'NodeJS_20' // Utilise NodeJS 20 configuré dans Jenkins
     }
@@ -55,36 +36,10 @@ pipeline {
                 sh 'rm -rf node_modules package-lock.json'
 
                 echo "📦 Réinstallation des dépendances"
->>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345
                 sh 'npm install'
             }
         }
 
-<<<<<<< HEAD
-        stage('Run Tests') {
-            steps {
-                sh 'npm run test'
-            }
-        }
-
-        stage('Build Frontend') {
-            steps {
-                sh 'npm run build'
-            }
-        }
-
-        stage('Build Docker Image') {
-            steps {
-                sh "docker build -t ${IMAGE_NAME} ./frontend"
-            }
-        }
-
-        stage('Push Docker Image') {
-            steps {
-                withDockerRegistry([credentialsId: 'docker-hub-credentials', url: ""]) {
-                    sh "docker tag ${IMAGE_NAME} ${DOCKER_REGISTRY}/${IMAGE_NAME}:latest"
-                    sh "docker push ${DOCKER_REGISTRY}/${IMAGE_NAME}:latest"
-=======
         stage('🧪 Run Tests') {
             steps {
                 echo "🧪 Exécution des tests unitaires"
@@ -103,21 +58,10 @@ pipeline {
                       -Dsonar.host.url=$SONAR_HOST_URL \
                       -Dsonar.login=$SONAR_TOKEN
                     '''
->>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345
                 }
             }
         }
 
-<<<<<<< HEAD
-        stage('Deploy') {
-            steps {
-                sh 'docker-compose down frontend'
-                sh 'docker-compose up -d frontend'
-            }
-        }
-    }
-}
-=======
         stage('⚙️ Build React App') {
             steps {
                 echo "⚙️ Construction de l'application React"
@@ -162,4 +106,3 @@ pipeline {
         }
     }
 }
->>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345

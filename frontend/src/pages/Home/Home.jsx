@@ -15,15 +15,9 @@ const Home = () => {
       <div className='container mx-auto px-4'>
         {/* Hero Section */}
         <div className="bg-gradient-to-r from-teal-500 to-green-600 text-white p-10 rounded-lg shadow-xl mb-16 text-center">
-<<<<<<< HEAD
-          <h1 className='text-5xl font-bold mb-4 drop-shadow-md'>Jeu Concours Thé Tip Top ! 🍵</h1>
-          <h2 className='text-2xl mb-8 font-light'>
-            100 % gagnant - Participez et remportez des cadeaux exclusifs !
-=======
           <h1 className='text-5xl font-bold mb-4 drop-shadow-md'>Jeu Concours Thé Tip Top 100 % gagnant ! 🍵</h1>
           <h2 className='text-2xl mb-8 font-light'>
             Participez gratuitement à notre jeu concours Thé Tip Top et relevez le défi pour remporter des cadeaux théinés uniques !
->>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345
           </h2>
           <Link to='/game'> 
             <button className='bg-yellow-400 hover:bg-yellow-500 text-green-900 font-semibold py-3 px-10 rounded-full transition duration-300 ease-in-out shadow-lg transform hover:scale-105 text-xl'>
@@ -42,11 +36,7 @@ const Home = () => {
             />
           </div>
           <div className="md:w-1/2 text-gray-700 space-y-5">
-<<<<<<< HEAD
-             <h3 className="text-3xl font-semibold text-gray-800 mb-4">Bienvenue sur notre plateforme !</h3>
-=======
              <h3 className="text-3xl font-semibold text-gray-800 mb-4">Bienvenue sur notre plateforme de jeu-concours!</h3>
->>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345
              <p className="leading-relaxed">
               The Tip Top est ravi de vous inviter à participer à son jeu-concours exclusif, conçu spécialement pour vous remercier de votre fidélité et pour répondre à tous vos besoins en matière de thé haut de gamme. Découvrez une expérience unique à travers nos différentes gammes de thé, soigneusement sélectionnées pour satisfaire les amateurs les plus exigeants.
             </p>

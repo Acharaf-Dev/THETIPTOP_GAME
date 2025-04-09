@@ -4,19 +4,6 @@ import pluginReact from "eslint-plugin-react";
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
-<<<<<<< HEAD
-  pluginJs.configs.recommended,
-  pluginReact.configs.flat.recommended,
-  { languageOptions: { globals: globals.browser } },
-  {
-    files: ["**/*.{js,mjs,cjs,jsx}"],
-    rules: {
-      "react/react-in-jsx-scope": "off",
-      "react/prop-types": "off",
-    },
-  },
-  {
-=======
   // Configurations recommandées pour JavaScript et React
   pluginJs.configs.recommended,
   pluginReact.configs.flat.recommended,
@@ -60,7 +47,6 @@ export default [
   },
   {
     // Règles spécifiques pour les tests
->>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345
     files: ["**/*.test.js", "**/*.spec.js"],
     languageOptions: {
       globals: {
@@ -72,9 +58,5 @@ export default [
         jest: "readonly",
       },
     },
-<<<<<<< HEAD
-  }
-=======
   },
->>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345
 ];

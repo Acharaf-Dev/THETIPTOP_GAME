@@ -67,11 +67,7 @@ const Game = () => {
             }
 
             const response = await axios.post(
-<<<<<<< HEAD
-                "http://localhost:4000/api/game/play",
-=======
                 `${process.env.REACT_APP_API_URL}/game/play`,
->>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345
                 { ticketNumber },
                 {
                     headers: {
