@@ -49,7 +49,7 @@ pipeline {
 
         stage('🔎 SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('SonarScanner') { // Doit correspondre au nom configuré dans Jenkins
+                withSonarQubeEnv('SonarQube') { // Doit correspondre au nom configuré dans Jenkins
                     sh 'npm install -g sonar-scanner'
                     sh '''
                     sonar-scanner \
