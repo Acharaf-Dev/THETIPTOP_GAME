@@ -64,27 +64,33 @@ pipeline {
 
        stage('Start Containers on VPS') {
         steps {
-            sshagent(['vps-ssh-key']) {
-                sh '''
-                    echo "🔧 Connecting to VPS server..."
-                    ssh -o StrictHostKeyChecking=no ${VPS_USER}@${VPS_HOST} 'bash -s' <<'EOF'
+        sshagent(['vps-ssh-key']) {
+            script {
+                def startScript = """
                     set -ex
-                    echo "✅ Connected to VPS at $(date)"
+                    echo "✅ Connected to VPS at \$(date)"
                     cd ${REMOTE_PROJECT_PATH}
-                    echo "🚀 Pulling Docker images"
+                    echo "🔄 Pulling Docker images"
                     docker compose pull
-                    echo "🧱 Starting containers"
+                    echo "🔁 Starting containers"
                     docker compose up -d --force-recreate
-                    EOF
+                """
 
-                    # Capture and report SSH exit code
-                    SSH_STATUS=$?
-                    echo "SSH Exit Code: $SSH_STATUS"
-                    if [ $SSH_STATUS -ne 0 ]; then
-                        echo "❌ SSH command failed!"
-                        exit $SSH_STATUS
+                sh """
+                    echo "🚀 Starting containers on VPS..."
+                    ssh -o StrictHostKeyChecking=no ${VPS_USER}@${VPS_HOST} '${startScript}' > vps_start_output.log 2>&1
+                    SSH_STATUS=\$?
+                    echo "====== VPS START OUTPUT ======"
+                    cat vps_start_output.log
+                    echo "======= END OF OUTPUT ========"
+                    if [ \$SSH_STATUS -ne 0 ]; then
+                        echo "❌ VPS startup failed with exit code \$SSH_STATUS"
+                        exit \$SSH_STATUS
+                    else
+                        echo "✅ VPS startup succeeded"
                     fi
-                '''
+                """
+            }
         }
     }
 }
