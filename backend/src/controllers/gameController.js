@@ -95,7 +95,7 @@ const grandTirageController = async (req, res) => {
     //   });
     // }
 
-    const dateToPlay = "2025-04-30";
+    const dateToPlay = "2025-04-05";
     const date = new Date();
 
     // Comparaison correcte des dates (en format YYYY-MM-DD)
