@@ -1,141 +1,153 @@
-pipeline {
-    agent any
+// pipeline {
+//     agent any
 
-    environment {
-        NODE_ENV = 'test'
-        SONARQUBE_URL = 'http://sonarqube:9000'
-        SONARQUBE_TOKEN = credentials('sonarqube-token')
-        VPS_USER = 'root'
-        VPS_HOST = '161.97.76.223'
-        REMOTE_PROJECT_PATH = '/PROJET/THETIPTOP_GAME'
-        SYSTEM_DEBUG = 'true'
-    }
+//     environment {
+//         NODE_ENV = 'test'
+//         SONARQUBE_URL = 'http://sonarqube:9000'
+//         SONARQUBE_TOKEN = credentials('sonarqube-token')
+//         VPS_USER = 'root'
+//         VPS_HOST = '161.97.76.223'
+//         REMOTE_PROJECT_PATH = '/PROJET/THETIPTOP_GAME'
+//         SYSTEM_DEBUG = 'true'
+//     }
 
-    stages {
-        stage('Checkout Code') {
-            steps {
-                script {
-                    checkout([
-                        $class: 'GitSCM',
-                        branches: [[name: "*/${env.BRANCH_NAME}"]],
-                        extensions: [[$class: 'CleanBeforeCheckout']],
-                        userRemoteConfigs: [[url: 'https://github.com/Acharaf-Dev/THETIPTOP_GAME.git']]
-                    ])
+//     stages {
+//         stage('Checkout Code') {
+//             steps {
+//                 script {
+//                     checkout([
+//                         $class: 'GitSCM',
+//                         branches: [[name: "*/${env.BRANCH_NAME}"]],
+//                         extensions: [[$class: 'CleanBeforeCheckout']],
+//                         userRemoteConfigs: [[url: 'https://github.com/Acharaf-Dev/THETIPTOP_GAME.git']]
+//                     ])
 
-                    switch (env.BRANCH_NAME) {
-                        case 'main':
-                            echo "🔴 Déploiement en Production"
-                            env.DOCKER_IMAGE = "thetiptop_game/backend:prod-${GIT_COMMIT}"
-                            break
-                        case 'preprod':
-                            echo "🟡 Déploiement en Préproduction"
-                            env.DOCKER_IMAGE = "thetiptop_game/backend:preprod-${GIT_COMMIT}"
-                            break
-                        case 'develop':
-                        case 'test':
-                        case 'testunit':
-                            echo "🟢 Branche de test/développement"
-                            env.DOCKER_IMAGE = "thetiptop_game/backend:dev-${GIT_COMMIT}"
-                            break
-                        default:
-                            error "❌ Branche non supportée : ${env.BRANCH_NAME}"
-                    }
-                }
-            }
-        }
+//                     switch (env.BRANCH_NAME) {
+//                         case 'main':
+//                             echo "🔴 Déploiement en Production"
+//                             env.DOCKER_IMAGE = "thetiptop_game/backend:prod-${GIT_COMMIT}"
+//                             break
+//                         case 'preprod':
+//                             echo "🟡 Déploiement en Préproduction"
+//                             env.DOCKER_IMAGE = "thetiptop_game/backend:preprod-${GIT_COMMIT}"
+//                             break
+//                         case 'develop':
+//                         case 'test':
+//                         case 'testunit':
+//                             echo "🟢 Branche de test/développement"
+//                             env.DOCKER_IMAGE = "thetiptop_game/backend:dev-${GIT_COMMIT}"
+//                             break
+//                         default:
+//                             error "❌ Branche non supportée : ${env.BRANCH_NAME}"
+//                     }
+//                 }
+//             }
+//         }
 
-        // Uncomment if needed
-        // stage('Install Dependencies') {
-        //     steps {
-        //         dir('backend') {
-        //             script {
-        //                 sh 'npm install --include=dev'
-        //             }
-        //         }
-        //     }
-        // }
+//         // Uncomment if needed
+//         // stage('Install Dependencies') {
+//         //     steps {
+//         //         dir('backend') {
+//         //             script {
+//         //                 sh 'npm install --include=dev'
+//         //             }
+//         //         }
+//         //     }
+//         // }
 
-        // stage('Audit Dependencies') {
-        //     steps {
-        //         dir('backend') {
-        //             sh 'npm audit || true'
-        //         }
-        //     }
-        // }
+//         // stage('Audit Dependencies') {
+//         //     steps {
+//         //         dir('backend') {
+//         //             sh 'npm audit || true'
+//         //         }
+//         //     }
+//         // }
 
 
-        stage('Start Containers on VPS') {
-        steps {
+//         stage('Start Containers on VPS') {
+//         steps {
+//         withCredentials([sshUserPrivateKey(credentialsId: 'vps-ssh-key', keyFileVariable: 'SSH_KEY')]) {
+//             sh """
+//                 chmod 600 \$SSH_KEY
+//                 echo "Using private key at: \$SSH_KEY"
+//                 echo "Connecting to ${VPS_USER}@${VPS_HOST}..."
+//                 ssh -i \$SSH_KEY -o StrictHostKeyChecking=no ${VPS_USER}@${VPS_HOST} echo "✅ SSH worked!"
+//             """
+//         }
+//     }
+// }
+
+//         stage('Run Backend Tests + Coverage') {
+//             steps {
+//                 dir('backend') {
+//                     sh './node_modules/.bin/jest --runInBand --coverage --verbose'
+//                 }
+//             }
+//         }
+
+//         stage('SonarQube Analysis') {
+//             steps {
+//                 dir('backend') {
+//                     sh """
+//                         ./node_modules/.bin/sonar-scanner \\
+//                         -Dsonar.projectKey=thetiptop_game \\
+//                         -Dsonar.sources=. \\
+//                         -Dsonar.tests=./tests \\
+//                         -Dsonar.testExecutionReportPaths=coverage/lcov.info \\
+//                         -Dsonar.host.url=${SONARQUBE_URL} \\
+//                         -Dsonar.login=${SONARQUBE_TOKEN}
+//                     """
+//                 }
+//             }
+//         }
+
+//         stage('Deploy on VPS') {
+//             when {
+//                 branch 'main'
+//             }
+//             steps {
+//                 sshagent(['vps-ssh-key']) {
+//                     sh """
+//                         echo "🚚 Deploying to VPS..."
+//                         ssh -o StrictHostKeyChecking=no ${VPS_USER}@${VPS_HOST} 'bash -s' <<EOF
+//                             set -ex
+//                             echo "✅ Connected to VPS at \$(date)"
+//                             cd ${REMOTE_PROJECT_PATH}
+//                             echo "🔄 Pulling Docker images"
+//                             docker compose pull
+//                             echo "🔁 Restarting containers"
+//                             docker compose up -d --force-recreate
+//                         EOF
+//                         SSH_STATUS=\$?
+//                         echo "SSH exit code: \$SSH_STATUS"
+//                         if [ \$SSH_STATUS -ne 0 ]; then
+//                             echo "❌ SSH deploy failed!"
+//                             exit \$SSH_STATUS
+//                         fi
+//                     """
+//                 }
+//             }
+//         }
+//     }
+
+//     post {
+//         success {
+//             echo '✅ Pipeline terminé avec succès.'
+//         }
+//         failure {
+//             echo '❌ Pipeline échoué. Vérifie les erreurs.'
+//         }
+//     }
+// }
+
+stage('Test SSH Connection to VPS') {
+    steps {
         withCredentials([sshUserPrivateKey(credentialsId: 'vps-ssh-key', keyFileVariable: 'SSH_KEY')]) {
             sh """
                 chmod 600 \$SSH_KEY
-                echo "Using private key at: \$SSH_KEY"
-                echo "Connecting to ${VPS_USER}@${VPS_HOST}..."
-                ssh -i \$SSH_KEY -o StrictHostKeyChecking=no ${VPS_USER}@${VPS_HOST} echo "✅ SSH worked!"
+                echo "✅ Using private key at \$SSH_KEY"
+                ssh -i \$SSH_KEY -o StrictHostKeyChecking=no root@161.97.76.223 echo "✅ SSH from Jenkins is working!"
             """
-        }
-    }
-}
-
-        stage('Run Backend Tests + Coverage') {
-            steps {
-                dir('backend') {
-                    sh './node_modules/.bin/jest --runInBand --coverage --verbose'
-                }
-            }
-        }
-
-        stage('SonarQube Analysis') {
-            steps {
-                dir('backend') {
-                    sh """
-                        ./node_modules/.bin/sonar-scanner \\
-                        -Dsonar.projectKey=thetiptop_game \\
-                        -Dsonar.sources=. \\
-                        -Dsonar.tests=./tests \\
-                        -Dsonar.testExecutionReportPaths=coverage/lcov.info \\
-                        -Dsonar.host.url=${SONARQUBE_URL} \\
-                        -Dsonar.login=${SONARQUBE_TOKEN}
-                    """
-                }
-            }
-        }
-
-        stage('Deploy on VPS') {
-            when {
-                branch 'main'
-            }
-            steps {
-                sshagent(['vps-ssh-key']) {
-                    sh """
-                        echo "🚚 Deploying to VPS..."
-                        ssh -o StrictHostKeyChecking=no ${VPS_USER}@${VPS_HOST} 'bash -s' <<EOF
-                            set -ex
-                            echo "✅ Connected to VPS at \$(date)"
-                            cd ${REMOTE_PROJECT_PATH}
-                            echo "🔄 Pulling Docker images"
-                            docker compose pull
-                            echo "🔁 Restarting containers"
-                            docker compose up -d --force-recreate
-                        EOF
-                        SSH_STATUS=\$?
-                        echo "SSH exit code: \$SSH_STATUS"
-                        if [ \$SSH_STATUS -ne 0 ]; then
-                            echo "❌ SSH deploy failed!"
-                            exit \$SSH_STATUS
-                        fi
-                    """
-                }
-            }
-        }
-    }
-
-    post {
-        success {
-            echo '✅ Pipeline terminé avec succès.'
-        }
-        failure {
-            echo '❌ Pipeline échoué. Vérifie les erreurs.'
         }
     }
 }
