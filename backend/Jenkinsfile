@@ -63,12 +63,14 @@ pipeline {
         //     }
         // }
 
-        stage('Confirm Variables') {
-        steps {
-        sh """
-            echo "VPS_USER is: ${VPS_USER}"
-            echo "VPS_HOST is: ${VPS_HOST}"
-        """
+    stage('Check SSH Key Availability') {
+    steps {
+        sshagent(['vps-ssh-key']) {
+            sh """
+                echo "🔐 Checking loaded SSH keys..."
+                ssh-add -l || echo "❌ No SSH keys loaded in agent"
+            """
+        }
     }
 }
 
