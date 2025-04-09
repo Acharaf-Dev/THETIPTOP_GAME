@@ -113,6 +113,7 @@ const Register = () => {
             password: formData.password,
         };
         const response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/register`, payload);
+        
 
         // const response = await axios.post('https://www.backend.dsp5-archi-f24a-15m-g8.fr/api/auth/register', payload);
         

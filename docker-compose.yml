@@ -32,10 +32,10 @@ services:
     build:
       context: ./backend
     container_name: tip_top_backend
-    environment:
-      - PORT=4000
     env_file:
       - ./backend/.env
+    environment:
+      - NODE_ENV=test
     depends_on:
       - mongodb
     ports:
