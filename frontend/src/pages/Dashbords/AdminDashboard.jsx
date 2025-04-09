@@ -115,7 +115,7 @@ const AdminDashboard = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      alert("L'utilisateur a été déconnecté avec succès");
+      // alert("L'utilisateur a été déconnecté avec succès");
 
       // Rafraîchir la liste des utilisateurs
       const updatedUsers = users.map((user) => {
