@@ -63,21 +63,12 @@ pipeline {
         //     }
         // }
 
-        stage('Minimal SSH Test') {
+        stage('Confirm Variables') {
         steps {
-        sshagent(['vps-ssh-key']) {
-            sh """
-                set -ex
-                echo "🌐 Pinging VPS..."
-                ping -c 2 ${VPS_HOST}
-
-                echo "🔐 Checking SSH key:"
-                ssh-add -l || echo "❌ No key loaded"
-
-                echo "🔧 Attempting SSH"
-                ssh -v -o StrictHostKeyChecking=no ${VPS_USER}@${VPS_HOST} echo "✅ SSH to VPS succeeded"
-            """
-        }
+        sh """
+            echo "VPS_USER is: ${VPS_USER}"
+            echo "VPS_HOST is: ${VPS_HOST}"
+        """
     }
 }
 
