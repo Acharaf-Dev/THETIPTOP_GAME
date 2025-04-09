@@ -50,7 +50,7 @@ pipeline {
             echo "🚀 Connexion SSH à ${VPS_HOST} pour exécuter les tests..."
             ssh -o StrictHostKeyChecking=no ${VPS_USER}@${VPS_HOST} << EOF
               cd ${REMOTE_PROJECT_PATH}
-             docker-compose exec backend npm run test -- --coverage --verbose
+            sh './node_modules/.bin/jest --runInBand --coverage --verbose'
             EOF
           """
         }
