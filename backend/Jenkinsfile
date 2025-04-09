@@ -57,23 +57,22 @@ pipeline {
         }
       }
     }
-
-    stage('SonarQube Analysis') {
-      steps {
-        withCredentials([string(credentialsId: 'sonarqube-token', variable: 'SONAR_TOKEN')]) {
-          sshagent(['vps-ssh-key']) {
-            sh """
-              ssh -o StrictHostKeyChecking=no ${VPS_USER}@${VPS_HOST} << 'EOF'
-                cd ${REMOTE_PROJECT_PATH}/backend
-                echo "🧼 Lancement de l'analyse SonarQube..."
-                /opt/sonar-scanner/bin/sonar-scanner -Dsonar.token=\$SONAR_TOKEN
-              EOF
-            """
-          }
-        }
+stage('SonarQube Analysis') {
+  steps {
+    withCredentials([string(credentialsId: 'sonarqube-token', variable: 'SONAR_TOKEN')]) {
+      sshagent(['vps-ssh-key']) {
+        sh """
+          echo "🧼 Lancement de l'analyse SonarQube avec fichier sonar-project.properties..."
+          ssh -o StrictHostKeyChecking=no ${VPS_USER}@${VPS_HOST} << EOF
+            cd ${REMOTE_PROJECT_PATH}/backend
+            /opt/sonar-scanner/bin/sonar-scanner \\
+              -Dsonar.token=${SONAR_TOKEN}
+          EOF
+        """
       }
     }
-
+  }
+}
     stage('Deploy on VPS') {
       when {
         branch 'main'
