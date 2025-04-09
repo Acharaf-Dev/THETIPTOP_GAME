@@ -113,7 +113,7 @@ pipeline {
         SONARQUBE_TOKEN = credentials('sonarqube-token')
         VPS_USER = 'root'
         VPS_HOST = '161.97.76.223'
-        REMOTE_PROJECT_PATH = '/PROJET/THETIPTOP_GAME'
+        REMOTE_PROJECT_PATH = '/root/PROJET/THETIPTOP_GAME'
         SYSTEM_DEBUG = 'true'
     }
 
