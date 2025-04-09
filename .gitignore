@@ -5,6 +5,8 @@ node_modules/
 
 # Environnement
 .env
+.env.*
+!.env.example
 
 ./backend/node_modules/
 ./frontend/node_modules/
