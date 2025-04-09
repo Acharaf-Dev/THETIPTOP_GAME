@@ -119,6 +119,7 @@ services:
     networks:
       - web
 
+  services:
   prometheus:
     image: prom/prometheus:latest
     platform: linux/amd64
