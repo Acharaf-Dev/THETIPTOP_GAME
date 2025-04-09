@@ -18,6 +18,11 @@ import Mention from './pages/Confidentialite/Mention';
 import Politique from './pages/Confidentialite/Politique';
 import ForgotPassword from './pages/Password/ForgotPassword';
 import ProtectedRoute from './components/ProtectedRoute';
+<<<<<<< HEAD
+=======
+import GrandGagnant from './pages/Grandgagnant/Grandgagnant';
+
+>>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345
 
 function App() {
   return (
@@ -39,11 +44,20 @@ function App() {
           <Route path="/clientdashboard" element={<ProtectedRoute><ClientDashboard /></ProtectedRoute>} />
           <Route path="/employeedashboard" element={<ProtectedRoute><EmployeeDashboard /></ProtectedRoute>} />
           <Route path="/admindashboard" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+<<<<<<< HEAD
+=======
+          <Route path="/big-game" element={<ProtectedRoute><GrandGagnant /></ProtectedRoute>} />
+
+>>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345
           <Route 
             path="/game" 
             element={
               <ProtectedRoute>
                 <Game />
+<<<<<<< HEAD
+=======
+
+>>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345
               </ProtectedRoute>
             } 
           />

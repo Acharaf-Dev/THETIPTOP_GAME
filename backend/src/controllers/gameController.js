@@ -12,6 +12,7 @@ const {
 // Enregistrer le gain d'un utilisateur
 const recordGameController = async (req, res) => {
   try {
+<<<<<<< HEAD
     // get user id from token
     const user = req.user;
     const userId = user._id;
@@ -32,6 +33,12 @@ const recordGameController = async (req, res) => {
     const date = new Date();
 
     // Définition de la période valide du jeu
+=======
+    const user = req.user;
+    const userId = user._id;
+    const date = new Date();
+
+>>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345
     const validFrom = new Date("2025-03-01T00:00:00Z");
     const validUntil = new Date("2025-04-30T23:59:59Z");
 
@@ -43,6 +50,7 @@ const recordGameController = async (req, res) => {
     }
 
     const { ticketNumber } = req.body;
+<<<<<<< HEAD
     // check if all fields are provided
     if (!ticketNumber) {
       return res.status(400).json({
@@ -53,6 +61,13 @@ const recordGameController = async (req, res) => {
     // check if ticket number is valid
     const ticket = await Ticket.findOne({ ticketNumber }); // Vérifier si le ticket existe dans la base
     // check if ticket is used
+=======
+    if (!ticketNumber) {
+      return res.status(400).json({ success: false, message: "ticket number is required" });
+    }
+
+    const ticket = await Ticket.findOne({ ticketNumber });
+>>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345
     if (!ticket || ticket.isUsed) {
       return res.status(400).json({
         success: false,
@@ -60,6 +75,7 @@ const recordGameController = async (req, res) => {
       });
     }
 
+<<<<<<< HEAD
     // Enregistrer le gain
     const newGain = new Gain({
       userId: userId, // Use the extracted userId
@@ -77,6 +93,19 @@ const recordGameController = async (req, res) => {
     // Formater la date actuelle (No specific formatting needed if date object is okay)
 
     // Configuration de l'email pour le participant
+=======
+    const newGain = new Gain({
+      userId,
+      ticketNumber,
+      prizeWon: ticket.prizeWon,
+      prizeValue: ticket.prizeValue,
+    });
+
+    await newGain.save();
+    ticket.isUsed = true;
+    await ticket.save();
+
+>>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345
     await sendPlayerNotification({
       userName: user.userName,
       email: user.email,
@@ -84,7 +113,11 @@ const recordGameController = async (req, res) => {
       prizeWon: ticket.prizeWon,
       prizeValue: ticket.prizeValue,
     });
+<<<<<<< HEAD
     // Configuration de l'email pour l'administrateur
+=======
+
+>>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345
     await sendAdminNotification({
       userName: user.userName,
       email: user.email,
@@ -98,6 +131,7 @@ const recordGameController = async (req, res) => {
       message: `Congratulations, you won ${ticket.prizeWon} worth ${ticket.prizeValue} euros.`,
     });
   } catch (error) {
+<<<<<<< HEAD
     console.error("Error playing game:", error); // Log the actual error
     return res.status(500).json({
       success: false,
@@ -129,6 +163,38 @@ const grandTirageController = async (req, res) => {
 
     // Comparaison correcte des dates (en format YYYY-MM-DD)
     if (date.toISOString().split("T")[0] !== dateToPlay) {
+=======
+   
+    return res.status(500).json({ success: false, message: "Error playing game." });
+  }
+};
+
+
+const grandTirageController = async (req, res) => {
+  try {
+    // let date;
+    // try {
+    //   const response = await axios.get(
+    //     "http://worldclockapi.com/api/json/utc/now"
+    //   );
+    //   date = new Date(response.data.currentDateTime);
+    // } catch (error) {
+    //   console.error(
+    //     " Erreur lors de la récupération de la date :",
+    //     error.message
+    //   );
+    //   return res.status(500).json({
+    //     success: false,
+    //     message: "Impossible de récupérer la date réelle. Réessayez plus tard.",
+    //   });
+    // }
+
+    const dateToPlay = "2025-04-05";
+    const date = new Date();
+
+    // Comparaison correcte des dates (en format YYYY-MM-DD)
+    if (date !== dateToPlay) {
+>>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345
       return res.status(400).json({
         success: false,
         message: "Game is not available.",

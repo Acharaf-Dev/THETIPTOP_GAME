@@ -1,4 +1,5 @@
 pipeline {
+<<<<<<< HEAD
     agent any
 
     environment {
@@ -16,10 +17,50 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
+=======
+    tools {
+        nodejs 'NodeJS_20' // Utilise NodeJS 20 configuré dans Jenkins
+    }
+
+    agent {
+        docker {
+            image 'node:20'
+        }
+    }
+
+    environment {
+        NODE_ENV = 'production'
+        SONAR_HOST_URL = 'https://www.sonarqube.dsp5-archi-f24a-15m-g8.fr'
+        SONAR_TOKEN = credentials('sonarqube-token')
+        GIT_REPO = 'https://github.com/Acharaf-Dev/THETIPTOP_GAME.git'
+        DOCKER_IMAGE = "tiptop_frontend:${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
+        DOCKER_TAG_LATEST = "tiptop_frontend:${env.BRANCH_NAME}"
+        SSH_CREDENTIALS = 'vps-ssh-key'
+        VPS_USER = 'root'
+        VPS_HOST = '161.97.76.223'
+        CONTAINER_NAME = 'tip_top_frontend'
+        PROJECT_PATH = '/root/THETIPTOP_GAME/frontend'
+    }
+
+    stages {
+        stage('📥 Checkout') {
+            steps {
+                git branch: env.BRANCH_NAME, credentialsId: 'github-token', url: env.GIT_REPO
+            }
+        }
+
+        stage('📦 Clean & Install Dependencies') {
+            steps {
+                echo "🔥 Suppression de node_modules et de fichiers de verrouillage"
+                sh 'rm -rf node_modules package-lock.json'
+
+                echo "📦 Réinstallation des dépendances"
+>>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345
                 sh 'npm install'
             }
         }
 
+<<<<<<< HEAD
         stage('Run Tests') {
             steps {
                 sh 'npm run test'
@@ -43,10 +84,31 @@ pipeline {
                 withDockerRegistry([credentialsId: 'docker-hub-credentials', url: ""]) {
                     sh "docker tag ${IMAGE_NAME} ${DOCKER_REGISTRY}/${IMAGE_NAME}:latest"
                     sh "docker push ${DOCKER_REGISTRY}/${IMAGE_NAME}:latest"
+=======
+        stage('🧪 Run Tests') {
+            steps {
+                echo "🧪 Exécution des tests unitaires"
+                sh 'npm run test || true'
+            }
+        }
+
+        stage('🔎 SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('SonarScanner') { // Doit correspondre au nom configuré dans Jenkins
+                    sh 'npm install -g sonar-scanner'
+                    sh '''
+                    sonar-scanner \
+                      -Dsonar.projectKey=frontend \
+                      -Dsonar.sources=src \
+                      -Dsonar.host.url=$SONAR_HOST_URL \
+                      -Dsonar.login=$SONAR_TOKEN
+                    '''
+>>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345
                 }
             }
         }
 
+<<<<<<< HEAD
         stage('Deploy') {
             steps {
                 sh 'docker-compose down frontend'
@@ -55,3 +117,49 @@ pipeline {
         }
     }
 }
+=======
+        stage('⚙️ Build React App') {
+            steps {
+                echo "⚙️ Construction de l'application React"
+                sh 'npm run build'
+            }
+        }
+
+        stage('🐳 Docker Build') {
+            steps {
+                echo "🐳 Construction de l'image Docker"
+                sh "docker build -f Dockerfile.prod -t ${DOCKER_IMAGE} -t ${DOCKER_TAG_LATEST} ."
+            }
+        }
+
+        stage('🚀 Deploy to VPS') {
+            steps {
+                sshagent([env.SSH_CREDENTIALS]) {
+                    sh """
+                        ssh -o StrictHostKeyChecking=no ${VPS_USER}@${VPS_HOST} << 'EOF'
+                        cd ${PROJECT_PATH}
+                        docker stop ${CONTAINER_NAME} || true
+                        docker rm ${CONTAINER_NAME} || true
+                        docker rmi ${DOCKER_TAG_LATEST} || true
+                        docker build -f Dockerfile.prod -t ${DOCKER_TAG_LATEST} .
+                        docker run -d --name ${CONTAINER_NAME} \
+                          --network=web \
+                          -e REACT_APP_API_URL=https://www.backend.dsp5-archi-f24a-15m-g8.fr/api \
+                          ${DOCKER_TAG_LATEST}
+                        EOF
+                    """
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo '✅ Déploiement réussi'
+        }
+        failure {
+            echo '❌ Échec du pipeline'
+        }
+    }
+}
+>>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345

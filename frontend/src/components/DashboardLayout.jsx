@@ -11,7 +11,11 @@ const DashboardLayout = ({ userType, children }) => {
     let sidebarTextColor = 'text-gray-300';
     let sidebarHoverColor = 'hover:bg-gray-700 hover:text-white';
     let activeLinkColor = 'bg-gray-900 text-white';
+<<<<<<< HEAD
     let title = 'Dashboard';
+=======
+    let title = 'Tableau de bord';
+>>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345
     let navLinks = [];
 
     switch (userType) {
@@ -20,12 +24,21 @@ const DashboardLayout = ({ userType, children }) => {
             sidebarTextColor = 'text-blue-100';
             sidebarHoverColor = 'hover:bg-blue-800 hover:text-white';
             activeLinkColor = 'bg-blue-950 text-white';
+<<<<<<< HEAD
             title = 'Admin Panel';
             navLinks = [
                 { path: '/admindashboard', icon: <FiHome />, label: 'Tableau de bord' },
                 { path: '/admin/users', icon: <FiUsers />, label: 'Utilisateurs' }, // Example paths
                 { path: '/admin/stats', icon: <FiGift />, label: 'Statistiques Jeu' }, // Example paths
                 { path: '/admin/settings', icon: <FiSettings />, label: 'Paramètres' },
+=======
+            title = 'Espace Administrateur';
+            navLinks = [
+                { path: '/admindashboard', icon: <FiHome />, label: 'Tableau de bord' },
+                { path: '/employeedashboard', icon: <FiUsers />, label: 'Utilisateurs' }, // Example paths
+                { path: '/big-game', icon: <FiGift />, label: 'Le Grand Jeu' }, // Example paths
+                { path: '', icon: <FiSettings />, label: 'Paramètres' },
+>>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345
             ];
             break;
         case 'client':
@@ -33,7 +46,11 @@ const DashboardLayout = ({ userType, children }) => {
             sidebarTextColor = 'text-teal-100';
             sidebarHoverColor = 'hover:bg-teal-700 hover:text-white';
             activeLinkColor = 'bg-teal-900 text-white';
+<<<<<<< HEAD
             title = 'Espace Client';
+=======
+            title = 'Espace Utilisateur';
+>>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345
             navLinks = [
                 { path: '/clientdashboard', icon: <FiHome />, label: 'Tableau de bord' },
                 { path: '/game', icon: <FiGift />, label: 'Jouer au jeu' },
@@ -47,8 +64,13 @@ const DashboardLayout = ({ userType, children }) => {
             title = 'Espace Employé';
             navLinks = [
                 { path: '/employeedashboard', icon: <FiHome />, label: 'Tableau de bord' },
+<<<<<<< HEAD
                 { path: '/employee/tasks', icon: <FiTrello />, label: 'Mes Tâches' }, // Example paths
                 { path: '/employee/projects', icon: <FiBell />, label: 'Notifications' }, // Example paths
+=======
+                // { path: '/employee/tasks', icon: <FiTrello />, label: 'Mes Tâches' }, // Example paths
+                // { path: '/employee/projects', icon: <FiBell />, label: 'Notifications' }, // Example paths
+>>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345
             ];
             break;
         default:
