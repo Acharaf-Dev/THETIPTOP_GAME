@@ -8,10 +8,15 @@ export default [
   pluginReact.configs.flat.recommended,
   { languageOptions: { globals: globals.browser } },
   {
-    files: ["**/*.{js,mjs,cjs,jsx}"],
+    files: ["**/*.{js,mjs,cjs,jsx,ts,tsx}"],
     rules: {
       "react/react-in-jsx-scope": "off",
       "react/prop-types": "off",
+    },
+    settings: {
+      react: {
+        version: "detect", // Permet de détecter automatiquement la version de React
+      },
     },
   },
   {
@@ -26,5 +31,5 @@ export default [
         jest: "readonly",
       },
     },
-  }
+  },
 ];
