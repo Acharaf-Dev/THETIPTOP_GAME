@@ -35,7 +35,7 @@ services:
     env_file:
       - ./backend/.env
     environment:
-      - NODE_ENV=test
+      - NODE_ENV=development
     depends_on:
       - mongodb
     ports:
