@@ -1,3 +1,19 @@
+<<<<<<< HEAD
+const mongoose = require("mongoose");
+
+const connectDB = async () => {
+    try {
+        await mongoose.connect(process.env.MONGO_URI);
+        console.log("Connexion à la base de données réussi");
+    } catch (error) {
+        console.log(error, "Echec de la connexion à la base de données");
+    }
+}
+
+module.exports = connectDB;
+
+
+=======
 const mongoose = require('mongoose');
 require('dotenv').config();
 
@@ -25,3 +41,4 @@ const connectDB = async () => {
 };
 
 module.exports = connectDB;
+>>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345

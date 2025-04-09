@@ -9,6 +9,10 @@ const registerUserController = async (req, res) => {
     try {
       const { userName, email, password, googleId, facebookId, phone, address, userType, answer } = req.body;
   
+<<<<<<< HEAD
+      // ✅ Vérification champs requis
+=======
+>>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345
       if (!userName || !email || !password) {
         return res.status(400).json({
           success: false,
@@ -22,9 +26,14 @@ const registerUserController = async (req, res) => {
           message: "Password must be at least 8 characters long and include uppercase, lowercase letters and a digit.",
         });
       }
+<<<<<<< HEAD
+  
+      const existingUser = await userModel.findOne({ email });
+=======
       const normalizedEmail = email.toLowerCase().trim();
   
       const existingUser = await userModel.findOne({ email: normalizedEmail });
+>>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345
       if (existingUser) {
         return res.status(409).json({
           success: false,
@@ -37,7 +46,11 @@ const registerUserController = async (req, res) => {
   
       const user = await userModel.create({
         userName,
+<<<<<<< HEAD
+        email,
+=======
         email: normalizedEmail,
+>>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345
         password: hashedPassword,
         googleId,
         facebookId,
@@ -75,8 +88,12 @@ const registerUserController = async (req, res) => {
         });
       }
   
+<<<<<<< HEAD
+      const user = await userModel.findOne({ email });
+=======
       const normalizedEmail = email.toLowerCase().trim();
       const user = await userModel.findOne({ email: normalizedEmail });
+>>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345
       if (!user) {
         return res.status(404).json({
           success: false,
@@ -94,11 +111,14 @@ const registerUserController = async (req, res) => {
   
       const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
       user.password = undefined;
+<<<<<<< HEAD
+=======
       console.log("✅ Login réussi :", {
         email: user.email,
         userId: user._id,
         token,
       });
+>>>>>>> df0fa71cbf65b7a5e01c74aa12342c91324b0345
   
       res.status(200).json({
         success: true,
