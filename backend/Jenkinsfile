@@ -56,37 +56,23 @@ pipeline {
           """
         }
       }
-stage('SonarQube Analysis') {
-  steps {
-    withCredentials([string(credentialsId: 'sonarqube-token', variable: 'SONAR_TOKEN')]) {
-      sshagent(['vps-ssh-key']) {
-        sh """
-          ssh -o StrictHostKeyChecking=no ${VPS_USER}@${VPS_HOST} << 'EOF'
-            cd ${REMOTE_PROJECT_PATH}/backend
+    }
 
-            echo "🧼 Launching SonarScanner..."
-            /opt/sonar-scanner/bin/sonar-scanner -Dsonar.token=\$SONAR_TOKEN
-          EOF
-        """
+    stage('SonarQube Analysis') {
+      steps {
+        withCredentials([string(credentialsId: 'sonarqube-token', variable: 'SONAR_TOKEN')]) {
+          sshagent(['vps-ssh-key']) {
+            sh """
+              ssh -o StrictHostKeyChecking=no ${VPS_USER}@${VPS_HOST} << 'EOF'
+                cd ${REMOTE_PROJECT_PATH}/backend
+                echo "🧼 Lancement de l'analyse SonarQube..."
+                /opt/sonar-scanner/bin/sonar-scanner -Dsonar.token=\$SONAR_TOKEN
+              EOF
+            """
+          }
+        }
       }
     }
-  }
-}
-
-
-    // stage('Start or Restart Containers on VPS') {
-    //   steps {
-    //     sshagent(['vps-ssh-key']) {
-    //       sh """
-    //         ssh -o StrictHostKeyChecking=no ${VPS_USER}@${VPS_HOST} << 'EOF'
-    //           cd ${REMOTE_PROJECT_PATH}
-    //           docker compose pull
-    //           docker compose up -d --force-recreate
-    //         EOF
-    //       """
-    //     }
-    //   }
-    // }
 
     stage('Deploy on VPS') {
       when {
