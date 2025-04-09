@@ -18,6 +18,8 @@ import Mention from './pages/Confidentialite/Mention';
 import Politique from './pages/Confidentialite/Politique';
 import ForgotPassword from './pages/Password/ForgotPassword';
 import ProtectedRoute from './components/ProtectedRoute';
+import GrandGagnant from './pages/Grandgagnant/Grandgagnant';
+
 
 function App() {
   return (
@@ -39,11 +41,14 @@ function App() {
           <Route path="/clientdashboard" element={<ProtectedRoute><ClientDashboard /></ProtectedRoute>} />
           <Route path="/employeedashboard" element={<ProtectedRoute><EmployeeDashboard /></ProtectedRoute>} />
           <Route path="/admindashboard" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+          <Route path="/big-game" element={<ProtectedRoute><GrandGagnant /></ProtectedRoute>} />
+
           <Route 
             path="/game" 
             element={
               <ProtectedRoute>
                 <Game />
+
               </ProtectedRoute>
             } 
           />

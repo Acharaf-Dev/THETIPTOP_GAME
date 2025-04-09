@@ -28,4 +28,4 @@ User-agent: BlexBot
 Disallow: /
 
 # Sitemap location
-Sitemap: https://dsp5-archi-f24a-15M-G2.fr/sitemap.xml
+Sitemap: https://www.dsp5-archi-f24a-15m-g8.fr/sitemap.xml
