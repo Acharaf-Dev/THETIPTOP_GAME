@@ -11,7 +11,7 @@ pipeline {
 
     environment {
         NODE_ENV = 'production'
-        SONAR_HOST_URL = 'http://sonarqube:9000'
+        SONAR_HOST_URL = 'https://www.sonarqube.dsp5-archi-f24a-15m-g8.fr'
         SONAR_TOKEN = credentials('sonarqube-token')
         GIT_REPO = 'https://github.com/Acharaf-Dev/THETIPTOP_GAME.git'
         DOCKER_IMAGE = "tiptop_frontend:${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
@@ -40,17 +40,6 @@ pipeline {
             }
         }
 
-        // stage('🧹 Lint Code') {
-        //     steps {
-        //         echo "🧹 Linting et correction automatique avec ESLint"
-        //         sh '''
-        //         if ! npm run lint; then
-        //             echo "⚠️ ESLint a détecté des erreurs, mais le pipeline continue."
-        //         fi
-        //         '''
-        //     }
-        // }
-
         stage('🧪 Run Tests') {
             steps {
                 echo "🧪 Exécution des tests unitaires"
@@ -60,8 +49,15 @@ pipeline {
 
         stage('🔎 SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('SonarQube') {
-                    sh "npm run sonar"
+                withSonarQubeEnv('SonarScanner') { // Doit correspondre au nom configuré dans Jenkins
+                    sh 'npm install -g sonar-scanner'
+                    sh '''
+                    sonar-scanner \
+                      -Dsonar.projectKey=frontend \
+                      -Dsonar.sources=src \
+                      -Dsonar.host.url=$SONAR_HOST_URL \
+                      -Dsonar.login=$SONAR_TOKEN
+                    '''
                 }
             }
         }
