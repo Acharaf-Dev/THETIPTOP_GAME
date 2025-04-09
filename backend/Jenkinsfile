@@ -57,36 +57,38 @@ pipeline {
         }
       }
     }
-
-    stage('SonarQube Analysis') {
-      steps {
-        dir('backend') {
-          sh """
-            ./node_modules/.bin/sonar-scanner \\
+stage('SonarQube Analysis') {
+  steps {
+    sshagent(['vps-ssh-key']) {
+      sh """
+        ssh -o StrictHostKeyChecking=no ${VPS_USER}@${VPS_HOST} << 'EOF'
+          cd ${REMOTE_PROJECT_PATH}/backend
+          sonar-scanner \\
             -Dsonar.projectKey=thetiptop_game \\
             -Dsonar.sources=. \\
             -Dsonar.tests=./tests \\
             -Dsonar.testExecutionReportPaths=coverage/lcov.info \\
             -Dsonar.host.url=${SONARQUBE_URL} \\
             -Dsonar.login=${SONARQUBE_TOKEN}
-          """
-        }
-      }
-    }
-
-    stage('Start or Restart Containers on VPS') {
-      steps {
-        sshagent(['vps-ssh-key']) {
-          sh """
-            ssh -o StrictHostKeyChecking=no ${VPS_USER}@${VPS_HOST} << 'EOF'
-              cd ${REMOTE_PROJECT_PATH}
-              docker compose pull
-              docker compose up -d --force-recreate
             EOF
           """
         }
       }
     }
+
+    // stage('Start or Restart Containers on VPS') {
+    //   steps {
+    //     sshagent(['vps-ssh-key']) {
+    //       sh """
+    //         ssh -o StrictHostKeyChecking=no ${VPS_USER}@${VPS_HOST} << 'EOF'
+    //           cd ${REMOTE_PROJECT_PATH}
+    //           docker compose pull
+    //           docker compose up -d --force-recreate
+    //         EOF
+    //       """
+    //     }
+    //   }
+    // }
 
     stage('Deploy on VPS') {
       when {
