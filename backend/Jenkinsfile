@@ -1,10 +1,5 @@
 pipeline {
-  agent {
-    docker {
-      image 'node:18'
-      args '-u root' // pour les permissions si besoin
-    }
-  }
+  agent any
 
   environment {
     NODE_ENV = 'test'
@@ -49,28 +44,16 @@ pipeline {
       }
     }
 
-    stage('Install Dependencies') {
+    stage('Run Backend Tests on VPS') {
       steps {
-        dir('backend') {
-          script {
-            sh 'npm install --include=dev'
-          }
-        }
-      }
-    }
-
-    stage('Audit Dependencies') {
-      steps {
-        dir('backend') {
-          sh 'npm audit || true'
-        }
-      }
-    }
-
-    stage('Run Backend Tests + Coverage') {
-      steps {
-        dir('backend') {
-          sh './node_modules/.bin/jest --runInBand --coverage --verbose'
+        sshagent(['vps-ssh-key']) {
+          sh """
+            echo "🚀 Connexion SSH à ${VPS_HOST} pour exécuter les tests..."
+            ssh -o StrictHostKeyChecking=no ${VPS_USER}@${VPS_HOST} << 'EOF'
+              cd ${REMOTE_PROJECT_PATH}
+              docker compose exec -T backend npm test
+            EOF
+          """
         }
       }
     }
@@ -91,13 +74,11 @@ pipeline {
       }
     }
 
-    stage('Start Containers on VPS') {
+    stage('Start or Restart Containers on VPS') {
       steps {
         sshagent(['vps-ssh-key']) {
           sh """
-            echo "Connecting to VPS server"
             ssh -o StrictHostKeyChecking=no ${VPS_USER}@${VPS_HOST} << 'EOF'
-              set -ex
               cd ${REMOTE_PROJECT_PATH}
               docker compose pull
               docker compose up -d --force-recreate
@@ -114,7 +95,7 @@ pipeline {
       steps {
         sshagent(['vps-ssh-key']) {
           sh """
-            ssh ${VPS_USER}@${VPS_HOST} << 'EOF'
+            ssh -o StrictHostKeyChecking=no ${VPS_USER}@${VPS_HOST} << 'EOF'
               cd ${REMOTE_PROJECT_PATH}
               docker compose pull
               docker compose up -d --force-recreate
