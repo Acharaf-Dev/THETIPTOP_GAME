@@ -53,4 +53,84 @@ pipeline {
       steps {
         dir('backend') {
           script {
-            sh 'npm install --include=
+            sh 'npm install --include=dev'
+          }
+        }
+      }
+    }
+
+    stage('Audit Dependencies') {
+      steps {
+        dir('backend') {
+          sh 'npm audit || true'
+        }
+      }
+    }
+
+    stage('Run Backend Tests + Coverage') {
+      steps {
+        dir('backend') {
+          sh './node_modules/.bin/jest --runInBand --coverage --verbose'
+        }
+      }
+    }
+
+    stage('SonarQube Analysis') {
+      steps {
+        dir('backend') {
+          sh """
+            ./node_modules/.bin/sonar-scanner \\
+            -Dsonar.projectKey=thetiptop_game \\
+            -Dsonar.sources=. \\
+            -Dsonar.tests=./tests \\
+            -Dsonar.testExecutionReportPaths=coverage/lcov.info \\
+            -Dsonar.host.url=${SONARQUBE_URL} \\
+            -Dsonar.login=${SONARQUBE_TOKEN}
+          """
+        }
+      }
+    }
+
+    stage('Start Containers on VPS') {
+      steps {
+        sshagent(['vps-ssh-key']) {
+          sh """
+            echo "Connecting to VPS server"
+            ssh -o StrictHostKeyChecking=no ${VPS_USER}@${VPS_HOST} << 'EOF'
+              set -ex
+              cd ${REMOTE_PROJECT_PATH}
+              docker compose pull
+              docker compose up -d --force-recreate
+            EOF
+          """
+        }
+      }
+    }
+
+    stage('Deploy on VPS') {
+      when {
+        branch 'main'
+      }
+      steps {
+        sshagent(['vps-ssh-key']) {
+          sh """
+            ssh ${VPS_USER}@${VPS_HOST} << 'EOF'
+              cd ${REMOTE_PROJECT_PATH}
+              docker compose pull
+              docker compose up -d --force-recreate
+            EOF
+          """
+        }
+      }
+    }
+  }
+
+  post {
+    success {
+      echo '✅ Pipeline terminé avec succès.'
+    }
+    failure {
+      echo '❌ Pipeline échoué. Vérifie les erreurs.'
+    }
+  }
+}
