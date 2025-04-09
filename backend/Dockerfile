@@ -1,5 +1,4 @@
 # Utiliser Node.js comme image de base
-# FROM node:18
 FROM --platform=linux/amd64 node:18
 
 # Définir le répertoire de travail
@@ -11,8 +10,8 @@ COPY package*.json ./
 # Installer les dépendances
 RUN npm install
 
-
-# Installer Nodemon globalement pour le hot reload
+# Installer jest-junit et Nodemon globalement
+RUN npm install --save-dev jest-junit
 RUN npm install -g nodemon
 
 # Copier le reste du code source
@@ -23,5 +22,3 @@ EXPOSE 4000
 
 # Lancer l'application avec Nodemon pour le développement
 CMD ["nodemon", "server.js"]
-
-
