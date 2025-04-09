@@ -10,7 +10,7 @@ module.exports = {
   reporters: [
     "default",
     ["jest-junit", {
-      outputDirectory: "coverage",
+      outputDirectory: "./backend/coverage", // Chemin absolu ou relatif à partir du répertoire où Jest s'exécute
       outputName: "test-report.xml"
     }]
   ]
