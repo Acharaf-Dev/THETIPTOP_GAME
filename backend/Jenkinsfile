@@ -1,5 +1,5 @@
 pipeline {
-    agent any // Switched to run on Jenkins host with Docker access
+    agent any
 
     environment {
         NODE_ENV = 'test'
@@ -44,6 +44,7 @@ pipeline {
             }
         }
 
+        // Uncomment if needed
         // stage('Install Dependencies') {
         //     steps {
         //         dir('backend') {
@@ -62,23 +63,23 @@ pipeline {
         //     }
         // }
 
-       stage('Start Containers on VPS') {
-        steps {
-        sshagent(['vps-ssh-key']) {
-            sh """
-                echo "🔧 Testing SSH connectivity..."
-                echo "Running: ssh -v -o StrictHostKeyChecking=no ${VPS_USER}@${VPS_HOST} echo 'Hello from VPS'"
-                ssh -v -o StrictHostKeyChecking=no ${VPS_USER}@${VPS_HOST} echo "✅ SSH SUCCESSFUL"
-                SSH_STATUS=\$?
-                echo "SSH exit status: \$SSH_STATUS"
-                if [ \$SSH_STATUS -ne 0 ]; then
-                echo "❌ SSH failed"
-                exit \$SSH_STATUS
-                fi
-                """
+        stage('Start Containers on VPS') {
+            steps {
+                sshagent(['vps-ssh-key']) {
+                    sh """
+                        echo "🔧 Testing SSH connectivity..."
+                        echo "Running: ssh -v -o StrictHostKeyChecking=no ${VPS_USER}@${VPS_HOST} echo 'Hello from VPS'"
+                        ssh -v -o StrictHostKeyChecking=no ${VPS_USER}@${VPS_HOST} echo "✅ SSH SUCCESSFUL"
+                        SSH_STATUS=\$?
+                        echo "SSH exit status: \$SSH_STATUS"
+                        if [ \$SSH_STATUS -ne 0 ]; then
+                            echo "❌ SSH failed"
+                            exit \$SSH_STATUS
+                        fi
+                    """
+                }
+            }
         }
-    }
-}
 
         stage('Run Backend Tests + Coverage') {
             steps {
@@ -92,12 +93,12 @@ pipeline {
             steps {
                 dir('backend') {
                     sh """
-                        ./node_modules/.bin/sonar-scanner \
-                        -Dsonar.projectKey=thetiptop_game \
-                        -Dsonar.sources=. \
-                        -Dsonar.tests=./tests \
-                        -Dsonar.testExecutionReportPaths=coverage/lcov.info \
-                        -Dsonar.host.url=${SONARQUBE_URL} \
+                        ./node_modules/.bin/sonar-scanner \\
+                        -Dsonar.projectKey=thetiptop_game \\
+                        -Dsonar.sources=. \\
+                        -Dsonar.tests=./tests \\
+                        -Dsonar.testExecutionReportPaths=coverage/lcov.info \\
+                        -Dsonar.host.url=${SONARQUBE_URL} \\
                         -Dsonar.login=${SONARQUBE_TOKEN}
                     """
                 }
@@ -111,11 +112,22 @@ pipeline {
             steps {
                 sshagent(['vps-ssh-key']) {
                     sh """
-                        ssh ${VPS_USER}@${VPS_HOST} << 'EOF'
-                        cd ${REMOTE_PROJECT_PATH}
-                        docker compose pull
-                        docker compose up -d --force-recreate
+                        echo "🚚 Deploying to VPS..."
+                        ssh -o StrictHostKeyChecking=no ${VPS_USER}@${VPS_HOST} 'bash -s' <<EOF
+                            set -ex
+                            echo "✅ Connected to VPS at \$(date)"
+                            cd ${REMOTE_PROJECT_PATH}
+                            echo "🔄 Pulling Docker images"
+                            docker compose pull
+                            echo "🔁 Restarting containers"
+                            docker compose up -d --force-recreate
                         EOF
+                        SSH_STATUS=\$?
+                        echo "SSH exit code: \$SSH_STATUS"
+                        if [ \$SSH_STATUS -ne 0 ]; then
+                            echo "❌ SSH deploy failed!"
+                            exit \$SSH_STATUS
+                        fi
                     """
                 }
             }
