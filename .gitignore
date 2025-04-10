@@ -90,3 +90,7 @@ lcov-report/
 *.swp
 *.swo
 *~
+
+# Package-lock files (ignore if you don't want them tracked)
+backend/package-lock.json
+frontend/package-lock.json
