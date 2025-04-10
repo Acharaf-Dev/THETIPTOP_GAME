@@ -9,27 +9,25 @@ const Login = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
+  // Handle standard form login submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
 
     try {
+      // Send login request to backend
       const response = await axios.post(
         `${process.env.REACT_APP_API_URL}/auth/login`,
-        {
-          email,
-          password,
-        }
+        { email, password }
       );
 
-      // Stockage token et type d'utilisateur dans le localStorage
-      const token = response.data.token;
-      const userType = response.data.user.userType;
-
+      // Store token and user type in localStorage
+      const { token, user } = response.data;
       localStorage.setItem("token", token);
-      localStorage.setItem("userType", userType); // C'est ça qui permet au Header de faire la redirection correcte
+      localStorage.setItem("userType", user.userType); // Used for redirection
 
-      // Redirection selon le type d'utilisateur
+      // Redirect user based on their type
+      const userType = user.userType;
       if (userType === "admin") {
         navigate("/admindashboard");
       } else if (userType === "employer") {
@@ -37,21 +35,22 @@ const Login = () => {
       } else {
         navigate("/clientdashboard");
       }
-
-      // alert("Connexion réussie !");
     } catch (err) {
-      setError(
-        err.response?.data?.message || "Email ou mot de passe incorrect."
-      );
+      // Handle errors from login request
+      setError(err.response?.data?.message || "Email ou mot de passe incorrect.");
     }
   };
 
+  // Handle Google login (for future integration)
   const handleGoogleLogin = () => {
     console.log("Google login clicked");
+    // Implement Google OAuth login here
   };
 
+  // Handle Facebook login (for future integration)
   const handleFacebookLogin = () => {
     console.log("Facebook login clicked");
+    // Implement Facebook OAuth login here
   };
 
   return (
@@ -72,6 +71,7 @@ const Login = () => {
           </p>
         </div>
 
+        {/* Error message */}
         {error && (
           <div
             className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
@@ -81,6 +81,7 @@ const Login = () => {
           </div>
         )}
 
+        {/* Login Form */}
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div>
             <label
@@ -122,6 +123,7 @@ const Login = () => {
             />
           </div>
 
+          {/* Remember Me and Forgot Password */}
           <div className="flex items-center justify-between">
             <div className="flex items-center">
               <input
@@ -148,6 +150,7 @@ const Login = () => {
             </div>
           </div>
 
+          {/* Submit Button */}
           <div>
             <button
               type="submit"
@@ -158,6 +161,7 @@ const Login = () => {
           </div>
         </form>
 
+        {/* Google and Facebook Login Buttons */}
         <div className="mt-6 grid grid-cols-2 gap-3">
           <div>
             <button
