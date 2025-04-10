@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   backend:
     platform: linux/amd64
@@ -8,11 +6,11 @@ services:
     container_name: tip_top_backend_dev
     volumes:
       - ./backend:/app
-      - /app/node_modules  # Pour éviter le conflit entre node_modules host/container
+      - /app/node_modules 
     ports:
       - "4000:4000"
     env_file:
-      - ./backend/.env
+      - ./backend/.env.dev
     environment:
       - NODE_ENV=development
     command: nodemon server.js
@@ -56,7 +54,7 @@ services:
 
   mongo-express:
     image: mongo-express:latest
-    container_name: mongo-express
+    container_name: mongo-express-dev
     restart: always
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
