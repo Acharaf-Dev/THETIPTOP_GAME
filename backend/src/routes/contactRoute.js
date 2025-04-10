@@ -1,12 +1,8 @@
-// routes/contactRoute.js
-
 const express = require('express');
 const router = express.Router();
+const { contactController } = require('../controllers/contactController');
 
-// Importation du contrôleur
-const { sendContactEmail } = require('../controllers/contactController');
-
-// Route POST pour le formulaire de contact
-router.post('/', sendContactEmail);
+// Route pour le formulaire de contact
+router.post('/contact', contactController);
 
 module.exports = router;

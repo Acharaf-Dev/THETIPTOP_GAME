@@ -143,8 +143,87 @@ L'équipe Thé Tip Top`,
 };
 
 
+
+
+/**
+ * Notifie l'administrateur qu'un utilisateur a envoyé un message via la page contact.
+ * @param {Object} params - Les paramètres nécessaires.
+ * @param {string} params.userName - Nom de l'utilisateur.
+ * @param {string} params.email - Email de l'utilisateur.
+ * @param {string} params.subject - Sujet du message.
+ * @param {string} params.message - Le contenu du message.
+ * @returns {Promise}
+ */
+const sendAdminContactNotification = async ({ userName, email, subject, message }) => {
+  const mailOptions = {
+    from: `${userName} <${email}>`,
+    to: 'contact.developeur@gmail.com', // email de l'administrateur
+    subject: `Nouveau message de contact : ${subject}`,
+    text: `Vous avez reçu un nouveau message de la part de ${userName} (${email}) :
+
+Sujet : ${subject}
+
+Message :
+${message}
+
+Cordialement,
+Votre site.`,
+    html: `
+      <h3>Nouveau message de contact</h3>
+      <p><strong>De :</strong> ${userName} (<em>${email}</em>)</p>
+      <p><strong>Sujet :</strong> ${subject}</p>
+      <p><strong>Message :</strong><br>${message}</p>
+      <p>Cordialement,<br>Votre site.</p>
+    `,
+    envelope: {
+      from: process.env.EMAIL_USER,
+      to: 'contact.developeur@gmail.com'
+    }
+  };
+
+  return sendEmail(mailOptions);
+};
+
+/**
+ * Envoie un email de confirmation à l'utilisateur après l'envoi de son message.
+ * @param {Object} params - Les paramètres nécessaires.
+ * @param {string} params.userName - Nom de l'utilisateur.
+ * @param {string} params.email - Email de l'utilisateur.
+ * @param {string} params.subject - Sujet du message envoyé.
+ * @returns {Promise}
+ */
+const sendUserContactNotification = async ({ userName, email, subject }) => {
+  const mailOptions = {
+    from: `Thé Tip Top <${process.env.EMAIL_USER}>`,
+    to: email,
+    subject: 'Nous avons bien reçu votre message',
+    text: `Bonjour ${userName},
+
+Nous confirmons la réception de votre message concernant : "${subject}".
+Nous reviendrons vers vous dans les plus brefs délais.
+
+Cordialement,
+L'équipe Thé Tip Top`,
+    html: `
+      <p>Bonjour <strong>${userName}</strong>,</p>
+      <p>Nous confirmons la réception de votre message concernant : "<strong>${subject}</strong>".</p>
+      <p>Nous reviendrons vers vous dans les plus brefs délais.</p>
+      <p>Cordialement,<br>L'équipe Thé Tip Top</p>
+    `,
+    envelope: {
+      from: process.env.EMAIL_USER,
+      to: email
+    }
+  };
+
+  return sendEmail(mailOptions);
+};
+
+
 module.exports = {
   sendAdminNotification,
   sendPlayerNotification,
   sendWelcomeEmail,
+  sendAdminContactNotification,
+  sendUserContactNotification,
 };
