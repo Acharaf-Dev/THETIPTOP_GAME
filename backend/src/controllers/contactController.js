@@ -20,7 +20,7 @@ const contactController = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message: "Votre message a été envoyé avec succès."
+      message: "Votre message a bien été envoyé avec succès !"
     });
   } catch (error) {
     console.error("Erreur dans le controller contact:", error);

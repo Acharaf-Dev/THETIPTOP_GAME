@@ -219,6 +219,41 @@ L'équipe Thé Tip Top`,
   return sendEmail(mailOptions);
 };
 
+/**
+ * Envoie un email de réinitialisation de mot de passe.
+ * @param {Object} params - Les paramètres nécessaires.
+ * @param {string} params.userName - Nom de l'utilisateur.
+ * @param {string} params.email - Email de l'utilisateur.
+ * @param {string} params.resetUrl - URL pour la réinitialisation du mot de passe.
+ * @returns {Promise}
+ */
+const sendPasswordResetEmail = async ({ userName, email, resetUrl }) => {
+  const mailOptions = {
+    from: `Thé Tip Top <${process.env.EMAIL_USER}>`,
+    to: email,
+    subject: 'Réinitialisation de votre mot de passe',
+    text: `Bonjour ${userName},
+
+Pour réinitialiser votre mot de passe, veuillez cliquer sur le lien suivant : ${resetUrl}
+
+Si vous n'avez pas demandé la réinitialisation, veuillez ignorer cet email.
+
+Cordialement,
+L'équipe Thé Tip Top`,
+    html: `
+      <p>Bonjour <strong>${userName}</strong>,</p>
+      <p>Pour réinitialiser votre mot de passe, veuillez cliquer sur le lien suivant : <a href="${resetUrl}">${resetUrl}</a></p>
+      <p>Si vous n'avez pas demandé la réinitialisation, veuillez ignorer cet email.</p>
+      <p>Cordialement,<br>L'équipe Thé Tip Top</p>
+    `,
+    envelope: {
+      from: process.env.EMAIL_USER,
+      to: email
+    }
+  };
+
+  return transporter.sendMail(mailOptions);
+};
 
 module.exports = {
   sendAdminNotification,
@@ -226,4 +261,5 @@ module.exports = {
   sendWelcomeEmail,
   sendAdminContactNotification,
   sendUserContactNotification,
+  sendPasswordResetEmail
 };
