@@ -41,7 +41,7 @@ function App() {
           <Route path="/clientdashboard" element={<ProtectedRoute><ClientDashboard /></ProtectedRoute>} />
           <Route path="/employeedashboard" element={<ProtectedRoute><EmployeeDashboard /></ProtectedRoute>} />
           <Route path="/admindashboard" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
-          <Route path="/big-game" element={<ProtectedRoute><GrandGagnant /></ProtectedRoute>} />
+          <Route path="/grandgagnant" element={<ProtectedRoute><GrandGagnant /></ProtectedRoute>} />
 
           <Route 
             path="/game" 

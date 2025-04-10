@@ -4,6 +4,7 @@ import axios from 'axios';
 import { UserIcon, MailIcon, PhoneIcon, TicketIcon, CalendarIcon, GiftIcon } from '@heroicons/react/outline'; // Assuming heroicons are installed
 import DashboardLayout from '../../components/DashboardLayout'; // Adjust path if needed
 // Removed: import './client.css';
+import './client.css';
 
 // Simple SVG placeholder for Gift Icon if Heroicons not available
 const DefaultGiftIcon = () => <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4H5z" /></svg>;
