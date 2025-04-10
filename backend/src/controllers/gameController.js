@@ -95,16 +95,16 @@ const grandTirageController = async (req, res) => {
     //   });
     // }
 
-    const dateToPlay = "2025-04-05";
-    const date = new Date();
+    // const dateToPlay = "2025-04-30";
+    // const date = new Date();
 
-    // Comparaison correcte des dates (en format YYYY-MM-DD)
-    if (date !== dateToPlay) {
-      return res.status(400).json({
-        success: false,
-        message: "Game is not available.",
-      });
-    }
+    // // Comparaison correcte des dates (en format YYYY-MM-DD)
+    // if (date !== dateToPlay) {
+    //   return res.status(400).json({
+    //     success: false,
+    //     message: "Game is not available.",
+    //   });
+    // }
     // get a random ticket number from gains collection
     const randomGain = await Gain.aggregate([{ $sample: { size: 1 } }]);
     if (randomGain.length === 0) {

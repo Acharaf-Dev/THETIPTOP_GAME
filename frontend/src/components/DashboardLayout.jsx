@@ -24,7 +24,7 @@ const DashboardLayout = ({ userType, children }) => {
             navLinks = [
                 { path: '/admindashboard', icon: <FiHome />, label: 'Tableau de bord' },
                 { path: '/employeedashboard', icon: <FiUsers />, label: 'Utilisateurs' }, // Example paths
-                { path: '/big-game', icon: <FiGift />, label: 'Le Grand Jeu' }, // Example paths
+                { path: '/grandgagnant', icon: <FiGift />, label: 'Le Grand Jeu' }, // Example paths
                 { path: '', icon: <FiSettings />, label: 'Paramètres' },
             ];
             break;
