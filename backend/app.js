@@ -7,7 +7,6 @@ const express = require("express");
 const authRoutes = require("./src/routes/authRoute");
 const userRoutes = require("./src/routes/userRoute");
 const gameRoutes = require("./src/routes/gameRoute");
-const contactRoutes = require("./src/routes/contactRoute");
 const contactRoute = require('./src/routes/contactRoute');
 
 const app = express();
@@ -54,6 +53,5 @@ app.use("/api/contact", contactRoute);
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/game", gameRoutes);
-app.use("/api/contact", contactRoutes);
 
 module.exports = app;

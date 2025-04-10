@@ -68,8 +68,17 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Answer is require'],
         default: "test"
+    },
+    resetPasswordToken: {
+        type: String,
+        default: null
+    },
+    resetPasswordExpires: {
+        type: Date,
+        default: null
     }
-}, { timestamps: true });
+}
+, { timestamps: true });
 
 const User = mongoose.model("User", userSchema);
 
