@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 const UserIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -10,19 +10,33 @@ const UserIcon = () => (
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userType, setUserType] = useState(null);
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const userType = localStorage.getItem('userType');
-  const profileLink =
-    userType === 'admin' ? '/admindashboard' :
-    userType === 'employer' ? '/employeedashboard' :
-    '/clientdashboard';
-
+  // ⚡️ On surveille le token et le type dans le localStorage
   useEffect(() => {
     const token = localStorage.getItem('token');
+    const type = localStorage.getItem('userType');
     setIsLoggedIn(!!token);
+    setUserType(type);
+
+    // Déclenche une redirection + reload une seule fois
+    if (token && type && !location.pathname.includes('dashboard') && !sessionStorage.getItem('hasReloaded')) {
+      sessionStorage.setItem('hasReloaded', 'true');
+      let path = '/clientdashboard';
+      if (type === 'admin') path = '/admindashboard';
+      else if (type === 'employer') path = '/employeedashboard';
+
+      navigate(path);
+      setTimeout(() => {
+        window.location.reload();
+      }, 100);
+    }
 
     const handleStorageChange = () => {
       setIsLoggedIn(!!localStorage.getItem('token'));
+      setUserType(localStorage.getItem('userType'));
     };
 
     window.addEventListener('storage', handleStorageChange);
@@ -32,9 +46,23 @@ const Header = () => {
       window.removeEventListener('storage', handleStorageChange);
       window.removeEventListener('focus', handleStorageChange);
     };
-  }, []);
+  }, [navigate, location.pathname]);
 
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
+
+  const handleProfileClick = () => {
+    let path = '/clientdashboard';
+    if (userType === 'admin') path = '/admindashboard';
+    else if (userType === 'employer') path = '/employeedashboard';
+
+    navigate(path);
+    setTimeout(() => {
+      window.location.reload();
+    }, 100);
+  };
+
+  const isClient = userType === 'client' || !userType;
+  const showContactLink = userType === 'client';
 
   return (
     <header className="bg-white shadow-md sticky top-0 z-50">
@@ -47,17 +75,17 @@ const Header = () => {
           <li><Link to="/reglement" className="text-gray-600 hover:text-teal-600 transition duration-300">Règles du Jeu</Link></li>
           {isLoggedIn && (
             <>
-              <li><Link to="/game" className="text-gray-600 hover:text-teal-600 transition duration-300">Espace de Jeu</Link></li>
-              <li><Link to={profileLink} className="text-gray-600 hover:text-teal-600 transition duration-300">Espace Client</Link></li>
+              {isClient && <li><Link to="/game" className="text-gray-600 hover:text-teal-600 transition duration-300">Espace de Jeu</Link></li>}
+              <li><Link to="#" onClick={handleProfileClick} className="text-gray-600 hover:text-teal-600 transition duration-300">Espace Client</Link></li>
             </>
           )}
-          <li><Link to="/contact" className="text-gray-600 hover:text-teal-600 transition duration-300">Contact</Link></li>
+          {showContactLink && <li><Link to="/contact" className="text-gray-600 hover:text-teal-600 transition duration-300">Contact</Link></li>}
 
           {isLoggedIn ? (
             <li>
-              <Link to={profileLink} className="flex items-center text-gray-600 hover:text-teal-600 transition duration-300 p-2 rounded-full hover:bg-gray-100" title="Mon Compte">
+              <button onClick={handleProfileClick} className="flex items-center text-gray-600 hover:text-teal-600 transition duration-300 p-2 rounded-full hover:bg-gray-100" title="Mon Compte">
                 <UserIcon />
-              </Link>
+              </button>
             </li>
           ) : (
             <li>
@@ -81,18 +109,21 @@ const Header = () => {
             <li><Link to="/reglement" className="text-gray-600 hover:text-teal-600 block" onClick={closeMobileMenu}>Règles</Link></li>
             {isLoggedIn && (
               <>
-                <li><Link to="/game" className="text-gray-600 hover:text-teal-600 block" onClick={closeMobileMenu}>Jouer</Link></li>
-                <li><Link to={profileLink} className="text-gray-600 hover:text-teal-600 block" onClick={closeMobileMenu}>Espace</Link></li>
+                {isClient && <li><Link to="/game" className="text-gray-600 hover:text-teal-600 block" onClick={closeMobileMenu}>Jouer</Link></li>}
+                <li>
+                  <button onClick={() => { closeMobileMenu(); handleProfileClick(); }} className="text-gray-600 hover:text-teal-600 block">Espace</button>
+                </li>
               </>
             )}
-            <li><Link to="/contact" className="text-gray-600 hover:text-teal-600 block" onClick={closeMobileMenu}>Contact</Link></li>
-
+            {showContactLink && (
+              <li><Link to="/contact" className="text-gray-600 hover:text-teal-600 block" onClick={closeMobileMenu}>Contact</Link></li>
+            )}
             {isLoggedIn ? (
               <li>
-                <Link to={profileLink} className="text-gray-600 hover:text-teal-600 flex items-center space-x-1" onClick={closeMobileMenu}>
+                <button onClick={() => { closeMobileMenu(); handleProfileClick(); }} className="text-gray-600 hover:text-teal-600 flex items-center space-x-1">
                   <UserIcon />
                   <span>Profil</span>
-                </Link>
+                </button>
               </li>
             ) : (
               <li>
