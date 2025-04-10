@@ -35,7 +35,7 @@ services:
     env_file:
       - ./backend/.env
     environment:
-      - NODE_ENV=development
+      - NODE_ENV=test
     depends_on:
       - mongodb
     ports:
@@ -121,7 +121,6 @@ services:
 
   prometheus:
     image: prom/prometheus:latest
-    platform: linux/amd64
     container_name: prometheus
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
@@ -134,9 +133,10 @@ services:
       - "traefik.http.routers.prometheus.entrypoints=websecure"
       - "traefik.http.routers.prometheus.tls.certresolver=myresolver"
       - "traefik.http.services.prometheus.loadbalancer.server.port=9090"
+    depends_on:
+      - jenkins
     networks:
       - web
-
   grafana:
     image: grafana/grafana:latest
     platform: linux/amd64
