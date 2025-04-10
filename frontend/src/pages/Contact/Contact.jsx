@@ -7,6 +7,7 @@ const Contact = () => {
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
+    subject: "",
     email: "",
     message: "",
   });
@@ -29,10 +30,13 @@ const Contact = () => {
     let newErrors = {};
     if (!formData.firstName.trim()) {
       newErrors.firstName = "Le prénom est obligatoire.";
-    }
-    if (!formData.lastName.trim()) {
-      newErrors.lastName = "Le nom est obligatoire.";
-    }
+      }
+      if (!formData.lastName.trim()) {
+        newErrors.lastName = "Le nom est obligatoire.";
+      }
+      if (!formData.subject.trim()) {
+        newErrors.subject = "Le sujet est obligatoire.";
+      }
     if (!formData.email.trim()) {
       newErrors.email = "L'adresse email est obligatoire.";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
@@ -55,22 +59,23 @@ const Contact = () => {
       setIsSubmitting(true);
       // Create payload matching backend expectations
       const payload = {
-          nom: `${formData.firstName} ${formData.lastName}`, // Combine first and last name for 'nom'
-          adresse_mail: formData.email, // Map email to adresse_mail
+          userName: `${formData.firstName} ${formData.lastName}`, // Combine first and last name for 'nom'
+          email: formData.email, // Map email to adresse_mail
+          subject: formData.subject,
           message: formData.message
       };
       
       try {
         // Use environment variable for API URL is better practice, but keeping localhost for now
-        const response = await axios.post(`${process.env.REACT_APP_API_URL}/contact/`, payload); // Corrected URL: removed '/send' 
+        const response = await axios.post(`${process.env.REACT_APP_API_URL}/contact/contact`,payload); // Corrected URL: removed '/send' 
         //const response = await axios.post('https://www.backend.dsp5-archi-f24a-15m-g8.fr/api/contact/', payload); 
         
         console.log('Backend Response:', response.data); // <-- Log the actual response data
 
         // Check backend success message (adjust if backend sends different success indicator)
-        if (response.data.message === "Votre message a bien été envoyé !") { // More specific check
+        if (response.data.message === "Votre message a bien été envoyé avec succès !") { // More specific check
             setSubmitSuccess(true);
-            setFormData({ firstName: "", lastName: "", email: "", message: "" }); // Reset form
+            setFormData({ firstName: "", lastName: "", subject: "", email: "", message: "" }); // Reset form
             setErrors({});
         } else {
             // If backend indicates success differently, adjust here
@@ -115,12 +120,12 @@ const Contact = () => {
         {/* Removed redundant title h2 */}
         <form onSubmit={handleSubmit} className="space-y-6">
             {submitSuccess && (
-                 <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
-                    <span className="block sm:inline">Votre message a été envoyé avec succès ! Nous vous répondrons bientôt.</span>
+                 <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert" id="success-message">
+                    <span className="block sm:inline">Votre message a été envoyé  ! Nous vous répondrons bientôt.</span>
                 </div>
             )}
              {submitError && (
-                 <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                 <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert" id="error-message">
                     <span className="block sm:inline">Erreur: {submitError}</span>
                 </div>
             )}
@@ -173,6 +178,22 @@ const Contact = () => {
                  />
                 {errors.email && <p className="text-red-500 text-xs italic pt-1">{errors.email}</p>}
             </div>
+            {/* Subject */}
+            <div>
+                <label htmlFor="subject" className="sr-only">Sujet</label>
+                <input
+                    id="subject"
+                    name="subject"  
+                    type="text"
+                    autoComplete="subject"
+                    value={formData.subject}
+                    onChange={handleChange}
+                    required
+                    className={getInputClassName('subject')}  
+                    placeholder="Sujet *"
+                />
+                {errors.subject && <p className="text-red-500 text-xs italic pt-1">{errors.subject}</p>}
+            </div>      
             {/* Message */}
             <div>
                 <label htmlFor="message" className="sr-only">Message</label>
