@@ -64,7 +64,7 @@ pipeline {
 
         stage('⚙️ Build React App') {
             steps {
-                echo "⚙️ Construction de l'application React"
+                echo "⚙️ Construction de l'application avec React"
                 sh 'npm run build'
             }
         }
