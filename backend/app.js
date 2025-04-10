@@ -8,6 +8,7 @@ const authRoutes = require("./src/routes/authRoute");
 const userRoutes = require("./src/routes/userRoute");
 const gameRoutes = require("./src/routes/gameRoute");
 const contactRoutes = require("./src/routes/contactRoute");
+const contactRoute = require('./src/routes/contactRoute');
 
 const app = express();
 
@@ -46,6 +47,10 @@ app.get("/api/hello", (req, res) => {
   res.status(200).json({ message: "Hello, World!" });
 });
 
+
+// ... configuration middleware, etc.
+
+app.use("/api/contact", contactRoute);
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/game", gameRoutes);
