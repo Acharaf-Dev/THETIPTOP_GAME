@@ -29,7 +29,7 @@ services:
   backend:
     build:
       context: ./backend
-      dockerfile: Dockerfile.prod
+      dockerfile: Dockerfile.preprod
     container_name: tip_top_backend_preprod
     restart: unless-stopped
     env_file:
@@ -50,7 +50,7 @@ services:
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile.prod
+      dockerfile: Dockerfile.preprod
       args:
         - REACT_APP_API_URL=https://preprod.backend.dsp5-archi-f24a-15m-g8.fr/api
     container_name: tip_top_frontend_preprod
