@@ -4,20 +4,14 @@ import DashboardLayout from "../../components/DashboardLayout";
 import PrizeDistributionChart from "../../components/PrizeDistributionChart";
 import TicketUsageChart from "../../components/TicketUsageChart";
 import UserActivityChart from "../../components/UserActivityChart";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import {
   FiUsers,
-  FiShoppingBag,
-  FiBarChart2,
-  FiActivity,
   FiUserCheck,
-  FiUserX,
   FiPackage,
   FiDollarSign,
   FiPieChart,
   FiTrendingUp,
-  FiArrowUp,
-  FiArrowDown,
   FiCalendar,
   FiClock,
   FiCheckCircle,
@@ -40,7 +34,7 @@ const AdminDashboard = () => {
   const [gameStats, setGameStats] = useState(null);
   const [activeTab, setActiveTab] = useState("overview");
   const [selectedFilter, setSelectedFilter] = useState("all");
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   // State for user details modal
   const [showUserModal, setShowUserModal] = useState(false);
