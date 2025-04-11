@@ -10,8 +10,7 @@ pipeline {
         DOCKER_REGISTRY = 'docker.io'
         BACKEND_IMAGE_NAME = "${DOCKER_REGISTRY}/asquare25/thetiptop"
         FRONTEND_IMAGE_NAME = "${DOCKER_REGISTRY}/asquare25/thetiptop"
-
-        SSH_HOST = '161.97.76.223'
+        WEBHOOK_URL = "http://161.97.76.223:5000/webhook"
     }
 
     stages {
@@ -79,18 +78,17 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
+        stage('Trigger Webhook') {
             when {
                 expression { ['develop', 'preprod', 'prod'].contains(env.BRANCH_NAME) }
             }
             steps {
-                withCredentials([usernamePassword(credentialsId: 'ssh-credentials', usernameVariable: 'SSH_USER', passwordVariable: 'SSH_PASS')]) {
+                script {
+                    def webhookCall = "${WEBHOOK_URL}?branch=${BRANCH_NAME}"
+                    echo "📡 Appel du webhook de déploiement : ${webhookCall}"
+
                     sh """
-                        sshpass -p "\${SSH_PASS}" ssh -o StrictHostKeyChecking=no "\${SSH_USER}@\${SSH_HOST}" '
-                        cd /opt/docker-compose &&
-                        docker-compose pull &&
-                        docker-compose up -d
-                        '
+                        curl -X POST "${webhookCall}"
                     """
                 }
             }
