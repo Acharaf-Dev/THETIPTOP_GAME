@@ -83,9 +83,9 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'ssh-credentials', usernameVariable: 'SSH_USER', passwordVariable: 'SSH_PASS')]) {
                     sh """
                         sshpass -p "\${SSH_PASS}" ssh -o StrictHostKeyChecking=no "\${SSH_USER}@\${SSH_HOST}" '
-                          cd /opt/docker-compose &&
-                          docker-compose pull &&
-                          docker-compose up -d
+                        cd /opt/docker-compose &&
+                        docker-compose pull &&
+                        docker-compose up -d
                         '
                     """
                 }
