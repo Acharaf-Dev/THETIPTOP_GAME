@@ -161,7 +161,7 @@ const AdminDashboard = () => {
     setShowUserModal(true);
   };
 
-  // User details modal component
+  // User details modal
   const UserDetailsModal = () => {
     if (!selectedUser) return null;
 
