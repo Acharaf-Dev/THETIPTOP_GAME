@@ -4,7 +4,7 @@ environment {
     BACKEND_IMAGE_NAME = "${DOCKER_REGISTRY}/tiptop-backend"
     FRONTEND_IMAGE_NAME = "${DOCKER_REGISTRY}/tiptop-frontend"
     
-    SSH_HOST = 'ton.serveur.exemple.com'
+    SSH_HOST = '161.97.76.223'
 }
 
 stages {
