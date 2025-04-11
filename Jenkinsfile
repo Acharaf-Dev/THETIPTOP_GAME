@@ -44,35 +44,42 @@ pipeline {
         //     }
         // }
 
-       stage('Install, Test & Build') {
+       stage('Test Backend & Build Backend + Frontend (Docker)') {
             steps {
                 script {
-                    ['backend', 'frontend'].each { module ->
-                        dir(module) {
-                            try {
-                                // Installer les dépendances
-                                sh 'npm install'
-
-                                // Exécuter les tests avec couverture
-                                sh 'npm run test -- --coverage --coverageReporters=lcov'
-
-                                // Construire le projet
-                                sh 'npm run build'
-                            } catch (Exception e) {
-                                // Gestion d'erreur personnalisée
-                                error("Build or test failed for ${module}: ${e.message}")
-                            }
-                        }
-                        // Publier le rapport de couverture HTML
-                        publishHTML(target: [
-                            reportName: "${module.capitalize()} Coverage",
-                            reportDir: "${module}/coverage",
-                            reportFiles: 'index.html',
-                            keepAll: true,
-                            allowMissing: true,
-                            alwaysLinkToLastBuild: true
-                        ])
+                    def backendContainer = "tiptop_backend"
+                    def frontendContainer = "tiptop_frontend"
+        
+                    try {
+                        echo "🧪 Lancement des tests backend avec coverage"
+                        sh "docker exec ${backendContainer} npm install"
+                        sh "docker exec ${backendContainer} npm run test -- --coverage --coverageReporters=lcov"
+        
+                        echo "📦 Build du backend"
+                        sh "docker exec ${backendContainer} npm run build"
+        
+                        echo "🎨 Build du frontend"
+                        sh "docker exec ${frontendContainer} npm install"
+                        sh "docker exec ${frontendContainer} npm run build"
+                    } catch (err) {
+                        echo "❌ Une erreur est survenue : ${err}"
+                        currentBuild.result = 'FAILURE'
+                        error("Échec pendant test/build backend ou frontend")
                     }
+        
+                    echo "📤 Copie du rapport de coverage backend depuis le conteneur"
+                    // Montre le dossier de coverage vers l’hôte via Docker volume si ce n’est pas déjà fait
+                    sh "docker cp ${backendContainer}:/app/coverage ./backend_coverage"
+        
+                    echo "📊 Publication du rapport coverage dans Jenkins"
+                    publishHTML(target: [
+                        reportName: "Backend Coverage",
+                        reportDir: "backend_coverage/lcov-report",
+                        reportFiles: 'index.html',
+                        keepAll: true,
+                        allowMissing: true,
+                        alwaysLinkToLastBuild: true
+                    ])
                 }
             }
         }
