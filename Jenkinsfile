@@ -22,27 +22,86 @@ pipeline {
             }
         }
 
-        stage('Install, Test & Build') {
+        // stage('Install, Test & Build') {
+        //     steps {
+        //         script {
+        //             ['backend', 'frontend'].each { module ->
+        //                 dir(module) {
+        //                     sh 'npm install'
+        //                     sh 'npm run test -- --coverage --coverageReporters=lcov'
+        //                     sh 'npm run build'
+        //                 }
+        //                 publishHTML(target: [
+        //                     reportName: "${module.capitalize()} Coverage",
+        //                     reportDir: "${module}/coverage",
+        //                     reportFiles: 'index.html',
+        //                     keepAll: true,
+        //                     allowMissing: true,
+        //                     alwaysLinkToLastBuild: true
+        //                 ])
+        //             }
+        //         }
+        //     }
+        // }
+
+        stage('Install, Test & Build Backend') {
+
             steps {
-                script {
-                    ['backend', 'frontend'].each { module ->
-                        dir(module) {
+
+                dir('backend') {
+
+                    script {
+
+                        try {
+
+                            echo "📦 Installation des dépendances backend"
+
                             sh 'npm install'
+        
+                            echo "🧪 Lancement des tests avec coverage"
+
                             sh 'npm run test -- --coverage --coverageReporters=lcov'
+        
+                            echo "🏗️ Build du backend"
+
                             sh 'npm run build'
+
+                        } catch (err) {
+
+                            echo "❌ Erreur lors du test/build backend : ${err}"
+
+                            currentBuild.result = 'FAILURE'
+
+                            error("Échec du test ou du build backend")
+
                         }
+        
+                        echo "📊 Publication du rapport de couverture"
+
                         publishHTML(target: [
-                            reportName: "${module.capitalize()} Coverage",
-                            reportDir: "${module}/coverage",
+
+                            reportName: "Backend Coverage",
+
+                            reportDir: "coverage",
+
                             reportFiles: 'index.html',
+
                             keepAll: true,
+
                             allowMissing: true,
+
                             alwaysLinkToLastBuild: true
+
                         ])
+
                     }
+
                 }
+
             }
+
         }
+ 
 
         stage('Build & Push Docker Images') {
             when {
