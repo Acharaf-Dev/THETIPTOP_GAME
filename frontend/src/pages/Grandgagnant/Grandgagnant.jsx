@@ -116,7 +116,7 @@ const Grandgagnant = () => {
       {grandWinner && (
         <div className="mt-6 text-center bg-green-100 text-green-800 p-4 rounded-lg">
           <h3 className="text-xl font-bold">Félicitations à {grandWinner.userName} {grandWinner.email}!</h3>
-          <p>Vous aviez remporté le grand concours gagnant d'une valeur de 360€ pour l'année Thé Tip Top 2025 à NICE</p>
+          <p>Vous aviez remporté le grand concours gagnant d'une valeur de 360€ pour l'année Thé Tip Top 2025 </p>
         </div>
       )}
     </div>
