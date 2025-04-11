@@ -1,11 +1,15 @@
 pipeline {
     agent any
 
+    tools {
+        // Définir la version de NodeJS à utiliser
+        nodejs 'NodeJS'  // Préciser l'ID du NodeJS installé dans Jenkins (par exemple, 'NodeJS_16' peut être l'ID que tu as configuré dans Jenkins)
+    }
+
     environment {
         REGISTRY = "docker.io"
         APP_NAME = "tip_top_app"
         DOCKER_CREDENTIALS = credentials('dockerhub-credentials') // Jenkins > DockerHub credentials
-        GITHUB_CREDENTIALS = credentials('github-credentials-token')  // Ajouter le credential GitHub
         SONARQUBE_ENV = 'SonarQubeServer' // Jenkins > SonarQube Servers
         SONAR_SCANNER = tool 'SonarQubeScanner'
     }
@@ -15,8 +19,23 @@ pipeline {
         stage('Checkout') {
             steps {
                 script {
-                    // Utilisation des credentials GitHub pour cloner le repository
-                    git credentialsId: 'github-credentials', url: 'https://github.com/Acharaf-Dev/THETIPTOP_GAME.git'
+                    try {
+                        // Clonage du repository
+                        git(
+                            credentialsId: 'github-credentials-token',  // ID des credentials Jenkins pour GitHub
+                            url: 'https://github.com/Acharaf-Dev/THETIPTOP_GAME.git',  // URL du repository
+                            branch: env.BRANCH_NAME,  // Utilisation de la variable d'environnement BRANCH_NAME pour récupérer la branche en cours
+                            changelog: true,  // Génère un changelog
+                            poll: false,  // Désactive le polling
+                            scmRetryCount: 3,  // Nombre de tentatives en cas d'échec du checkout
+                            pollInterval: 1  // Intervalle entre les tentatives de polling (en secondes)
+                        )
+
+                        // Si nécessaire, faire un git pull explicite pour t'assurer de récupérer les dernières modifications
+                        sh 'git fetch --all && git reset --hard origin/${env.BRANCH_NAME}'
+                    } catch (Exception e) {
+                        error "Échec du checkout du repository : ${e.getMessage()}"
+                    }
                 }
             }
         }
@@ -51,8 +70,12 @@ pipeline {
         stage('Check .env Files') {
             steps {
                 script {
-                    sh "ls ${ENV_FILE_BACKEND}" // Vérifier si le fichier .env est présent pour le backend
-                    sh "ls ${ENV_FILE_FRONTEND}" // Vérifier si le fichier .env est présent pour le frontend
+                    try {
+                        sh "ls ${ENV_FILE_BACKEND}" // Vérifier si le fichier .env est présent pour le backend
+                        sh "ls ${ENV_FILE_FRONTEND}" // Vérifier si le fichier .env est présent pour le frontend
+                    } catch (Exception e) {
+                        error "Les fichiers .env ne sont pas présents ou erreur lors de la vérification : ${e.getMessage()}"
+                    }
                 }
             }
         }
@@ -60,7 +83,13 @@ pipeline {
         stage('Install Backend Dependencies') {
             steps {
                 dir('backend') {
-                    sh 'npm install'
+                    script {
+                        try {
+                            sh 'npm install'
+                        } catch (Exception e) {
+                            error "Échec de l'installation des dépendances backend : ${e.getMessage()}"
+                        }
+                    }
                 }
             }
         }
@@ -68,7 +97,13 @@ pipeline {
         stage('Install Frontend Dependencies') {
             steps {
                 dir('frontend') {
-                    sh 'npm install'
+                    script {
+                        try {
+                            sh 'npm install'
+                        } catch (Exception e) {
+                            error "Échec de l'installation des dépendances frontend : ${e.getMessage()}"
+                        }
+                    }
                 }
             }
         }
@@ -76,7 +111,13 @@ pipeline {
         stage('Backend Tests') {
             steps {
                 dir('backend') {
-                    sh 'npm run test -- --coverage --coverageReporters=lcov'
+                    script {
+                        try {
+                            sh 'npm run test -- --coverage --coverageReporters=lcov'
+                        } catch (Exception e) {
+                            error "Échec des tests backend : ${e.getMessage()}"
+                        }
+                    }
                 }
             }
         }
@@ -84,7 +125,13 @@ pipeline {
         stage('Frontend Tests') {
             steps {
                 dir('frontend') {
-                    sh 'npm run test -- --coverage --coverageReporters=lcov'
+                    script {
+                        try {
+                            sh 'npm run test -- --coverage --coverageReporters=lcov'
+                        } catch (Exception e) {
+                            error "Échec des tests frontend : ${e.getMessage()}"
+                        }
+                    }
                 }
             }
         }
@@ -92,14 +139,20 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv("${SONARQUBE_ENV}") {
-                    sh """
-                        ${SONAR_SCANNER}/bin/sonar-scanner \
-                          -Dsonar.projectKey=${APP_NAME}-${env.BRANCH_NAME} \
-                          -Dsonar.sources=backend,frontend \
-                          -Dsonar.exclusions=**/node_modules/**,**/__tests__/** \
-                          -Dsonar.javascript.lcov.reportPaths=backend/coverage/lcov.info,frontend/coverage/lcov.info \
-                          -Dsonar.sourceEncoding=UTF-8
-                    """
+                    script {
+                        try {
+                            sh """
+                                ${SONAR_SCANNER}/bin/sonar-scanner \
+                                  -Dsonar.projectKey=${APP_NAME}-${env.BRANCH_NAME} \
+                                  -Dsonar.sources=backend,frontend \
+                                  -Dsonar.exclusions=**/node_modules/**,**/__tests__/** \
+                                  -Dsonar.javascript.lcov.reportPaths=backend/coverage/lcov.info,frontend/coverage/lcov.info \
+                                  -Dsonar.sourceEncoding=UTF-8
+                            """
+                        } catch (Exception e) {
+                            error "Échec de l'analyse SonarQube : ${e.getMessage()}"
+                        }
+                    }
                 }
             }
         }
@@ -115,7 +168,11 @@ pipeline {
         stage('Build Backend Image') {
             steps {
                 script {
-                    sh "docker build -t ${REGISTRY}/${APP_NAME}:backend-${env.BRANCH_NAME} -f ${DOCKERFILE_BACKEND} ./backend"
+                    try {
+                        sh "docker build -t ${REGISTRY}/${APP_NAME}:backend-${env.BRANCH_NAME} -f ${DOCKERFILE_BACKEND} ./backend"
+                    } catch (Exception e) {
+                        error "Échec de la construction de l'image backend : ${e.getMessage()}"
+                    }
                 }
             }
         }
@@ -123,7 +180,11 @@ pipeline {
         stage('Build Frontend Image') {
             steps {
                 script {
-                    sh "docker build -t ${REGISTRY}/${APP_NAME}:frontend-${env.BRANCH_NAME} -f ${DOCKERFILE_FRONTEND} ./frontend"
+                    try {
+                        sh "docker build -t ${REGISTRY}/${APP_NAME}:frontend-${env.BRANCH_NAME} -f ${DOCKERFILE_FRONTEND} ./frontend"
+                    } catch (Exception e) {
+                        error "Échec de la construction de l'image frontend : ${e.getMessage()}"
+                    }
                 }
             }
         }
@@ -131,9 +192,13 @@ pipeline {
         stage('Push Docker Images') {
             steps {
                 script {
-                    docker.withRegistry('', "${DOCKER_CREDENTIALS}") {
-                        sh "docker push ${REGISTRY}/${APP_NAME}:backend-${env.BRANCH_NAME}"
-                        sh "docker push ${REGISTRY}/${APP_NAME}:frontend-${env.BRANCH_NAME}"
+                    try {
+                        docker.withRegistry('', "${DOCKER_CREDENTIALS}") {
+                            sh "docker push ${REGISTRY}/${APP_NAME}:backend-${env.BRANCH_NAME}"
+                            sh "docker push ${REGISTRY}/${APP_NAME}:frontend-${env.BRANCH_NAME}"
+                        }
+                    } catch (Exception e) {
+                        error "Échec du push des images Docker : ${e.getMessage()}"
                     }
                 }
             }
@@ -142,9 +207,13 @@ pipeline {
         stage('Deploy to Environment') {
             steps {
                 script {
-                    sh """
-                        docker-compose -p ${NAMESPACE} -f ${DOCKER_COMPOSE_FILE} up -d --build
-                    """
+                    try {
+                        sh """
+                            docker-compose -p ${NAMESPACE} -f ${DOCKER_COMPOSE_FILE} up -d --build
+                        """
+                    } catch (Exception e) {
+                        error "Échec du déploiement sur l'environnement ${env.BRANCH_NAME} : ${e.getMessage()}"
+                    }
                 }
             }
         }
@@ -155,7 +224,11 @@ pipeline {
             }
             steps {
                 script {
-                    sh "docker-compose -p ${NAMESPACE} -f ${DOCKER_COMPOSE_FILE} down"
+                    try {
+                        sh "docker-compose -p ${NAMESPACE} -f ${DOCKER_COMPOSE_FILE} down"
+                    } catch (Exception e) {
+                        echo "Échec de la suppression des containers Docker : ${e.getMessage()}"
+                    }
                 }
             }
         }
