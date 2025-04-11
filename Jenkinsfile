@@ -10,7 +10,7 @@ pipeline {
         // 🛠️ Docker
         DOCKER_REGISTRY = 'docker.io'
         BACKEND_IMAGE_NAME = "${DOCKER_REGISTRY}/asquare25/thetiptop"
-        FRONTEND_IMAGE_NAME = "${DOCKER_REGISTRY}/asquare25/thetiptop-frontend"
+        FRONTEND_IMAGE_NAME = "${DOCKER_REGISTRY}/asquare25/thetiptop"
         
         SSH_HOST = 'ton.serveur.exemple.com'
     }
