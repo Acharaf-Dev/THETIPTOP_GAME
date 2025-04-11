@@ -5,7 +5,7 @@ pipeline {
         REGISTRY = "docker.io"
         APP_NAME = "tip_top_app"
         DOCKER_CREDENTIALS = credentials('dockerhub-credentials') // Jenkins > DockerHub credentials
-        GITHUB_CREDENTIALS = credentials('dockerhub-credentials-token')  // Ajouter le credential GitHub
+        GITHUB_CREDENTIALS = credentials('github-credentials-token')  // Ajouter le credential GitHub
         SONARQUBE_ENV = 'SonarQubeServer' // Jenkins > SonarQube Servers
         SONAR_SCANNER = tool 'SonarQubeScanner'
     }
