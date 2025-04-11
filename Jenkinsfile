@@ -2,16 +2,14 @@ pipeline {
     agent {
         docker {
             image 'node:20.19.0'
-            args '-v $PWD:/app'  // Si tu veux monter le volume du workspace Jenkins
+            args '-v $PWD:/app'
         }
     }
 
     environment {
-        // 🛠️ Docker
         DOCKER_REGISTRY = 'docker.io'
         BACKEND_IMAGE_NAME = "${DOCKER_REGISTRY}/tiptop-backend"
         FRONTEND_IMAGE_NAME = "${DOCKER_REGISTRY}/tiptop-frontend"
-
         SSH_HOST = 'ton.serveur.exemple.com'
     }
 
@@ -25,26 +23,41 @@ pipeline {
         stage('Install, Test & Build') {
             steps {
                 script {
-                    ['backend', 'frontend'].each { module ->
-                        dir(module) {
-                            sh 'npm install'
-                            // sh 'npm run test -- --coverage --coverageReporters=lcov'
+                    dir('backend') {
+                        sh 'npm install'
 
-                            if (fileExists('package.json') && sh(script: 'npm run | grep -q "build"', returnStatus: true) == 0) {
-                                sh 'npm run build'
-                            } else {
-                                echo "⚠️ Aucun script build trouvé pour ${module}, skip."
-                            }
+                        if (fileExists('package.json') && sh(script: 'npm run | grep -q "build"', returnStatus: true) == 0) {
+                            sh 'npm run build'
+                        } else {
+                            echo "⚠️ Aucun script build trouvé pour backend, skip."
                         }
-                        publishHTML(target: [
-                            reportName: "${module.capitalize()} Coverage",
-                            reportDir: "${module}/coverage",
-                            reportFiles: 'index.html',
-                            keepAll: true,
-                            allowMissing: true,
-                            alwaysLinkToLastBuild: true
-                        ])
                     }
+
+                    publishHTML(target: [
+                        reportName: "Backend Coverage",
+                        reportDir: "backend/coverage",
+                        reportFiles: 'index.html',
+                        keepAll: true,
+                        allowMissing: true,
+                        alwaysLinkToLastBuild: true
+                    ])
+
+                    dir('frontend') {
+                        sh 'npm install'
+
+                        withEnv(["CI=false"]) {
+                            sh 'npm run build'
+                        }
+                    }
+
+                    publishHTML(target: [
+                        reportName: "Frontend Coverage",
+                        reportDir: "frontend/coverage",
+                        reportFiles: 'index.html',
+                        keepAll: true,
+                        allowMissing: true,
+                        alwaysLinkToLastBuild: true
+                    ])
                 }
             }
         }

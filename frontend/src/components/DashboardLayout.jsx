@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 // Import icons (example using react-icons)
-import { FiHome, FiUsers, FiSettings, FiLogOut, FiGift, FiUser, FiTrello, FiBell } from 'react-icons/fi'; 
+import { FiHome, FiUsers, FiSettings, FiLogOut, FiGift } from 'react-icons/fi'; 
 
 const DashboardLayout = ({ userType, children }) => {
     const navigate = useNavigate();
