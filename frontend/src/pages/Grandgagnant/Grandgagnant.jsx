@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { FiGift, FiSearch } from "react-icons/fi";
+import { FiGift } from "react-icons/fi";
 
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:4000/api";
 
@@ -9,7 +9,7 @@ const Grandgagnant = () => {
   const [users, setUsers] = useState([]);
   const [gains, setGains] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
+  // const [searchTerm, setSearchTerm] = useState("");
   const [grandWinner, setGrandWinner] = useState(null);
   const [isDrawn, setIsDrawn] = useState(false); // Ajout d'un état pour vérifier si le tirage a été effectué
 

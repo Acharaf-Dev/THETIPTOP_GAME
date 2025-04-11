@@ -32,10 +32,18 @@ pipeline {
                             // Pour le frontend, on force les permissions sur react-scripts
                             if (module == 'frontend') {
                                 sh 'chmod -R +x node_modules/.bin'  // <-- Donne les droits d'exécution à tous les binaires
+
+                                // Installe 'serve' globalement pour pouvoir servir l'app
+                                sh 'yarn global add serve'
                             }
 
                             withEnv(["CI=false"]) {
                                 sh 'npm run build'
+
+                                // Si c'est le frontend, on le sert après le build (facultatif selon l'usage)
+                                if (module == 'frontend') {
+                                    sh 'serve -s build -l 3000'
+                                }
                             }
                         }
                         publishHTML(target: [
