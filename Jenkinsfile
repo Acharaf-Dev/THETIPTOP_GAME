@@ -44,62 +44,34 @@ pipeline {
         //     }
         // }
 
-        stage('Install, Test & Build Backend') {
-
+        stage('Test & Build Backend (Docker)') {
             steps {
-
-                dir('backend') {
-
-                    script {
-
-                        try {
-
-                            echo "📦 Installation des dépendances backend"
-
-                            sh 'npm install'
+                script {
+                    def containerName = "tiptop_backend" // ou le vrai nom de ton conteneur backend
         
-                            echo "🧪 Lancement des tests avec coverage"
-
-                            sh 'npm run test -- --coverage --coverageReporters=lcov'
+                    try {
+                        echo "🧪 Lancement des tests dans le conteneur Docker"
+                        sh "docker exec ${containerName} npm run test -- --coverage --coverageReporters=lcov"
         
-                            echo "🏗️ Build du backend"
-
-                            sh 'npm run build'
-
-                        } catch (err) {
-
-                            echo "❌ Erreur lors du test/build backend : ${err}"
-
-                            currentBuild.result = 'FAILURE'
-
-                            error("Échec du test ou du build backend")
-
-                        }
-        
-                        echo "📊 Publication du rapport de couverture"
-
-                        publishHTML(target: [
-
-                            reportName: "Backend Coverage",
-
-                            reportDir: "coverage",
-
-                            reportFiles: 'index.html',
-
-                            keepAll: true,
-
-                            allowMissing: true,
-
-                            alwaysLinkToLastBuild: true
-
-                        ])
-
+                        echo "🏗️ Build dans le conteneur Docker"
+                        sh "docker exec ${containerName} npm run build"
+                    } catch (err) {
+                        echo "❌ Échec dans le conteneur backend : ${err}"
+                        currentBuild.result = 'FAILURE'
+                        error("Échec du test ou build Docker backend")
                     }
-
+        
+                    echo "📊 Publication du rapport de couverture (en local)"
+                    publishHTML(target: [
+                        reportName: "Backend Coverage",
+                        reportDir: "backend/coverage",
+                        reportFiles: 'index.html',
+                        keepAll: true,
+                        allowMissing: true,
+                        alwaysLinkToLastBuild: true
+                    ])
                 }
-
             }
-
         }
  
 
