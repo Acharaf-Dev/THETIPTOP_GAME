@@ -11,7 +11,7 @@ pipeline {
         DOCKER_REGISTRY = 'docker.io'
         BACKEND_IMAGE_NAME = "${DOCKER_REGISTRY}/tiptop-backend"
         FRONTEND_IMAGE_NAME = "${DOCKER_REGISTRY}/tiptop-frontend"
-        
+
         SSH_HOST = 'ton.serveur.exemple.com'
     }
 
@@ -29,7 +29,12 @@ pipeline {
                         dir(module) {
                             sh 'npm install'
                             // sh 'npm run test -- --coverage --coverageReporters=lcov'
-                            sh 'npm run build'
+
+                            if (fileExists('package.json') && sh(script: 'npm run | grep -q "build"', returnStatus: true) == 0) {
+                                sh 'npm run build'
+                            } else {
+                                echo "⚠️ Aucun script build trouvé pour ${module}, skip."
+                            }
                         }
                         publishHTML(target: [
                             reportName: "${module.capitalize()} Coverage",
@@ -43,47 +48,6 @@ pipeline {
                 }
             }
         }
-
-    //    stage('Test Backend & Build Backend + Frontend (Docker)') {
-    //         steps {
-    //             script {
-    //                 def backendContainer = "tiptop_backend"
-    //                 def frontendContainer = "tiptop_frontend"
-        
-    //                 try {
-    //                     echo "🧪 Lancement des tests backend avec coverage"
-    //                     sh "docker exec ${backendContainer} npm install"
-    //                     sh "docker exec ${backendContainer} npm run test -- --coverage --coverageReporters=lcov"
-        
-    //                     echo "📦 Build du backend"
-    //                     sh "docker exec ${backendContainer} npm run build"
-        
-    //                     echo "🎨 Build du frontend"
-    //                     sh "docker exec ${frontendContainer} npm install"
-    //                     sh "docker exec ${frontendContainer} npm run build"
-    //                 } catch (err) {
-    //                     echo "❌ Une erreur est survenue : ${err}"
-    //                     currentBuild.result = 'FAILURE'
-    //                     error("Échec pendant test/build backend ou frontend")
-    //                 }
-        
-    //                 echo "📤 Copie du rapport de coverage backend depuis le conteneur"
-    //                 // Montre le dossier de coverage vers l’hôte via Docker volume si ce n’est pas déjà fait
-    //                 sh "docker cp ${backendContainer}:/app/coverage ./backend_coverage"
-        
-    //                 echo "📊 Publication du rapport coverage dans Jenkins"
-    //                 publishHTML(target: [
-    //                     reportName: "Backend Coverage",
-    //                     reportDir: "backend_coverage/lcov-report",
-    //                     reportFiles: 'index.html',
-    //                     keepAll: true,
-    //                     allowMissing: true,
-    //                     alwaysLinkToLastBuild: true
-    //                 ])
-    //             }
-    //         }
-    //     }
-
 
         stage('Build & Push Docker Images') {
             when {
