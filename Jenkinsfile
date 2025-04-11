@@ -2,17 +2,16 @@ pipeline {
     agent {
         docker {
             image 'node:20.19.0'
-            args '-v $PWD:/app'  // Monter le volume du workspace Jenkins (facultatif)
+            args '-v $PWD:/app'
         }
     }
 
     environment {
-        // 🛠️ Docker
         DOCKER_REGISTRY = 'docker.io'
         BACKEND_IMAGE_NAME = "${DOCKER_REGISTRY}/asquare25/thetiptop"
         FRONTEND_IMAGE_NAME = "${DOCKER_REGISTRY}/asquare25/thetiptop"
-        
-        SSH_HOST = 'ton.serveur.exemple.com'
+
+        SSH_HOST = '161.97.76.223'
     }
 
     stages {
@@ -30,16 +29,30 @@ pipeline {
                             sh 'npm install'
 
                             if (module == 'frontend') {
-                                // Ajout spécifique pour le dossier frontend
-                                sh 'chmod -R +x node_modules/.bin'  // Permissions d'exécution
+                                sh 'chmod -R +x node_modules/.bin'
                                 withEnv(["CI=false"]) {
-                                    sh 'npm run build'  // Exécuter le script build uniquement pour frontend
+                                    sh 'npm run build'
                                 }
                             } else {
                                 echo "Pas de script build pour ${module}"
                             }
                         }
                     }
+                }
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
+                    sh """
+                        npx sonar-scanner \
+                            -Dsonar.projectKey=tiptop-backend \
+                            -Dsonar.sources=./backend \
+                            -Dsonar.host.url=https://www.sonarqube.dsp5-archi-f24a-15m-g8.fr \
+                            -Dsonar.login=${SONAR_TOKEN} \
+                            -Dsonar.javascript.lcov.reportPaths=backend/coverage/lcov.info || true
+                    """
                 }
             }
         }
@@ -54,19 +67,10 @@ pipeline {
                         def backendImage = "${BACKEND_IMAGE_NAME}:${BRANCH_NAME}"
                         def frontendImage = "${FRONTEND_IMAGE_NAME}:${BRANCH_NAME}"
 
-                        // Docker login avec un Personal Access Token
                         sh """
                             echo \${DOCKER_PASS} | docker login -u \${DOCKER_USER} --password-stdin
-                        """
-
-                        // Build et Push pour backend
-                        sh """
                             docker build -t ${backendImage} ./backend
                             docker push ${backendImage}
-                        """
-
-                        // Build et Push pour frontend
-                        sh """
                             docker build -f ./frontend/Dockerfile.prod -t ${frontendImage} ./frontend
                             docker push ${frontendImage}
                         """
