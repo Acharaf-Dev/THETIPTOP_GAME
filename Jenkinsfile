@@ -22,42 +22,30 @@ pipeline {
             }
         }
 
+        
         stage('Install, Test & Build') {
             steps {
                 script {
                     ['backend', 'frontend'].each { module -> 
                         dir(module) {
                             sh 'npm install'
-                            
-                            // Pour le frontend, on force les permissions sur react-scripts
+
                             if (module == 'frontend') {
-                                sh 'chmod -R +x node_modules/.bin'  // <-- Donne les droits d'exécution à tous les binaires
-
-                                // Installe 'serve' globalement pour pouvoir servir l'app
-                                sh 'yarn global add serve'
-                            }
-
-                            withEnv(["CI=false"]) {
-                                sh 'npm run build'
-
-                                // Si c'est le frontend, on le sert après le build (facultatif selon l'usage)
-                                if (module == 'frontend') {
-                                    sh 'serve -s build -l 3000'
+                                // Ajout spécifique pour le dossier frontend
+                                sh 'chmod -R +x node_modules/.bin'  // Permissions d'exécution
+                                withEnv(["CI=false"]) {
+                                    sh 'npm run build'  // Exécuter le script build uniquement pour frontend
                                 }
+                            } else {
+                                // Vous pouvez ajouter d'autres scripts pour le backend si nécessaire
+                                echo "Pas de script build pour ${module}"
                             }
                         }
-                        publishHTML(target: [
-                            reportName: "${module.capitalize()} Coverage",
-                            reportDir: "${module}/coverage",
-                            reportFiles: 'index.html',
-                            keepAll: true,
-                            allowMissing: true,
-                            alwaysLinkToLastBuild: true
-                        ])
                     }
                 }
             }
         }
+
 
         stage('Build & Push Docker Images') {
             when {
