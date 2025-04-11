@@ -7,22 +7,15 @@ pipeline {
         BACKEND_IMAGE_NAME = "${DOCKER_REGISTRY}/tiptop-backend"
         FRONTEND_IMAGE_NAME = "${DOCKER_REGISTRY}/tiptop-frontend"
 
-        // 🧪 Qualité
+        // 🧪 SonarQube
         SONARQUBE_URL = 'https://sonarqube.dsp5-archi-f24a-15m-g8.fr'
         SONARQUBE_TOKEN = credentials('sonarqube-token-last')
 
-        // 🧑‍💻 Docker Hub creds
-        DOCKER_USER = credentials('dockerhub-credentials').username
-        DOCKER_PASS = credentials('dockerhub-credentials').password
-
-        // 🔐 SSH creds
-        SSH_USER = credentials('ssh-credentials').username
-        SSH_PASS = credentials('ssh-credentials').password
-        SSH_HOST = 'ton.serveur.exemple.com'
-
-        // 📦 Shared
+        // 📦 Node env (si besoin d’un Docker agent node)
         DOCKER_NODE_IMAGE = 'node:16'
         DOCKER_ARGS = '-v $PWD:/app'
+
+        SSH_HOST = 'ton.serveur.exemple.com'
     }
 
     stages {
@@ -33,24 +26,15 @@ pipeline {
             }
         }
 
-        // 👉 Install, Test & Build for both frontend/backend
-        ['backend', 'frontend'].each { module ->
-            stage("Install Dependencies - ${module}") {
-                steps {
-                    dir(module) {
-                        sh 'npm install'
-                    }
-                }
-            }
-
-            stage("Run Tests - ${module}") {
-                steps {
-                    dir(module) {
-                        sh 'npm run test -- --coverage --coverageReporters=lcov'
-                    }
-                }
-                post {
-                    always {
+        stage('Install, Test & Build') {
+            steps {
+                script {
+                    ['backend', 'frontend'].each { module ->
+                        dir(module) {
+                            sh 'npm install'
+                            sh 'npm run test -- --coverage --coverageReporters=lcov'
+                            sh 'npm run build'
+                        }
                         publishHTML(target: [
                             reportName: "${module.capitalize()} Coverage",
                             reportDir: "${module}/coverage",
@@ -59,14 +43,6 @@ pipeline {
                             allowMissing: true,
                             alwaysLinkToLastBuild: true
                         ])
-                    }
-                }
-            }
-
-            stage("Build ${module.capitalize()}") {
-                steps {
-                    dir(module) {
-                        sh 'npm run build'
                     }
                 }
             }
@@ -99,17 +75,19 @@ pipeline {
                 expression { ['develop', 'preprod', 'prod'].contains(env.BRANCH_NAME) }
             }
             steps {
-                script {
-                    def backendImage = "${BACKEND_IMAGE_NAME}:${BRANCH_NAME}"
-                    def frontendImage = "${FRONTEND_IMAGE_NAME}:${BRANCH_NAME}"
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    script {
+                        def backendImage = "${BACKEND_IMAGE_NAME}:${BRANCH_NAME}"
+                        def frontendImage = "${FRONTEND_IMAGE_NAME}:${BRANCH_NAME}"
 
-                    sh """
-                        echo "${DOCKER_PASS}" | docker login -u "${DOCKER_USER}" --password-stdin
-                        docker build -t ${backendImage} ./backend
-                        docker build -t ${frontendImage} ./frontend
-                        docker push ${backendImage}
-                        docker push ${frontendImage}
-                    """
+                        sh """
+                            echo "${DOCKER_PASS}" | docker login -u "${DOCKER_USER}" --password-stdin
+                            docker build -t ${backendImage} ./backend
+                            docker build -t ${frontendImage} ./frontend
+                            docker push ${backendImage}
+                            docker push ${frontendImage}
+                        """
+                    }
                 }
             }
         }
@@ -119,13 +97,15 @@ pipeline {
                 expression { ['develop', 'preprod', 'prod'].contains(env.BRANCH_NAME) }
             }
             steps {
-                sh """
-                    sshpass -p "${SSH_PASS}" ssh -o StrictHostKeyChecking=no "${SSH_USER}@${SSH_HOST}" '
-                      cd /opt/docker-compose &&
-                      docker-compose pull &&
-                      docker-compose up -d
-                    '
-                """
+                withCredentials([usernamePassword(credentialsId: 'ssh-credentials', usernameVariable: 'SSH_USER', passwordVariable: 'SSH_PASS')]) {
+                    sh """
+                        sshpass -p "${SSH_PASS}" ssh -o StrictHostKeyChecking=no "${SSH_USER}@${SSH_HOST}" '
+                          cd /opt/docker-compose &&
+                          docker-compose pull &&
+                          docker-compose up -d
+                        '
+                    """
+                }
             }
         }
 
