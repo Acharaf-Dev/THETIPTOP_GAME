@@ -24,7 +24,7 @@ pipeline {
         stage('Set Docker Paths') {
             steps {
                 script {
-                    if (env.BRANCH_NAME == 'dev') {
+                    if (env.BRANCH_NAME == 'develop') {
                         env.DOCKERFILE_BACKEND = './backend/Dockerfile.dev'
                         env.DOCKERFILE_FRONTEND = './frontend/Dockerfile.dev'
                         env.DOCKER_COMPOSE_FILE = './docker-compose.dev.yml'
