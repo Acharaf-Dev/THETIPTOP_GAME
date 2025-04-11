@@ -2,7 +2,7 @@ pipeline {
     agent {
         docker {
             image 'node:20.19.0'
-            args '-v $PWD:/app'  // Si tu veux monter le volume du workspace Jenkins
+            args '-v $PWD:/app'  // Monter le volume du workspace Jenkins (facultatif)
         }
     }
 
@@ -22,7 +22,6 @@ pipeline {
             }
         }
 
-        
         stage('Install, Test & Build') {
             steps {
                 script {
@@ -37,7 +36,6 @@ pipeline {
                                     sh 'npm run build'  // Exécuter le script build uniquement pour frontend
                                 }
                             } else {
-                                // Vous pouvez ajouter d'autres scripts pour le backend si nécessaire
                                 echo "Pas de script build pour ${module}"
                             }
                         }
@@ -45,7 +43,6 @@ pipeline {
                 }
             }
         }
-
 
         stage('Build & Push Docker Images') {
             when {
@@ -58,9 +55,9 @@ pipeline {
                         def frontendImage = "${FRONTEND_IMAGE_NAME}:${BRANCH_NAME}"
 
                         sh """
-                            echo "${DOCKER_PASS}" | docker login -u "${DOCKER_USER}" --password-stdin
+                            echo \${DOCKER_PASS} | docker login -u \${DOCKER_USER} --password-stdin
                             docker build -t ${backendImage} ./backend
-                            docker build -t ${frontendImage} ./frontend
+                            docker build -f ./frontend/Dockerfile.prod -t ${frontendImage} ./frontend
                             docker push ${backendImage}
                             docker push ${frontendImage}
                         """
@@ -76,7 +73,7 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'ssh-credentials', usernameVariable: 'SSH_USER', passwordVariable: 'SSH_PASS')]) {
                     sh """
-                        sshpass -p "${SSH_PASS}" ssh -o StrictHostKeyChecking=no "${SSH_USER}@${SSH_HOST}" '
+                        sshpass -p "\${SSH_PASS}" ssh -o StrictHostKeyChecking=no "\${SSH_USER}@\${SSH_HOST}" '
                           cd /opt/docker-compose &&
                           docker-compose pull &&
                           docker-compose up -d
