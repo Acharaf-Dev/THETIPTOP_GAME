@@ -1,21 +1,21 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'node:20.19.0'
+            args '-v $PWD:/app'  // Si tu veux monter le volume du workspace Jenkins
+        }
+    }
 
     environment {
         // 🛠️ Docker
         DOCKER_REGISTRY = 'docker.io'
         BACKEND_IMAGE_NAME = "${DOCKER_REGISTRY}/tiptop-backend"
         FRONTEND_IMAGE_NAME = "${DOCKER_REGISTRY}/tiptop-frontend"
-
-        // 📦 Node env (si besoin d’un Docker agent node)
-        DOCKER_NODE_IMAGE = 'node:16'
-        DOCKER_ARGS = '-v $PWD:/app'
-
+        
         SSH_HOST = 'ton.serveur.exemple.com'
     }
 
     stages {
-
         stage('Checkout') {
             steps {
                 checkout scm
@@ -25,7 +25,7 @@ pipeline {
         stage('Install, Test & Build') {
             steps {
                 script {
-                    ['backend', 'frontend'].each { module -> 
+                    ['backend', 'frontend'].each { module ->
                         dir(module) {
                             sh 'npm install'
                             sh 'npm run test -- --coverage --coverageReporters=lcov'
