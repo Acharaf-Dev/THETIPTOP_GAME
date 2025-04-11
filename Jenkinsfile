@@ -44,36 +44,39 @@ pipeline {
         //     }
         // }
 
-        stage('Test & Build Backend (Docker)') {
+       stage('Install, Test & Build') {
             steps {
                 script {
-                    def containerName = "tiptop_backend" // ou le vrai nom de ton conteneur backend
-        
-                    try {
-                        echo "🧪 Lancement des tests dans le conteneur Docker"
-                        sh "docker exec ${containerName} npm run test -- --coverage --coverageReporters=lcov"
-        
-                        echo "🏗️ Build dans le conteneur Docker"
-                        sh "docker exec ${containerName} npm run build"
-                    } catch (err) {
-                        echo "❌ Échec dans le conteneur backend : ${err}"
-                        currentBuild.result = 'FAILURE'
-                        error("Échec du test ou build Docker backend")
+                    ['backend', 'frontend'].each { module ->
+                        dir(module) {
+                            try {
+                                // Installer les dépendances
+                                sh 'npm install'
+
+                                // Exécuter les tests avec couverture
+                                sh 'npm run test -- --coverage --coverageReporters=lcov'
+
+                                // Construire le projet
+                                sh 'npm run build'
+                            } catch (Exception e) {
+                                // Gestion d'erreur personnalisée
+                                error("Build or test failed for ${module}: ${e.message}")
+                            }
+                        }
+                        // Publier le rapport de couverture HTML
+                        publishHTML(target: [
+                            reportName: "${module.capitalize()} Coverage",
+                            reportDir: "${module}/coverage",
+                            reportFiles: 'index.html',
+                            keepAll: true,
+                            allowMissing: true,
+                            alwaysLinkToLastBuild: true
+                        ])
                     }
-        
-                    echo "📊 Publication du rapport de couverture (en local)"
-                    publishHTML(target: [
-                        reportName: "Backend Coverage",
-                        reportDir: "backend/coverage",
-                        reportFiles: 'index.html',
-                        keepAll: true,
-                        allowMissing: true,
-                        alwaysLinkToLastBuild: true
-                    ])
                 }
             }
         }
- 
+
 
         stage('Build & Push Docker Images') {
             when {
