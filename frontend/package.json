@@ -36,7 +36,7 @@
   "scripts": {
     "start": "cross-env PORT=4200 react-scripts start",
     "build": "react-scripts build",
-    "test": "jest",
+    "test": "react-scripts test --watchAll=false --coverage",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "eject": "react-scripts eject",

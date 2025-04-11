@@ -18,10 +18,14 @@ up-preprod:
 	docker compose -f docker-compose.yml -f docker-compose.preprod.yml build
 	docker compose -f docker-compose.yml -f docker-compose.preprod.yml up -d
 
-# Lancer l'environnement de développement avec un build préalable
+# Lancer l'environnement de pré-production avec un build préalable
 up-dev:
 	docker compose -f docker-compose.yml -f docker-compose.dev.yml build
 	docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+
+# Lancer l'environnement de développement local avec un build préalable
+local:
+	docker compose -f docker-compose.dev.yml up --build -d
 
 # Lancer uniquement le frontend en développement
 front-dev:
@@ -46,10 +50,6 @@ down:
 # Vérifier la configuration du Docker Compose (dev, preprod, prod)
 config:
 	docker compose config
-
-# Lancer l'environnement de développement local avec un build préalable
-local:
-	docker compose -f docker-compose.dev.yml up --build -d
 
 # Arrêter et supprimer tous les services en local (dev)
 local-down:
