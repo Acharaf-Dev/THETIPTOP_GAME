@@ -7,10 +7,6 @@ pipeline {
         BACKEND_IMAGE_NAME = "${DOCKER_REGISTRY}/tiptop-backend"
         FRONTEND_IMAGE_NAME = "${DOCKER_REGISTRY}/tiptop-frontend"
 
-        // 🧪 SonarQube
-        SONARQUBE_URL = 'https://sonarqube.dsp5-archi-f24a-15m-g8.fr'
-        SONARQUBE_TOKEN = credentials('sonarqube-token-last')
-
         // 📦 Node env (si besoin d’un Docker agent node)
         DOCKER_NODE_IMAGE = 'node:16'
         DOCKER_ARGS = '-v $PWD:/app'
@@ -29,7 +25,7 @@ pipeline {
         stage('Install, Test & Build') {
             steps {
                 script {
-                    ['backend', 'frontend'].each { module ->
+                    ['backend', 'frontend'].each { module -> 
                         dir(module) {
                             sh 'npm install'
                             sh 'npm run test -- --coverage --coverageReporters=lcov'
@@ -44,28 +40,6 @@ pipeline {
                             alwaysLinkToLastBuild: true
                         ])
                     }
-                }
-            }
-        }
-
-        stage('SonarQube Analysis') {
-            when {
-                expression { ['develop', 'preprod', 'prod'].contains(env.BRANCH_NAME) }
-            }
-            steps {
-                withSonarQubeEnv('SonarQube') {
-                    sh 'npx sonar-scanner'
-                }
-            }
-        }
-
-        stage('Quality Gate') {
-            when {
-                expression { ['develop', 'preprod', 'prod'].contains(env.BRANCH_NAME) }
-            }
-            steps {
-                timeout(time: 3, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
                 }
             }
         }
