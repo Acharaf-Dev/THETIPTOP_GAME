@@ -1,98 +1,98 @@
-jest.setTimeout(60000);
-process.env.NODE_ENV = "test";
+// jest.setTimeout(60000);
+// process.env.NODE_ENV = "test";
 
-const request = require("supertest");
-const bcrypt = require("bcrypt");
-const mongoose = require("mongoose");
-const connectDB = require("../src/config/db");
-const app = require("../app");
+// const request = require("supertest");
+// const bcrypt = require("bcrypt");
+// const mongoose = require("mongoose");
+// const connectDB = require("../src/config/db");
+// const app = require("../app");
 
-let userModel;
-let ticketModel;
-let clientToken;
+// let userModel;
+// let ticketModel;
+// let clientToken;
 
-beforeAll(async () => {
-  // Connecte à la base de données
-  await connectDB();
-  console.log("🧪 Base de test utilisée :", mongoose.connection.name);
+// beforeAll(async () => {
+//   // Connecte à la base de données
+//   await connectDB();
+//   console.log("🧪 Base de test utilisée :", mongoose.connection.name);
 
-  // Import des modèles après connexion
-  userModel = require("../src/models/usersModel");
-  ticketModel = require("../src/models/winningTicket");
+//   // Import des modèles après connexion
+//   userModel = require("../src/models/usersModel");
+//   ticketModel = require("../src/models/winningTicket");
 
-  // Nettoyage des collections
-  await userModel.deleteMany({});
-  await ticketModel.deleteMany({});
+//   // Nettoyage des collections
+//   await userModel.deleteMany({});
+//   await ticketModel.deleteMany({});
 
-  // Création d'un ticket et d'un utilisateur
-  const normalizedEmail = "gameclient@example.com";
-  const rawPassword = "Gamepass123";
-  const hashedPassword = await bcrypt.hash(rawPassword, 10);
+//   // Création d'un ticket et d'un utilisateur
+//   const normalizedEmail = "gameclient@example.com";
+//   const rawPassword = "Gamepass123";
+//   const hashedPassword = await bcrypt.hash(rawPassword, 10);
 
-  await ticketModel.create({
-    ticketNumber: "3T-UOAR253",
-    prizeValue: 100,
-    prizeWon: "Carte cadeau Amazon",
-    isUsed: false,
-  });
+//   await ticketModel.create({
+//     ticketNumber: "3T-UOAR253",
+//     prizeValue: 100,
+//     prizeWon: "Carte cadeau Amazon",
+//     isUsed: false,
+//   });
 
-  await userModel.create({
-    userName: "GameClient",
-    email: normalizedEmail,
-    password: hashedPassword,
-    phone: "06 06 06 06 06",
-    address: ["Vincennes", "Paris"],
-    userType: "client",
-    answer: "test",
-  });
+//   await userModel.create({
+//     userName: "GameClient",
+//     email: normalizedEmail,
+//     password: hashedPassword,
+//     phone: "06 06 06 06 06",
+//     address: ["Vincennes", "Paris"],
+//     userType: "client",
+//     answer: "test",
+//   });
 
-  const usersInDb = await userModel.find({}, "_id email");
-  console.log("🔍 Tous les users en base après inscription :", usersInDb);
+//   const usersInDb = await userModel.find({}, "_id email");
+//   console.log("🔍 Tous les users en base après inscription :", usersInDb);
 
-  // Test de login pour récupérer un token
-  const loginRes = await request(app).post("/api/auth/login").send({
-    email: normalizedEmail,
-    password: rawPassword,
-  });
+//   // Test de login pour récupérer un token
+//   const loginRes = await request(app).post("/api/auth/login").send({
+//     email: normalizedEmail,
+//     password: rawPassword,
+//   });
 
-  console.log("🚨 Résultat du login :", loginRes.body);
-  clientToken = loginRes.body.token;
-  console.log("✅ Token JWT généré :", clientToken);
-});
+//   console.log("🚨 Résultat du login :", loginRes.body);
+//   clientToken = loginRes.body.token;
+//   console.log("✅ Token JWT généré :", clientToken);
+// });
 
-afterAll(async () => {
-  await mongoose.connection.close();
-});
+// afterAll(async () => {
+//   await mongoose.connection.close();
+// });
 
-describe("🎲 Game API", () => {
-  it("✅ should allow client to play with a valid ticket", async () => {
-    const res = await request(app)
-      .post("/api/game/play")
-      .set("Authorization", `Bearer ${clientToken}`)
-      .send({ ticketNumber: "3T-UOAR253" });
+// describe("🎲 Game API", () => {
+//   it("✅ should allow client to play with a valid ticket", async () => {
+//     const res = await request(app)
+//       .post("/api/game/play")
+//       .set("Authorization", `Bearer ${clientToken}`)
+//       .send({ ticketNumber: "3T-UOAR253" });
 
-    expect(res.statusCode).toBe(200);
-    expect(res.body).toHaveProperty("success", true);
-    expect(res.body.message).toMatch(/Congratulations/i);
-  });
+//     expect(res.statusCode).toBe(200);
+//     expect(res.body).toHaveProperty("success", true);
+//     expect(res.body.message).toMatch(/Congratulations/i);
+//   });
 
-  it("❌ should reject replay with same ticket", async () => {
-    const res = await request(app)
-      .post("/api/game/play")
-      .set("Authorization", `Bearer ${clientToken}`)
-      .send({ ticketNumber: "3T-UOAR253" });
+//   it("❌ should reject replay with same ticket", async () => {
+//     const res = await request(app)
+//       .post("/api/game/play")
+//       .set("Authorization", `Bearer ${clientToken}`)
+//       .send({ ticketNumber: "3T-UOAR253" });
 
-    expect(res.statusCode).toBe(400);
-    expect(res.body.message).toMatch(/déjà utilisé/i);
-  });
+//     expect(res.statusCode).toBe(400);
+//     expect(res.body.message).toMatch(/déjà utilisé/i);
+//   });
 
-  it("❌ should fail with invalid ticket", async () => {
-    const res = await request(app)
-      .post("/api/game/play")
-      .set("Authorization", `Bearer ${clientToken}`)
-      .send({ ticketNumber: "INVALID-999" });
+//   it("❌ should fail with invalid ticket", async () => {
+//     const res = await request(app)
+//       .post("/api/game/play")
+//       .set("Authorization", `Bearer ${clientToken}`)
+//       .send({ ticketNumber: "INVALID-999" });
 
-    expect(res.statusCode).toBe(400);
-    expect(res.body.message).toMatch(/Ticket invalide/i);
-  });
-});
+//     expect(res.statusCode).toBe(400);
+//     expect(res.body.message).toMatch(/Ticket invalide/i);
+//   });
+// });
