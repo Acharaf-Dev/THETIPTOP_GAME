@@ -7,7 +7,9 @@ WORKDIR /app
 COPY package*.json ./
 
 # Installer toutes les dépendances (prod + dev)
-RUN npm install
+# RUN npm install
+# Installe Jest pour qu'il soit toujours dispo
+RUN npm install --save-dev jest
 
 # Copier le reste du code
 COPY . .
