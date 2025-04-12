@@ -84,16 +84,16 @@ pipeline {
             steps {
                 withCredentials([sshUserPrivateKey(credentialsId: 'ssh-key-jenkins', keyFileVariable: 'SSH_KEY', usernameVariable: 'SSH_USER')]) {
                     script {
-                        def deployCommand = """
-                            ssh -i $SSH_KEY -o StrictHostKeyChecking=no ${SSH_USER}@161.97.76.223 '
+                        // Ensure proper SSH key usage
+                        sh """
+                            echo "🚀 Lancement du déploiement sur le serveur distant..."
+                            ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${SSH_USER}@161.97.76.223 <<EOF
                                 cd /opt/deploy-thetiptop &&
                                 docker-compose pull &&
                                 docker-compose up -d &&
                                 docker system prune -f
-                            '
+                            EOF
                         """
-                        echo "🚀 Lancement du déploiement sur le serveur distant..."
-                        sh deployCommand
                     }
                 }
             }
