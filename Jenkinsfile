@@ -10,7 +10,6 @@ pipeline {
         DOCKER_REGISTRY = 'docker.io'
         BACKEND_IMAGE_NAME = "${DOCKER_REGISTRY}/asquare25/thetiptop"
         FRONTEND_IMAGE_NAME = "${DOCKER_REGISTRY}/asquare25/thetiptop"
-        WEBHOOK_URL = "http://161.97.76.223:5000/webhook"
     }
 
     stages {
@@ -78,18 +77,24 @@ pipeline {
             }
         }
 
-        stage('Trigger Webhook') {
+        stage('Deploy via SSH') {
             when {
                 expression { ['develop', 'preprod', 'prod'].contains(env.BRANCH_NAME) }
             }
             steps {
-                script {
-                    def webhookCall = "${WEBHOOK_URL}?branch=${BRANCH_NAME}"
-                    echo "📡 Appel du webhook de déploiement : ${webhookCall}"
-
-                    sh """
-                        curl -X POST "${webhookCall}"
-                    """
+                withCredentials([sshUserPrivateKey(credentialsId: 'ssh-key-jenkins', keyFileVariable: 'SSH_KEY', usernameVariable: 'SSH_USER')]) {
+                    script {
+                        def deployCommand = """
+                            ssh -i $SSH_KEY -o StrictHostKeyChecking=no ${SSH_USER}@161.97.76.223 '
+                                cd /opt/deploy-thetiptop &&
+                                docker-compose pull &&
+                                docker-compose up -d &&
+                                docker system prune -f
+                            '
+                        """
+                        echo "🚀 Lancement du déploiement sur le serveur distant..."
+                        sh deployCommand
+                    }
                 }
             }
         }
