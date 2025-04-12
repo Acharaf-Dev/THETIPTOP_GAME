@@ -84,20 +84,23 @@ pipeline {
             steps {
                 withCredentials([sshUserPrivateKey(credentialsId: 'ssh-key-jenkins', keyFileVariable: 'SSH_KEY', usernameVariable: 'SSH_USER')]) {
                     script {
-                        // Ensure proper SSH key usage
+                        // Créer un fichier temporaire pour la clé SSH
                         sh """
-                            echo "🚀 Lancement du déploiement sur le serveur distant..."
-                            ssh -o StrictHostKeyChecking=no -i ${SSH_KEY} ${SSH_USER}@161.97.76.223 <<EOF
+                            echo \${SSH_KEY} > /tmp/id_rsa_jenkins
+                            chmod 600 /tmp/id_rsa_jenkins
+                            ssh -i /tmp/id_rsa_jenkins -o StrictHostKeyChecking=no ${SSH_USER}@161.97.76.223 '
                                 cd /opt/deploy-thetiptop &&
                                 docker-compose pull &&
                                 docker-compose up -d &&
                                 docker system prune -f
-                            EOF
+                            '
+                            rm -f /tmp/id_rsa_jenkins
                         """
                     }
                 }
             }
         }
+
 
         stage('Cleanup') {
             steps {
