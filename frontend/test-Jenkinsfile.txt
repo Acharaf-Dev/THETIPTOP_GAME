@@ -35,7 +35,7 @@ pipeline {
                 echo "🔥 Suppression de node_modules et de fichiers de verrouillage"
                 sh 'rm -rf node_modules package-lock.json'
 
-                echo "📦 Réinstallation des dépendances"
+                echo "📦 Réinstallation des dépend"
                 sh 'npm install'
             }
         }
