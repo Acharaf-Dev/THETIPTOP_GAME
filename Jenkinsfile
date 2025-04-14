@@ -44,6 +44,7 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
                     sh """
+                        set -e
                         npx sonar-scanner \
                             -Dsonar.projectKey=tiptop-backend \
                             -Dsonar.sources=./backend \
@@ -66,6 +67,7 @@ pipeline {
                         def frontendImage = "${FRONTEND_IMAGE_NAME}:${BRANCH_NAME}"
 
                         sh """
+                            set -e
                             echo \${DOCKER_PASS} | docker login -u \${DOCKER_USER} --password-stdin
                             docker build -t ${backendImage} ./backend
                             docker push ${backendImage}
@@ -84,23 +86,20 @@ pipeline {
             steps {
                 withCredentials([sshUserPrivateKey(credentialsId: 'ssh-key-jenkins', keyFileVariable: 'SSH_KEY', usernameVariable: 'SSH_USER')]) {
                     script {
-                        // Créer un fichier temporaire pour la clé SSH
                         sh """
-                            echo \${SSH_KEY} > /tmp/id_rsa_jenkins
-                            chmod 600 /tmp/id_rsa_jenkins
-                            ssh -i /tmp/id_rsa_jenkins -o StrictHostKeyChecking=no ${SSH_USER}@161.97.76.223 '
+                            set -e
+                            chmod 600 \${SSH_KEY}
+                            ssh -i \${SSH_KEY} -o StrictHostKeyChecking=no \${SSH_USER}@161.97.76.223 '
                                 cd /opt/deploy-thetiptop &&
                                 docker-compose pull &&
                                 docker-compose up -d &&
                                 docker system prune -f
                             '
-                            rm -f /tmp/id_rsa_jenkins
                         """
                     }
                 }
             }
         }
-
 
         stage('Cleanup') {
             steps {
