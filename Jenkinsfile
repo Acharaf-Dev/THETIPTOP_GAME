@@ -77,30 +77,34 @@ pipeline {
             }
         }
 
-        stage('Deploy via SSH') {
+        stage('Deploy via SCP + Remote Execution') {
             when {
                 expression { ['develop', 'preprod', 'prod'].contains(env.BRANCH_NAME) }
             }
             steps {
                 withCredentials([sshUserPrivateKey(credentialsId: 'ssh-key-jenkins', keyFileVariable: 'SSH_KEY', usernameVariable: 'SSH_USER')]) {
                     script {
-                        // Créer un fichier temporaire pour la clé SSH
+                        def remotePath = "/opt/deploy-thetiptop"
+
                         sh """
-                            echo \${SSH_KEY} > /tmp/id_rsa_jenkins
+                            echo "\${SSH_KEY}" > /tmp/id_rsa_jenkins
                             chmod 600 /tmp/id_rsa_jenkins
-                            ssh -i /tmp/id_rsa_jenkins -o StrictHostKeyChecking=no ${SSH_USER}@161.97.76.223 '
-                                cd /opt/deploy-thetiptop &&
-                                docker-compose pull &&
-                                docker-compose up -d &&
-                                docker system prune -f
+
+                            # Copier le script vers le serveur
+                            scp -i /tmp/id_rsa_jenkins -o StrictHostKeyChecking=no deployment/deploy.sh \${SSH_USER}@161.97.76.223:${remotePath}/deploy.sh
+
+                            # Exécuter le script à distance
+                            ssh -i /tmp/id_rsa_jenkins -o StrictHostKeyChecking=no \${SSH_USER}@161.97.76.223 '
+                                chmod +x ${remotePath}/deploy.sh &&
+                                ${remotePath}/deploy.sh
                             '
+
                             rm -f /tmp/id_rsa_jenkins
                         """
                     }
                 }
             }
         }
-
 
         stage('Cleanup') {
             steps {
