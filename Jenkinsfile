@@ -24,7 +24,10 @@ pipeline {
                 script {
                     ['backend', 'frontend'].each { module -> 
                         dir(module) {
-                            sh 'npm install'
+                            // Utilise un cache npm local
+                            cache(path: "${env.WORKSPACE}/.npm", key: "npm-cache-${module}", restoreKeys: ["npm-cache-"]) {
+                                sh 'npm install'
+                            }
 
                             if (module == 'frontend') {
                                 sh 'chmod -R +x node_modules/.bin'
@@ -77,28 +80,30 @@ pipeline {
             }
         }
 
-        stage('Deploy via SCP + Remote Execution') {
+        stage('Deploy via deploy.sh') {
             when {
                 expression { ['develop', 'preprod', 'prod'].contains(env.BRANCH_NAME) }
             }
             steps {
                 withCredentials([sshUserPrivateKey(credentialsId: 'ssh-key-jenkins', keyFileVariable: 'SSH_KEY', usernameVariable: 'SSH_USER')]) {
                     script {
-                        def remotePath = "/opt/deploy-thetiptop"
+                        def remotePath = "/opt/deploy-thetiptop" // Chemin cible sur le serveur distant
 
+                        // Crée un fichier temporaire pour la clé SSH
+                        writeFile file: '/tmp/id_rsa_jenkins', text: SSH_KEY
+                        
+                        // Copier le fichier deploy.sh sur le serveur
                         sh """
-                            echo "\${SSH_KEY}" > /tmp/id_rsa_jenkins
                             chmod 600 /tmp/id_rsa_jenkins
 
-                            # Copier le script vers le serveur
-                            scp -i /tmp/id_rsa_jenkins -o StrictHostKeyChecking=no deployment/deploy.sh \${SSH_USER}@161.97.76.223:${remotePath}/deploy.sh
+                            scp -i /tmp/id_rsa_jenkins -o StrictHostKeyChecking=no deployment/deploy.sh ${SSH_USER}@161.97.76.223:${remotePath}/deploy.sh
 
-                            # Exécuter le script à distance
-                            ssh -i /tmp/id_rsa_jenkins -o StrictHostKeyChecking=no \${SSH_USER}@161.97.76.223 '
+                            ssh -i /tmp/id_rsa_jenkins -o StrictHostKeyChecking=no ${SSH_USER}@161.97.76.223 '
                                 chmod +x ${remotePath}/deploy.sh &&
                                 ${remotePath}/deploy.sh
                             '
 
+                            // Supprimer la clé SSH temporaire
                             rm -f /tmp/id_rsa_jenkins
                         """
                     }
