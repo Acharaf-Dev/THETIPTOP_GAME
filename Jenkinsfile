@@ -22,9 +22,8 @@ pipeline {
         stage('Install, Test & Build') {
             steps {
                 script {
-                    ['backend', 'frontend'].each { module -> 
+                    ['backend', 'frontend'].each { module ->
                         dir(module) {
-                            // Utilise un cache npm local
                             cache(path: "${env.WORKSPACE}/.npm", key: "npm-cache-${module}", restoreKeys: ["npm-cache-"]) {
                                 sh 'npm install'
                             }
@@ -87,23 +86,21 @@ pipeline {
             steps {
                 withCredentials([sshUserPrivateKey(credentialsId: 'ssh-key-jenkins', keyFileVariable: 'SSH_KEY', usernameVariable: 'SSH_USER')]) {
                     script {
-                        def remotePath = "/opt/deploy-thetiptop" // Chemin cible sur le serveur distant
+                        def remotePath = "/opt/deploy-thetiptop"
 
-                        // Crée un fichier temporaire pour la clé SSH
                         writeFile file: '/tmp/id_rsa_jenkins', text: SSH_KEY
-                        
-                        // Copier le fichier deploy.sh sur le serveur
                         sh """
                             chmod 600 /tmp/id_rsa_jenkins
 
-                            scp -i /tmp/id_rsa_jenkins -o StrictHostKeyChecking=no deployment/deploy.sh ${SSH_USER}@161.97.76.223:${remotePath}/deploy.sh
+                            # Copie le script deploy.sh sur le serveur distant
+                            scp -i /tmp/id_rsa_jenkins -o StrictHostKeyChecking=no deployment/deploy.sh \${SSH_USER}@161.97.76.223:${remotePath}/deploy.sh
 
-                            ssh -i /tmp/id_rsa_jenkins -o StrictHostKeyChecking=no ${SSH_USER}@161.97.76.223 '
+                            # Exécute le script à distance
+                            ssh -i /tmp/id_rsa_jenkins -o StrictHostKeyChecking=no \${SSH_USER}@161.97.76.223 '
                                 chmod +x ${remotePath}/deploy.sh &&
                                 ${remotePath}/deploy.sh
                             '
 
-                            // Supprimer la clé SSH temporaire
                             rm -f /tmp/id_rsa_jenkins
                         """
                     }
