@@ -2,7 +2,7 @@ pipeline {
     agent {
         docker {
             image 'node:20.19.0'
-            args '-v $PWD:/app'
+            args "-v ${env.WORKSPACE}:/app"
         }
     }
 
