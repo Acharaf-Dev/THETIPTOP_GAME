@@ -10,6 +10,7 @@ pipeline {
         DOCKER_REGISTRY = 'docker.io'
         BACKEND_IMAGE_NAME = "${DOCKER_REGISTRY}/asquare25/thetiptop"
         FRONTEND_IMAGE_NAME = "${DOCKER_REGISTRY}/asquare25/thetiptop"
+        NPM_CACHE_DIR = "${env.WORKSPACE}/.npm"
     }
 
     stages {
@@ -24,9 +25,13 @@ pipeline {
                 script {
                     ['backend', 'frontend'].each { module ->
                         dir(module) {
-                            cache(path: "${env.WORKSPACE}/.npm", key: "npm-cache-${module}", restoreKeys: ["npm-cache-"]) {
-                                sh 'npm install'
-                            }
+                            // Assurer que le répertoire de cache npm existe
+                            sh "mkdir -p ${NPM_CACHE_DIR}"
+
+                            // Installation des dépendances avec cache npm
+                            sh """
+                                npm install --cache ${NPM_CACHE_DIR} --prefer-online
+                            """
 
                             if (module == 'frontend') {
                                 sh 'chmod -R +x node_modules/.bin'
