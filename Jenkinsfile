@@ -24,7 +24,9 @@ pipeline {
                 script {
                     ['backend', 'frontend'].each { module ->
                         dir(module) {
-                            sh 'npm install'
+                            cache(path: "${env.WORKSPACE}/.npm", key: "npm-cache-${module}", restoreKeys: ["npm-cache-"]) {
+                                sh 'npm install'
+                            }
 
                             if (module == 'frontend') {
                                 sh 'chmod -R +x node_modules/.bin'
@@ -86,20 +88,17 @@ pipeline {
                     script {
                         def remotePath = "/opt/deploy-thetiptop"
 
-                        writeFile file: '/tmp/id_rsa_jenkins', text: SSH_KEY
                         sh """
-                            chmod 600 /tmp/id_rsa_jenkins
+                            chmod 600 ${SSH_KEY}
 
                             # Copie le script deploy.sh sur le serveur distant
-                            scp -i /tmp/id_rsa_jenkins -o StrictHostKeyChecking=no deployment/deploy.sh \${SSH_USER}@161.97.76.223:${remotePath}/deploy.sh
+                            scp -i ${SSH_KEY} -o StrictHostKeyChecking=no deployment/deploy.sh \${SSH_USER}@161.97.76.223:${remotePath}/deploy.sh
 
                             # Exécute le script à distance
-                            ssh -i /tmp/id_rsa_jenkins -o StrictHostKeyChecking=no \${SSH_USER}@161.97.76.223 '
+                            ssh -i ${SSH_KEY} -o StrictHostKeyChecking=no \${SSH_USER}@161.97.76.223 '
                                 chmod +x ${remotePath}/deploy.sh &&
                                 ${remotePath}/deploy.sh
                             '
-
-                            rm -f /tmp/id_rsa_jenkins
                         """
                     }
                 }
