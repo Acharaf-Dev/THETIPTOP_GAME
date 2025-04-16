@@ -24,9 +24,7 @@ pipeline {
                 script {
                     ['backend', 'frontend'].each { module ->
                         dir(module) {
-                            cache(path: "${env.WORKSPACE}/.npm", key: "npm-cache-${module}", restoreKeys: ["npm-cache-"]) {
-                                sh 'npm install'
-                            }
+                            sh 'npm install'
 
                             if (module == 'frontend') {
                                 sh 'chmod -R +x node_modules/.bin'
