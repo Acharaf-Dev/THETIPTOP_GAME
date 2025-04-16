@@ -119,7 +119,14 @@ pipeline {
 
     post {
         success {
-            echo "✅ Pipeline terminée avec succès sur branche ${BRANCH_NAME}"
+            script {
+                if (env.BRANCH_NAME == 'prod') {
+                    echo '✅ Déploiement prod terminé. Sauvegarde...'
+                    // sh './scripts/backup.sh'
+                } else {
+                    echo "✅ Pipeline terminée avec succès sur branche ${BRANCH_NAME}"
+                }
+            }
         }
         failure {
             echo "❌ Pipeline échouée sur branche ${BRANCH_NAME}"
