@@ -1,8 +1,8 @@
 pipeline {
     agent {
         docker {
-            image 'custom-node-sonar:20' // Dockerfile personnalisé (voir plus bas)
-            // image 'node:20.19.0'
+            // image 'custom-node-sonar:20' // Dockerfile personnalisé (voir plus bas)
+            image 'node:20.19.0'
             args "-v ${env.WORKSPACE}:/app"
         }
     }
@@ -50,6 +50,7 @@ pipeline {
                     withEnv(["SONAR_TOKEN=${SONAR_TOKEN}"]) {
                         sh '''
                             # Analyse backend
+                            npm install -g sonar-scanner
                             sonar-scanner \
                                 -Dsonar.projectKey=tiptop-backend \
                                 -Dsonar.sources=./backend \
