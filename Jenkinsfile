@@ -47,20 +47,51 @@ pipeline {
             }
         }
 
+        // stage('SonarQube Analysis') {
+        //     steps {
+        //         withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
+        //             sh """
+        //                 npx sonar-scanner \
+        //                     -Dsonar.projectKey=tiptop-backend \
+        //                     -Dsonar.sources=./backend \
+        //                     -Dsonar.host.url=https://www.sonarqube.dsp5-archi-f24a-15m-g8.fr \
+        //                     -Dsonar.login=${SONAR_TOKEN} \
+        //                     -Dsonar.javascript.lcov.reportPaths=backend/coverage/lcov.info || true
+        //             """
+        //         }
+        //     }
+        // }
+
         stage('SonarQube Analysis') {
             steps {
                 withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
-                    sh """
-                        npx sonar-scanner \
-                            -Dsonar.projectKey=tiptop-backend \
-                            -Dsonar.sources=./backend \
-                            -Dsonar.host.url=https://www.sonarqube.dsp5-archi-f24a-15m-g8.fr \
-                            -Dsonar.login=${SONAR_TOKEN} \
-                            -Dsonar.javascript.lcov.reportPaths=backend/coverage/lcov.info || true
-                    """
+                    script {
+                        ['backend', 'frontend'].each { module ->
+                            dir(module) {
+                                def key = (module == 'backend') ? "tiptop-backend" : "tiptop-frontend"
+                                def lcovPath = (module == 'backend') ? "coverage/lcov.info" : "coverage/lcov.info"
+
+                                writeFile file: "sonar-project.properties", text: """
+                                    sonar.projectKey=${key}
+                                    sonar.projectName=TheTipTop Game ${module.capitalize()}
+                                    sonar.sources=.
+                                    sonar.exclusions=node_modules/**,coverage/**,build/**
+                                    sonar.coverage.exclusions=**/*.test.js
+                                    sonar.javascript.lcov.reportPaths=${lcovPath}
+                                    sonar.sourceEncoding=UTF-8
+                                    sonar.host.url=https://www.sonarqube.dsp5-archi-f24a-15m-g8.fr
+                                """
+
+                                sh """
+                                    npx sonar-scanner -Dsonar.login=${SONAR_TOKEN} || true
+                                """
+                            }
+                        }
+                    }
                 }
             }
         }
+
 
         stage('Build & Push Docker Images') {
             when {
