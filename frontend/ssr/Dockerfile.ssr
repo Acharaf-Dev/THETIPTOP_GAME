@@ -1,15 +1,17 @@
-# frontend/Dockerfile.ssr
+# Phase de build CRA
 FROM node:18 AS builder
 WORKDIR /app
-COPY package*.json ./
+COPY ../package*.json ./
 RUN npm install
-COPY . .
+COPY .. .
 RUN npm run build
 
+# Phase de prod SSR
 FROM node:18
 WORKDIR /app
 COPY --from=builder /app /app
-RUN npm install express react react-dom react-router-dom
+WORKDIR /app/frontend/ssr
+RUN npm install express react react-dom react-router-dom react-router-dom@latest
 COPY .env.ssr .env
 EXPOSE 3000
-CMD ["node", "ssr/server.js"]
+CMD ["node", "server.js"]

@@ -1,52 +1,53 @@
-import express from 'express';
-import path from 'path';
-import fs from 'fs';
-import { fileURLToPath } from 'url';
-import dotenv from 'dotenv';
-import React from 'react';
-import ReactDOMServer from 'react-dom/server';
-import App from '../src/App';
-import { StaticRouter } from 'react-router-dom/server';
+require('dotenv').config({ path: './frontend/ssr/.env.ssr' });
 
-// Load environment variables from .env.ssr
-dotenv.config({ path: path.resolve('./frontend/.env.ssr') });
+const path = require('path');
+const fs = require('fs');
+const express = require('express');
+const React = require('react');
+const ReactDOMServer = require('react-dom/server');
+const { StaticRouter } = require('react-router-dom/server');
+const { AppRoutes } = require('../src/AppRoutes');
 
-// Resolve __dirname in ES modules
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const PORT = process.env.PORT || 3000;
 const app = express();
+const PORT = process.env.PORT || 3000;
 
-// Serve static files from the CRA build
-app.use('/static', express.static(path.resolve(__dirname, '../build/static')));
-app.use('/assets', express.static(path.resolve(__dirname, '../build/assets')));
+// ✅ Redirections permanentes (301)
+const redirects = {
+  '/ancienne-page': '/',
+  '/old-login': '/login',
+  '/home': '/',
+};
 
-// Handle all GET requests
+app.use((req, res, next) => {
+  const target = redirects[req.path];
+  if (target) return res.redirect(301, target);
+  next();
+});
+
+// Sert les fichiers statiques
+app.use(express.static(path.resolve(__dirname, '../build')));
+
+// SSR Fallback
 app.get('*', (req, res) => {
-  const indexPath = path.resolve(__dirname, '../build/index.html');
+  const context = {};
+  const appHTML = ReactDOMServer.renderToString(
+    React.createElement(StaticRouter, { location: req.url, context },
+      React.createElement(AppRoutes)
+    )
+  );
 
-  fs.readFile(indexPath, 'utf8', (err, htmlData) => {
+  const indexFile = path.resolve(__dirname, '../build/index.html');
+  fs.readFile(indexFile, 'utf8', (err, htmlData) => {
     if (err) {
-      console.error('❌ Failed to read index.html', err);
-      return res.status(500).send('Internal server error');
+      return res.status(500).send('Erreur lors du chargement du HTML');
     }
 
-    const markup = ReactDOMServer.renderToString(
-      <StaticRouter location={req.url}>
-        <App />
-      </StaticRouter>
+    return res.send(
+      htmlData.replace('<div id="root"></div>', `<div id="root">${appHTML}</div>`)
     );
-
-    const finalHtml = htmlData.replace(
-      '<div id="root"></div>',
-      `<div id="root">${markup}</div>`
-    );
-
-    return res.send(finalHtml);
   });
 });
 
 app.listen(PORT, () => {
-  console.log(`✅ SSR server running at http://localhost:${PORT}`);
+  console.log(`✅ SSR Server running on http://localhost:${PORT}`);
 });
