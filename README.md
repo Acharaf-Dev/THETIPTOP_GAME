@@ -101,6 +101,8 @@ git push origin --delete Ticket-01
 - Répétez ce processus pour chaque nouvelle fonctionnalité. 
 
 **Arborescence projet**
+
+---
 thetiptop-project/
 │── backend/
 │   ├── config/
