@@ -102,7 +102,7 @@ git push origin --delete Ticket-01
 
 **Arborescence projet**
 
----
+```
 thetiptop-project/
 │── backend/
 │   ├── config/
@@ -158,7 +158,7 @@ thetiptop-project/
 │
 │── docker-compose.yml
 │── README.md
-
+```
 ---
 
 thanks 
