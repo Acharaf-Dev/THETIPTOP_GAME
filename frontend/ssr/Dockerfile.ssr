@@ -1,17 +1,22 @@
-# Phase de build CRA
-FROM node:18 AS builder
+FROM node:18
+
+# Définir le répertoire de travail
 WORKDIR /app
-COPY ../package*.json ./
+
+# Copier package.json et package-lock.json
+COPY package.json package-lock.json ./
+
+# Installer les dépendances
 RUN npm install
-COPY .. .
+
+# Copier tous les fichiers de l'application dans l'image Docker
+COPY . .
+
+# Exposer le port (modifie selon le port que tu utilises pour le SSR)
+EXPOSE 4200
+
+# Construire l'application
 RUN npm run build
 
-# Phase de prod SSR
-FROM node:18
-WORKDIR /app
-COPY --from=builder /app /app
-WORKDIR /app/frontend/ssr
-RUN npm install express react react-dom react-router-dom react-router-dom@latest
-COPY .env.ssr .env
-EXPOSE 3000
-CMD ["node", "server.js"]
+# Lancer l'application
+CMD ["npm", "start"]

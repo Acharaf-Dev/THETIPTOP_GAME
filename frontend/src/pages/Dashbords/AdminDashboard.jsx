@@ -170,7 +170,7 @@ const AdminDashboard = () => {
         <div className="bg-white rounded-lg p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
           <div className="flex justify-between items-start mb-6">
             <h2 className="text-2xl font-bold text-gray-900">
-              Détails de l'utilisateur
+              Détails de l&apos;utilisateur
             </h2>
             <button
               onClick={() => setShowUserModal(false)}
@@ -277,12 +277,12 @@ const AdminDashboard = () => {
               {selectedUser.gameAccess ? (
                 <>
                   <FiLock className="mr-2" />
-                  Bloquer l'accès au jeu
+                  Bloquer l&apos;accès au jeu
                 </>
               ) : (
                 <>
                   <FiUnlock className="mr-2" />
-                  Autoriser l'accès au jeu
+                  Autoriser l&apos;accès au jeu
                 </>
               )}
             </button>
@@ -342,7 +342,7 @@ const AdminDashboard = () => {
                   Email
                 </th>
                 <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Type d'Utilisateur
+                  Type d&apos;Utilisateur
                 </th>
                 <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Accès au jeu
@@ -591,7 +591,7 @@ const AdminDashboard = () => {
               <div className="flex justify-between items-start">
                 <div>
                   <p className="text-sm text-gray-500 font-medium">
-                    Taux d'Utilisation des Tickets
+                    Taux d&apos;Utilisation des Tickets
                   </p>
                   <p className="text-2xl font-bold text-gray-800 mt-1">
                     {usageRate}%
@@ -628,7 +628,7 @@ const AdminDashboard = () => {
           >
             <div className="px-6 py-4 border-b border-gray-200">
               <h3 className="text-lg font-semibold text-gray-800">
-                Tendance d'Activité des Utilisateurs
+                Tendance d&apos;Activité des Utilisateurs
               </h3>
             </div>
             <div className="p-4 h-72">
@@ -1096,7 +1096,7 @@ const AdminDashboard = () => {
                     : "text-gray-500 hover:text-gray-700 hover:border-gray-300"
                 }`}
               >
-                Vue d'ensemble
+                Vue d&apos;ensemble
               </button>
               <button
                 onClick={() => setActiveTab("users")}

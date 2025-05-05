@@ -28,8 +28,10 @@ local:
 	docker compose -f docker-compose.dev.yml up --build -d
 
 # Lancer l'environnement de développement local avec un build préalable & SSR
+.PHONY: ssr
 ssr:
-	docker compose -f docker-compose.ssr.yml up --build -d
+	docker compose -f docker-compose.dev.yml up --build -d frontend-ssr
+	@echo "Lancement de l'environnement de développement local avec SSR"
 
 # Lancer uniquement le frontend en développement
 front-dev:

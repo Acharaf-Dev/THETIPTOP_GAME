@@ -1,4 +1,3 @@
-// frontend/src/AppRoutes.jsx
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Home from './pages/Home/Home';
@@ -22,7 +21,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import GrandGagnant from './pages/Grandgagnant/Grandgagnant';
 import NotFound from './pages/NotFound/NotFound';
 
-export function AppRoutes() {
+const AppRoutes = () => {
   return (
     <>
       <Header />
@@ -43,10 +42,11 @@ export function AppRoutes() {
         <Route path="/admindashboard" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
         <Route path="/grandgagnant" element={<ProtectedRoute><GrandGagnant /></ProtectedRoute>} />
         <Route path="/game" element={<ProtectedRoute><Game /></ProtectedRoute>} />
-        {/* Catch-all pour les 404 */}
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
     </>
   );
-}
+};
+
+export default AppRoutes;

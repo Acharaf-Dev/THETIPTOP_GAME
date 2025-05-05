@@ -176,7 +176,7 @@ THETIPTOP_GAME/
 │   │   ├── sitemap.xml               # Sitemap du site
 │   │   └── images/                   # Images publiques
 │   └── src/                          # Code source React
-│       ├── App.jsx                   # Composant principal
+│       ├── AppRoutes.jsx                   # Composant principal
 │       ├── index.css                 # Styles globaux
 │       ├── index.jsx                 # Point d'entrée React
 │       ├── assets/                   # Assets (images, icônes, etc.)

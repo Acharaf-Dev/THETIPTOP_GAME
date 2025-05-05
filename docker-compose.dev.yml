@@ -39,6 +39,23 @@ services:
     networks:
       - web
 
+  frontend-ssr:
+    platform: linux/amd64
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.ssr
+    container_name: tip_top_frontend_ssr_dev
+    ports:
+      - "3201:3000"
+    environment:
+      - WATCHPACK_POLLING=true
+      - CHOKIDAR_USEPOLLING=true
+      - REACT_APP_API_URL=http://backend:4000/api
+    depends_on:
+      - backend
+    networks:
+      - web
+
   mongodb:
     image: mongo:6.0
     container_name: tip_top_mongo_dev

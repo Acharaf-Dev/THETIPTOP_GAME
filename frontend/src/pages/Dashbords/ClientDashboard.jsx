@@ -227,7 +227,7 @@ const ClientDashboard = () => {
                 <div className="space-y-4">
                     <div className="flex items-center p-3 border-b border-gray-100">
                         <ProfileIcon className="h-4 w-4 text-gray-500 mr-3" /> 
-                        <span className="text-gray-600 font-medium mr-2">Nom d'utilisateur:</span>
+                        <span className="text-gray-600 font-medium mr-2">Nom d&apos;utilisateur:</span>
                         <span className="text-gray-800">{userData.userName}</span>
                     </div>
                     <div className="flex items-center p-3 border-b border-gray-100">
@@ -245,7 +245,7 @@ const ClientDashboard = () => {
                 // --- Edit Mode Form ---
                 <form className="space-y-4" onSubmit={handleProfileUpdate}>
                     <div>
-                        <label htmlFor="userName" className="block text-sm font-medium text-gray-700">Nom d'utilisateur</label>
+                        <label htmlFor="userName" className="block text-sm font-medium text-gray-700">Nom d&apos;utilisateur</label>
                         <input
                             type="text"
                             name="userName"
@@ -355,7 +355,7 @@ const ClientDashboard = () => {
                           ))}
                       </ul>
                   ) : (
-                      <p className="text-gray-600">Vous n'avez pas encore enregistré de gains.</p>
+                      <p className="text-gray-600">Vous n&apos;avez pas encore enregistré de gains.</p>
                   )
               )}
           </div>

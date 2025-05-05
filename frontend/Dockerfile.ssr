@@ -1,0 +1,21 @@
+FROM node:18 AS builder
+
+WORKDIR /app
+
+# Copier package.json et package-lock.json
+COPY package.json package-lock.json ./
+
+# Installer toutes les dépendances (dev incluses)
+RUN npm install --legacy-peer-deps --force
+
+# Copier le reste du code source
+COPY . .
+
+# Build de l'application React
+RUN npm run build
+
+# Exposer le port SSR
+EXPOSE 3000
+
+# Démarrer le serveur SSR
+CMD ["npm", "run", "start:ssr"]
