@@ -103,61 +103,126 @@ git push origin --delete Ticket-01
 **Arborescence projet**
 
 ```
-thetiptop-project/
-│── backend/
-│   ├── config/
-│   │   ├── auth.js
-│   │   ├── db.js
-│   ├── controllers/
-│   │   ├── userController.js
-│   │   ├── gameController.js
-│   ├── middleware/
-│   │   ├── authMiddleware.js
-│   │   ├── errorHandler.js
-│   ├── models/
-│   │   ├── User.js
-│   │   ├── Game.js
-│   ├── routes/
-│   │   ├── userRoutes.js
-│   │   ├── gameRoutes.js
-│   ├── tests/
-│   │   ├── user.test.js
-│   │   ├── game.test.js
-│   ├── Dockerfile
-│   ├── Jenkinsfile
-│   ├── package.json
-│   ├── server.js
-│
-│── frontend/
-│   ├── public/
-│   │   ├── index.html
-│   ├── src/
-│   │   ├── assets/
-│   │   │   ├── images/
-│   │   │   ├── icons/
-│   │   ├── components/
-│   │   │   ├── Navbar.jsx
-│   │   │   ├── Footer.jsx
-│   │   ├── pages/
-│   │   │   ├── Home.jsx
-│   │   │   ├── Game.jsx
-│   │   │   ├── Login.jsx
-│   │   │   ├── Register.jsx
-│   │   │   ├── Dashboard.jsx
-│   │   ├── styles/
-│   │   │   ├── style.css
-│   │   ├── App.jsx
-│   │   ├── index.jsx
-│   ├── Dockerfile
-│   ├── Jenkinsfile
-│   ├── package.json
-│
-│── workflow/
-│   ├── prometheus.yml   #Configuration de Prometheus pour la collecte des métriques.
-│   ├── traefik.yml      #Configuration du reverse proxy.
-│
-│── docker-compose.yml
-│── README.md
+THETIPTOP_GAME/
+├── backend/                          # Code backend
+│   ├── config/                       # Configuration
+│   │   ├── auth.js                   # Configuration d'authentification
+│   │   ├── db.js                     # Configuration de la base de données
+│   │   ├── transporter.js            # Configuration pour l'envoi d'emails
+│   ├── controllers/                  # Logique métier
+│   │   ├── userController.js         # Contrôleur pour les utilisateurs
+│   │   ├── gameController.js         # Contrôleur pour les jeux
+│   │   ├── contactController.js      # Contrôleur pour les contacts
+│   ├── middleware/                   # Middlewares
+│   │   ├── authMiddleware.js         # Middleware d'authentification
+│   │   ├── userTypeMiddleware.js     # Middleware pour les types d'utilisateurs
+│   ├── models/                       # Modèles de données
+│   │   ├── usersModel.js             # Modèle pour les utilisateurs
+│   │   ├── gainsModel.js             # Modèle pour les gains
+│   │   ├── winningTicket.js          # Modèle pour les tickets gagnants
+│   ├── routes/                       # Routes API
+│   │   ├── authRoute.js              # Routes pour l'authentification
+│   │   ├── gameRoute.js              # Routes pour les jeux
+│   │   ├── contactRoute.js           # Routes pour les contacts
+│   ├── script/                       # Scripts utilitaires
+│   │   ├── protect-branches.sh       # Script pour protéger les branches Git
+│   ├── tests/                        # Tests backend
+│   │   ├── auth.test.js              # Tests pour l'authentification
+│   │   ├── game.test.js              # Tests pour les jeux
+│   ├── coverage/                     # Rapports de couverture de tests
+│   │   ├── lcov-report/              # Rapport HTML
+│   │   ├── coverage-final.json       # Rapport JSON
+│   │   ├── clover.xml                # Rapport XML
+│   ├── server.js                     # Point d'entrée du serveur
+│   ├── package.json                  # Dépendances backend
+│   ├── Dockerfile                    # Dockerfile pour le backend
+├── frontend/                         # Nouveau code frontend
+│   ├── .env                          # Variables d'environnement
+│   ├── .env.dev                      # Variables d'environnement pour le développement
+│   ├── .env.preprod                  # Variables d'environnement pour la préproduction
+│   ├── .env.prod                     # Variables d'environnement pour la production
+│   ├── .eslintrc.json                # Configuration ESLint
+│   ├── .gitignore                    # Fichiers/dossiers à ignorer par Git
+│   ├── babel.config.js               # Configuration Babel
+│   ├── Dockerfile.dev                # Dockerfile pour le développement
+│   ├── Dockerfile.prod               # Dockerfile pour la production
+│   ├── eslint.config.mjs             # Configuration ESLint en module
+│   ├── generate-sitemap.js           # Script pour générer le sitemap
+│   ├── jest.config.js                # Configuration Jest pour les tests
+│   ├── nginx.conf                    # Configuration Nginx
+│   ├── package.json                  # Dépendances frontend
+│   ├── postcss.config.js             # Configuration PostCSS
+│   ├── README.md                     # Documentation du frontend
+│   ├── tailwind.config.js            # Configuration Tailwind CSS
+│   ├── test-Jenkinsfile.txt          # Fichier de test pour Jenkins
+│   ├── vitest.config.js              # Configuration Vitest
+│   ├── build/                        # Fichiers générés après build
+│   │   ├── asset-manifest.json       # Manifest des assets
+│   │   ├── favicon.ico               # Icône du site
+│   │   ├── index.html                # Fichier HTML principal
+│   │   ├── manifest.json             # Manifest du site
+│   │   ├── robots.txt                # Fichier robots.txt
+│   │   ├── sitemap.xml               # Sitemap du site
+│   │   ├── images/                   # Images générées
+│   │   └── static/                   # Fichiers statiques
+│   │       ├── css/                  # Fichiers CSS
+│   │       ├── js/                   # Fichiers JavaScript
+│   │       └── media/                # Fichiers médias
+│   ├── public/                       # Fichiers publics
+│   │   ├── favicon.ico               # Icône du site
+│   │   ├── index.html                # Fichier HTML principal
+│   │   ├── manifest.json             # Manifest du site
+│   │   ├── robots.txt                # Fichier robots.txt
+│   │   ├── sitemap.xml               # Sitemap du site
+│   │   └── images/                   # Images publiques
+│   └── src/                          # Code source React
+│       ├── App.jsx                   # Composant principal
+│       ├── index.css                 # Styles globaux
+│       ├── index.jsx                 # Point d'entrée React
+│       ├── assets/                   # Assets (images, icônes, etc.)
+│       │   ├── images/               # Images
+│       │   ├── icons/                # Icônes
+│       ├── components/               # Composants réutilisables
+│       │   ├── Footer.jsx            # Pied de page
+│       │   ├── Header.jsx            # En-tête
+│       │   ├── ProtectedRoute.jsx    # Route protégée
+│       │   ├── DashboardLayout.jsx   # Layout pour le tableau de bord
+│       ├── pages/                    # Pages principales
+│       │   ├── About/                # Page "À propos"
+│       │   │   ├── About.jsx         # Composant "À propos"
+│       │   ├── Confidentialite/      # Pages de confidentialité
+│       │   │   ├── Cgu.jsx           # Conditions générales d'utilisation
+│       │   │   ├── Cgv.jsx           # Conditions générales de vente
+│       │   │   ├── Mention.jsx       # Mentions légales
+│       │   │   ├── Politique.jsx     # Politique de confidentialité
+│       │   ├── Contact/              # Page de contact
+│       │   │   ├── Contact.jsx       # Composant "Contact"
+│       │   ├── Dashbords/            # Tableaux de bord
+│       │   │   ├── AdminDashboard.jsx # Tableau de bord admin
+│       │   │   ├── ClientDashboard.jsx # Tableau de bord client
+│       │   │   ├── EmployeeDashboard.jsx # Tableau de bord employé
+│       │   ├── Game/                 # Page de jeu
+│       │   │   ├── Game.jsx          # Composant "Jeu"
+│       │   ├── Grandgagnant/         # Page des grands gagnants
+│       │   │   ├── Grandgagnant.jsx  # Composant "Grands gagnants"
+│       │   ├── Home/                 # Page d'accueil
+│       │   │   ├── Home.jsx          # Composant "Accueil"
+│       │   ├── Login/                # Page de connexion
+│       │   │   ├── Login.jsx         # Composant "Connexion"
+│       │   ├── Password/             # Gestion des mots de passe
+│       │   │   ├── ForgotPassword.jsx # Mot de passe oublié
+│       │   ├── Register/             # Page d'inscription
+│       │   │   ├── Register.jsx      # Composant "Inscription"
+│       ├── styles/                   # Fichiers de styles
+│       │   ├── style.css             # Styles globaux
+├── docs/                             # Documentation
+│   ├── architecture.md               # Documentation sur l'architecture
+│   ├── api-documentation.md          # Documentation des API
+├── .env                              # Variables d'environnement globales
+├── docker-compose.yml                # Configuration Docker Compose
+├── Jenkinsfile                       # Pipeline Jenkins
+├── README.md                         # Documentation principale
+└── teamRoadmap.md                    # Feuille de route de l'équipe
 ```
 ---
 
