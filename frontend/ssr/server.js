@@ -2,17 +2,7 @@ require('@babel/register')({
   extensions: ['.js', '.jsx'], // Permet de transpiler les fichiers .js et .jsx
 });
 require('./ignoreStyles');
-// import express from 'express';
-// import path from 'path';
-// import fs from 'fs';
-// import React from 'react';
-// import ReactDOMServer from 'react-dom/server';
-// import { StaticRouter } from 'react-router-dom/server';
-// import AppRoutes from '../src/AppRoutes';
-
-// frontend/ssr/server.js
-// Importer les modules nécessaires pour le serveur
-// Convertir import en require
+// Ignore les fichiers CSS et autres styles pour le SSR
 const express = require('express');
 const path = require('path');
 const fs = require('fs');

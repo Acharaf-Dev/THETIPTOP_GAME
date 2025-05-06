@@ -11,6 +11,7 @@ pipeline {
         BACKEND_IMAGE_NAME = "${DOCKER_REGISTRY}/asquare25/thetiptop"
         FRONTEND_IMAGE_NAME = "${DOCKER_REGISTRY}/asquare25/thetiptop"
         NPM_CACHE_DIR = "${env.WORKSPACE}/.npm"
+        SONAR_HOST_URL = 'https://www.sonarqube.dsp5-archi-f24a-15m-g8.fr'
     }
 
     stages {
@@ -26,8 +27,9 @@ pipeline {
                     ['backend', 'frontend'].each { module ->
                         dir(module) {
                             sh "mkdir -p ${NPM_CACHE_DIR}"
-                            sh "npm install --cache ${NPM_CACHE_DIR} --prefer-online"
-
+                            sh """
+                                npm install --cache ${NPM_CACHE_DIR} --prefer-online
+                            """
                             if (module == 'frontend') {
                                 sh 'chmod -R +x node_modules/.bin'
                                 withEnv(["CI=false"]) {
@@ -35,13 +37,6 @@ pipeline {
                                 }
                             } else {
                                 echo "Pas de script build pour ${module}"
-                            }
-
-                            // Génération de la couverture si un script existe
-                            try {
-                                sh 'npm run test -- --coverage'
-                            } catch (e) {
-                                echo "⚠️ Tests échoués ou script manquant pour ${module}, ignoré pour Sonar."
                             }
                         }
                     }
@@ -52,12 +47,35 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
-                    script {
-                        ['backend', 'frontend'].each { module ->
-                            dir(module) {
+                    withSonarQubeEnv('SonarQube Community Build Scanner') {
+                        script {
+                            // Analyse backend
+                            dir('backend') {
+                                sh 'npm run test -- --coverage'
+                                sh 'ls -l coverage/lcov.info || true'
                                 sh """
-                                    npx sonar-scanner \
-                                        -Dsonar.login=${SONAR_TOKEN} || echo "Analyse Sonar échouée pour ${module}, poursuivi."
+                                    ${tool 'SonarScanner'}/bin/sonar-scanner \
+                                        -Dsonar.projectKey=tiptop-backend \
+                                        -Dsonar.sources=. \
+                                        -Dsonar.host.url=${env.SONAR_HOST_URL} \
+                                        -Dsonar.login=${SONAR_TOKEN} \
+                                        -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
+                                        -Dsonar.sourceEncoding=UTF-8
+                                """
+                            }
+
+                            // Analyse frontend
+                            dir('frontend') {
+                                sh 'npm run test -- --coverage'
+                                sh 'ls -l coverage/lcov.info || true'
+                                sh """
+                                    ${tool 'SonarScanner'}/bin/sonar-scanner \
+                                        -Dsonar.projectKey=tiptop-frontend \
+                                        -Dsonar.sources=. \
+                                        -Dsonar.host.url=${env.SONAR_HOST_URL} \
+                                        -Dsonar.login=${SONAR_TOKEN} \
+                                        -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
+                                        -Dsonar.sourceEncoding=UTF-8
                                 """
                             }
                         }
