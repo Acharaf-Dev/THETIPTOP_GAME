@@ -46,7 +46,7 @@ services:
       dockerfile: Dockerfile.ssr
     container_name: tip_top_frontend_ssr_dev
     ports:
-      - "3201:3000"
+      - "3201:3500"
     environment:
       - WATCHPACK_POLLING=true
       - CHOKIDAR_USEPOLLING=true

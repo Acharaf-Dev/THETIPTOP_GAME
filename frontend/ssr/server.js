@@ -1,6 +1,7 @@
 require('@babel/register')({
   extensions: ['.js', '.jsx'], // Permet de transpiler les fichiers .js et .jsx
 });
+require('./ignoreStyles');
 // import express from 'express';
 // import path from 'path';
 // import fs from 'fs';
@@ -18,9 +19,9 @@ const fs = require('fs');
 const React = require('react');
 const ReactDOMServer = require('react-dom/server');
 const { StaticRouter } = require('react-router-dom/server');
-const AppRoutes = require('../src/AppRoutes');
+const AppRoutes = require('../src/AppRoutes').default;
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3500;
 const app = express();
 
 const staticDir = path.resolve(__dirname, '../build');

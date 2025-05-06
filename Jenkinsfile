@@ -25,13 +25,8 @@ pipeline {
                 script {
                     ['backend', 'frontend'].each { module ->
                         dir(module) {
-                            // Assurer que le répertoire de cache npm existe
                             sh "mkdir -p ${NPM_CACHE_DIR}"
-
-                            // Installation des dépendances avec cache npm
-                            sh """
-                                npm install --cache ${NPM_CACHE_DIR} --prefer-online
-                            """
+                            sh "npm install --cache ${NPM_CACHE_DIR} --prefer-online"
 
                             if (module == 'frontend') {
                                 sh 'chmod -R +x node_modules/.bin'
@@ -40,6 +35,13 @@ pipeline {
                                 }
                             } else {
                                 echo "Pas de script build pour ${module}"
+                            }
+
+                            // Génération de la couverture si un script existe
+                            try {
+                                sh 'npm run test -- --coverage'
+                            } catch (e) {
+                                echo "⚠️ Tests échoués ou script manquant pour ${module}, ignoré pour Sonar."
                             }
                         }
                     }
@@ -50,14 +52,16 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
-                    sh """
-                        npx sonar-scanner \
-                            -Dsonar.projectKey=tiptop-backend \
-                            -Dsonar.sources=./backend \
-                            -Dsonar.host.url=https://www.sonarqube.dsp5-archi-f24a-15m-g8.fr \
-                            -Dsonar.login=${SONAR_TOKEN} \
-                            -Dsonar.javascript.lcov.reportPaths=backend/coverage/lcov.info || true
-                    """
+                    script {
+                        ['backend', 'frontend'].each { module ->
+                            dir(module) {
+                                sh """
+                                    npx sonar-scanner \
+                                        -Dsonar.login=${SONAR_TOKEN} || echo "Analyse Sonar échouée pour ${module}, poursuivi."
+                                """
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -95,11 +99,7 @@ pipeline {
 
                         sh """
                             chmod 600 ${SSH_KEY}
-
-                            # Copie le script deploy.sh sur le serveur distant
                             scp -i ${SSH_KEY} -o StrictHostKeyChecking=no deployment/deploy.sh \${SSH_USER}@161.97.76.223:${remotePath}/deploy.sh
-
-                            # Exécute le script à distance
                             ssh -i ${SSH_KEY} -o StrictHostKeyChecking=no \${SSH_USER}@161.97.76.223 '
                                 chmod +x ${remotePath}/deploy.sh &&
                                 ${remotePath}/deploy.sh
