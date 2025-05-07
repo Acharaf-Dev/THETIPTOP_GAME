@@ -54,7 +54,7 @@ npm start
 - cADVISOR : http://161.97.76.223:8081/
 - TRAEFIK : http://161.97.76.223:8081/
 
-**SOUS NOM DE DOMAINE DU WORKFLOW**
+**NOM DE DOMAINE DU WORKFLOW**
 - JENKINS : https://www.jenkins.wk-archi-f24a-15M-G8.fr 
 - SONARQUBE : https://www.sonarqube.wk-archi-f24a-15M-G8.fr
 - PROMETHEUS : https://www.prometheus.wk-archi-f24a-15M-G8.fr
