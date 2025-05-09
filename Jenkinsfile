@@ -51,7 +51,7 @@ pipeline {
                         script {
                             // Install OpenJDK 11 for SonarQube analysis
                             sh 'apt-get update'
-                            sh 'apt-get install -y openjdk-11-jdk'
+                            sh 'apt-get install -y openjdk-17-jdk'
 
                             // Analyse backend
                             dir('backend') {
