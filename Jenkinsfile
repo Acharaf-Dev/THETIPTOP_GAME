@@ -28,12 +28,14 @@ pipeline {
         stage('MongoDB Setup') {
             steps {
                 script {
-                    // Démarre MongoDB dans un container Docker
                     echo 'Démarrage de MongoDB dans un container Docker...'
-                    sh """
-                        # Supprimer le conteneur existant s'il est déjà en cours d'exécution
-                        docker ps -q -f name=${MONGO_DB_CONTAINER_NAME} | grep -q . && docker stop ${MONGO_DB_CONTAINER_NAME} && docker rm -f ${MONGO_DB_CONTAINER_NAME} || echo "Pas de conteneur existant"
 
+                    // Supprimer le conteneur existant s'il existe, qu'il soit arrêté ou en cours d'exécution
+                    sh """
+                        # Supprimer le conteneur MongoDB existant (s'il existe)
+                        docker ps -aq -f name=${MONGO_DB_CONTAINER_NAME} | xargs -r docker rm -f
+
+                        # Démarrer un nouveau conteneur MongoDB
                         docker run -d --name ${MONGO_DB_CONTAINER_NAME} -p ${MONGO_PORT}:${MONGO_PORT} mongo:latest
                     """
                 }
