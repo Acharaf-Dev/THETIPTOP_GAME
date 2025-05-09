@@ -14,7 +14,8 @@ pipeline {
         SONAR_HOST_URL = 'https://www.sonarqube.dsp5-archi-f24a-15m-g8.fr'
         MONGO_DB_CONTAINER_NAME = 'mongo-test-container'
         MONGO_PORT = '27017'
-        MONGO_URI = "mongodb://localhost:${MONGO_PORT}/testdb"
+        // Utilisation du nom du conteneur Docker pour la connexion MongoDB
+        MONGO_URI = "mongodb://${MONGO_DB_CONTAINER_NAME}:${MONGO_PORT}/testdb"
     }
 
     stages {

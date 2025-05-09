@@ -7,7 +7,7 @@ const connectDB = async () => {
   try {
     const uri =
       process.env.NODE_ENV === 'test'
-        ? process.env.MONGO_URI_TEST || 'mongodb://root:password@localhost:27017/tip_top_game_test?authSource=admin'
+        ? process.env.MONGO_URI_TEST || 'mongodb://root:password@mongo-test-container:27017/tip_top_game_test?authSource=admin'
         : process.env.MONGO_URI || 'mongodb://localhost:27017/tip_top_game';
 
     await mongoose.connect(uri, {
