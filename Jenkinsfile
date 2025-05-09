@@ -56,6 +56,7 @@ pipeline {
                                 // Analyse Backend
                                 dir('backend') {
                                     sh 'ls -l coverage/lcov.info || echo "Pas de fichier lcov.info trouvé"'
+                                    sh "sed -i 's|\\\\|/|g' coverage/lcov.info"
                                     sh """
                                         ${tool 'SonarScanner'}/bin/sonar-scanner \
                                             -Dsonar.projectKey=tiptop-backend \
@@ -70,6 +71,7 @@ pipeline {
                                 // Analyse Frontend
                                 dir('frontend') {
                                     sh 'ls -l coverage/lcov.info || echo "Pas de fichier lcov.info trouvé"'
+                                    sh "sed -i 's|\\\\|/|g' coverage/lcov.info"
                                     sh """
                                         ${tool 'SonarScanner'}/bin/sonar-scanner \
                                             -Dsonar.projectKey=tiptop-frontend \
