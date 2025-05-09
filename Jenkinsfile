@@ -77,7 +77,7 @@ pipeline {
                                 sh """
                                     ${tool 'SonarScanner'}/bin/sonar-scanner \
                                         -Dsonar.projectKey=tiptop-backend \
-                                        -Dsonar.sources=. \
+                                        -Dsonar.sources=./backend \
                                         -Dsonar.host.url=${env.SONAR_HOST_URL} \
                                         -Dsonar.login=${SONAR_TOKEN} \
                                         -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
