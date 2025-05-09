@@ -14,7 +14,6 @@ pipeline {
         SONAR_HOST_URL = 'https://www.sonarqube.dsp5-archi-f24a-15m-g8.fr'
         MONGO_DB_CONTAINER_NAME = 'mongo-test-container'
         MONGO_PORT = '27017'
-        // Utilisation du nom du conteneur Docker pour la connexion MongoDB
         MONGO_URI = "mongodb://${MONGO_DB_CONTAINER_NAME}:${MONGO_PORT}/testdb"
     }
 
@@ -29,13 +28,8 @@ pipeline {
             steps {
                 script {
                     echo 'Démarrage de MongoDB dans un container Docker...'
-
-                    // Supprimer le conteneur existant s'il existe, qu'il soit arrêté ou en cours d'exécution
                     sh """
-                        # Supprimer le conteneur MongoDB existant (s'il existe)
                         docker ps -aq -f name=${MONGO_DB_CONTAINER_NAME} | xargs -r docker rm -f
-
-                        # Démarrer un nouveau conteneur MongoDB
                         docker run -d --name ${MONGO_DB_CONTAINER_NAME} -p ${MONGO_PORT}:${MONGO_PORT} mongo:latest
                     """
                 }
@@ -70,17 +64,22 @@ pipeline {
                 withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
                     withSonarQubeEnv('SonarQube') {
                         script {
+                            // ✅ Installer Java pour SonarScanner
+                            sh '''
+                                apt-get update && \
+                                apt-get install -y openjdk-17-jdk && \
+                                java -version
+                            '''
+
                             // Analyse backend
                             dir('backend') {
-                                // sh 'npm run test -- --coverage'
-                                // sh 'ls -l coverage/lcov.info || true'
                                 sh """
                                     ${tool 'SonarScanner'}/bin/sonar-scanner \
                                         -Dsonar.projectKey=tiptop-backend \
-                                        -Dsonar.sources=./backend \
+                                        -Dsonar.sources=. \
                                         -Dsonar.host.url=${env.SONAR_HOST_URL} \
                                         -Dsonar.login=${SONAR_TOKEN} \
-                                        -Dsonar.javascript.lcov.reportPaths=backend/coverage/lcov.info || true
+                                        -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
                                         -Dsonar.sourceEncoding=UTF-8
                                 """
                             }
@@ -92,7 +91,7 @@ pipeline {
                                 sh """
                                     ${tool 'SonarScanner'}/bin/sonar-scanner \
                                         -Dsonar.projectKey=tiptop-frontend \
-                                        -Dsonar.sources=./frontend \
+                                        -Dsonar.sources=. \
                                         -Dsonar.host.url=${env.SONAR_HOST_URL} \
                                         -Dsonar.login=${SONAR_TOKEN} \
                                         -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
@@ -152,7 +151,6 @@ pipeline {
         stage('Cleanup') {
             steps {
                 script {
-                    // Arrêter et supprimer le container MongoDB après le test
                     echo 'Arrêt du container MongoDB...'
                     sh """
                         docker stop ${MONGO_DB_CONTAINER_NAME} && docker rm ${MONGO_DB_CONTAINER_NAME}
