@@ -12,12 +12,27 @@ pipeline {
         FRONTEND_IMAGE_NAME = "${DOCKER_REGISTRY}/asquare25/thetiptop"
         NPM_CACHE_DIR = "${env.WORKSPACE}/.npm"
         SONAR_HOST_URL = 'https://www.sonarqube.dsp5-archi-f24a-15m-g8.fr'
+        MONGO_DB_CONTAINER_NAME = 'mongo-test-container'
+        MONGO_PORT = '27017'
+        MONGO_URI = "mongodb://localhost:${MONGO_PORT}/testdb"
     }
 
     stages {
         stage('Checkout') {
             steps {
                 checkout scm
+            }
+        }
+
+        stage('MongoDB Setup') {
+            steps {
+                script {
+                    // Démarre MongoDB dans un container Docker
+                    echo 'Démarrage de MongoDB dans un container Docker...'
+                    sh """
+                        docker run -d --name ${MONGO_DB_CONTAINER_NAME} -p ${MONGO_PORT}:${MONGO_PORT} mongo:latest
+                    """
+                }
             }
         }
 
@@ -130,7 +145,14 @@ pipeline {
 
         stage('Cleanup') {
             steps {
-                sh 'docker system prune -f --volumes'
+                script {
+                    // Arrêter et supprimer le container MongoDB après le test
+                    echo 'Arrêt du container MongoDB...'
+                    sh """
+                        docker stop ${MONGO_DB_CONTAINER_NAME} && docker rm ${MONGO_DB_CONTAINER_NAME}
+                    """
+                    sh 'docker system prune -f --volumes'
+                }
             }
         }
     }
