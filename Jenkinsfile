@@ -64,19 +64,23 @@ pipeline {
                 withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
                     withSonarQubeEnv('SonarQube') {
                         script {
-                            // ✅ Installer Java pour SonarScanner
+                            // Installer Java si nécessaire
                             sh '''
                                 apt-get update && \
                                 apt-get install -y openjdk-17-jdk && \
                                 java -version
                             '''
 
-                            // ✅ Installer SonarScanner à la volée
+                            // Installer SonarScanner à la volée
                             sh '''
                                 curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
                                 unzip sonar-scanner.zip
-                                export PATH=$PWD/sonar-scanner-5.0.1.3006-linux/bin:$PATH
+                                export PATH=$PWD/sonar-scanner-*/bin:$PATH
                             '''
+
+                            // Vérification du PATH et sonar-scanner
+                            sh 'echo $PATH'
+                            sh 'which sonar-scanner'
 
                             // Analyse backend
                             dir('backend') {
