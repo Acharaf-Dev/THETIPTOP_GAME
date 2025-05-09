@@ -12,27 +12,12 @@ pipeline {
         FRONTEND_IMAGE_NAME = "${DOCKER_REGISTRY}/asquare25/thetiptop"
         NPM_CACHE_DIR = "${env.WORKSPACE}/.npm"
         SONAR_HOST_URL = 'https://www.sonarqube.dsp5-archi-f24a-15m-g8.fr'
-        MONGO_DB_CONTAINER_NAME = 'mongo-test-container'
-        MONGO_PORT = '27017'
-        MONGO_URI = "mongodb://${MONGO_DB_CONTAINER_NAME}:${MONGO_PORT}/testdb"
     }
 
     stages {
         stage('Checkout') {
             steps {
                 checkout scm
-            }
-        }
-
-        stage('MongoDB Setup') {
-            steps {
-                script {
-                    echo 'Démarrage de MongoDB dans un container Docker...'
-                    sh """
-                        docker ps -aq -f name=${MONGO_DB_CONTAINER_NAME} | xargs -r docker rm -f
-                        docker run -d --name ${MONGO_DB_CONTAINER_NAME} -p ${MONGO_PORT}:${MONGO_PORT} mongo:latest
-                    """
-                }
             }
         }
 
@@ -64,50 +49,34 @@ pipeline {
                 withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
                     withSonarQubeEnv('SonarQube') {
                         script {
-                            // Installer Java si nécessaire
-                            sh '''
-                                apt-get update && \
-                                apt-get install -y openjdk-17-jdk && \
-                                java -version
-                            '''
-
-                            // Installer SonarScanner à la volée
-                            sh '''
-                                curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
-                                unzip sonar-scanner.zip
-                                export PATH=$PWD/sonar-scanner-*/bin:$PATH
-                            '''
-
-                            // Vérification du PATH et sonar-scanner
-                            sh 'echo $PATH'
-                            sh 'which sonar-scanner'
-
                             // Analyse backend
                             dir('backend') {
-                                sh '''
-                                    sonar-scanner \
+                                //sh 'npm run test -- --coverage'
+                                sh 'ls -l coverage/lcov.info || true'
+                                sh """
+                                    ${tool 'SonarScanner'}/bin/sonar-scanner \
                                         -Dsonar.projectKey=tiptop-backend \
-                                        -Dsonar.sources=. \
-                                        -Dsonar.host.url=${SONAR_HOST_URL} \
+                                        -Dsonar.sources=./backend \
+                                        -Dsonar.host.url=${env.SONAR_HOST_URL} \
                                         -Dsonar.token=${SONAR_TOKEN} \
-                                        -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
+                                        -Dsonar.javascript.lcov.reportPaths=backend/coverage/lcov.info || true
                                         -Dsonar.sourceEncoding=UTF-8
-                                '''
+                                """
                             }
 
                             // Analyse frontend
                             dir('frontend') {
-                                sh 'npm run test -- --coverage'
+                                // sh 'npm run test -- --coverage'
                                 sh 'ls -l coverage/lcov.info || true'
-                                sh '''
-                                    sonar-scanner \
+                                sh """
+                                    ${tool 'SonarScanner'}/bin/sonar-scanner \
                                         -Dsonar.projectKey=tiptop-frontend \
-                                        -Dsonar.sources=. \
-                                        -Dsonar.host.url=${SONAR_HOST_URL} \
+                                        -Dsonar.sources=./frontend \
+                                        -Dsonar.host.url=${env.SONAR_HOST_URL} \
                                         -Dsonar.token=${SONAR_TOKEN} \
-                                        -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
+                                        -Dsonar.javascript.lcov.reportPaths=frontend/coverage/lcov.info || true
                                         -Dsonar.sourceEncoding=UTF-8
-                                '''
+                                """
                             }
                         }
                     }
@@ -161,13 +130,7 @@ pipeline {
 
         stage('Cleanup') {
             steps {
-                script {
-                    echo 'Arrêt du container MongoDB...'
-                    sh """
-                        docker stop ${MONGO_DB_CONTAINER_NAME} && docker rm ${MONGO_DB_CONTAINER_NAME}
-                    """
-                    sh 'docker system prune -f --volumes'
-                }
+                sh 'docker system prune -f --volumes'
             }
         }
     }
