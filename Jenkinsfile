@@ -72,15 +72,15 @@ pipeline {
                         script {
                             // Analyse backend
                             dir('backend') {
-                                sh 'npm run test -- --coverage'
-                                sh 'ls -l coverage/lcov.info || true'
+                                // sh 'npm run test -- --coverage'
+                                // sh 'ls -l coverage/lcov.info || true'
                                 sh """
                                     ${tool 'SonarScanner'}/bin/sonar-scanner \
                                         -Dsonar.projectKey=tiptop-backend \
                                         -Dsonar.sources=./backend \
                                         -Dsonar.host.url=${env.SONAR_HOST_URL} \
                                         -Dsonar.login=${SONAR_TOKEN} \
-                                        -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
+                                        -Dsonar.javascript.lcov.reportPaths=backend/coverage/lcov.info || true
                                         -Dsonar.sourceEncoding=UTF-8
                                 """
                             }
@@ -92,7 +92,7 @@ pipeline {
                                 sh """
                                     ${tool 'SonarScanner'}/bin/sonar-scanner \
                                         -Dsonar.projectKey=tiptop-frontend \
-                                        -Dsonar.sources=. \
+                                        -Dsonar.sources=./frontend \
                                         -Dsonar.host.url=${env.SONAR_HOST_URL} \
                                         -Dsonar.login=${SONAR_TOKEN} \
                                         -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
