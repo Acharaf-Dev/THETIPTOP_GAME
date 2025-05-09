@@ -64,7 +64,7 @@ pipeline {
                 withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
                     withSonarQubeEnv('SonarQube') {
                         script {
-                            // ✅ Installer Java pour SonarScanner
+                            // Installer Java si nécessaire
                             sh '''
                                 apt-get update && \
                                 apt-get install -y openjdk-17-jdk && \
@@ -73,30 +73,30 @@ pipeline {
 
                             // Analyse backend
                             dir('backend') {
-                                sh """
-                                    ${tool 'SonarScanner'}/bin/sonar-scanner \
-                                        -Dsonar.projectKey=tiptop-backend \
-                                        -Dsonar.sources=. \
-                                        -Dsonar.host.url=${env.SONAR_HOST_URL} \
-                                        -Dsonar.login=${SONAR_TOKEN} \
-                                        -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
-                                        -Dsonar.sourceEncoding=UTF-8
-                                """
+                                sh '''#!/bin/bash
+                                ${SONAR_SCANNER_HOME}/bin/sonar-scanner \
+                                  -Dsonar.projectKey=tiptop-backend \
+                                  -Dsonar.sources=. \
+                                  -Dsonar.host.url=${SONAR_HOST_URL} \
+                                  -Dsonar.token=$SONAR_TOKEN \
+                                  -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
+                                  -Dsonar.sourceEncoding=UTF-8
+                                '''
                             }
 
                             // Analyse frontend
                             dir('frontend') {
                                 sh 'npm run test -- --coverage'
                                 sh 'ls -l coverage/lcov.info || true'
-                                sh """
-                                    ${tool 'SonarScanner'}/bin/sonar-scanner \
-                                        -Dsonar.projectKey=tiptop-frontend \
-                                        -Dsonar.sources=. \
-                                        -Dsonar.host.url=${env.SONAR_HOST_URL} \
-                                        -Dsonar.login=${SONAR_TOKEN} \
-                                        -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
-                                        -Dsonar.sourceEncoding=UTF-8
-                                """
+                                sh '''#!/bin/bash
+                                ${SONAR_SCANNER_HOME}/bin/sonar-scanner \
+                                  -Dsonar.projectKey=tiptop-frontend \
+                                  -Dsonar.sources=. \
+                                  -Dsonar.host.url=${SONAR_HOST_URL} \
+                                  -Dsonar.token=$SONAR_TOKEN \
+                                  -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
+                                  -Dsonar.sourceEncoding=UTF-8
+                                '''
                             }
                         }
                     }
