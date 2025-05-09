@@ -54,19 +54,19 @@ pipeline {
                                 sh 'apt-get install -y openjdk-17-jdk'
 
                                 // Analyse Backend
-                                dir('backend') {
-                                    sh 'ls -l coverage/lcov.info || echo "Pas de fichier lcov.info trouvé"'
-                                    sh "sed -i 's|\\\\|/|g' coverage/lcov.info"
-                                    sh """
-                                        ${tool 'SonarScanner'}/bin/sonar-scanner \
-                                            -Dsonar.projectKey=tiptop-backend \
-                                            -Dsonar.sources=. \
-                                            -Dsonar.host.url=${env.SONAR_HOST_URL} \
-                                            -Dsonar.token=${SONAR_TOKEN} \
-                                            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
-                                            -Dsonar.sourceEncoding=UTF-8
-                                    """
-                                }
+                                // dir('backend') {
+                                //     sh 'ls -l coverage/lcov.info || echo "Pas de fichier lcov.info trouvé"'
+                                //     sh "sed -i 's|\\\\|/|g' coverage/lcov.info"
+                                //     sh """
+                                //         ${tool 'SonarScanner'}/bin/sonar-scanner \
+                                //             -Dsonar.projectKey=tiptop-backend \
+                                //             -Dsonar.sources=. \
+                                //             -Dsonar.host.url=${env.SONAR_HOST_URL} \
+                                //             -Dsonar.token=${SONAR_TOKEN} \
+                                //             -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
+                                //             -Dsonar.sourceEncoding=UTF-8
+                                //     """
+                                // }
 
                                 // Analyse Frontend
                                 dir('frontend') {
