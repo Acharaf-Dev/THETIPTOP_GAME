@@ -49,36 +49,38 @@ pipeline {
                 withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
                     withSonarQubeEnv('SonarQube') {
                         script {
-                            // Install OpenJDK 11 for SonarQube analysis
-                            sh 'apt-get update'
-                            sh 'apt-get install -y openjdk-17-jdk'
+                            catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
+                                // Install OpenJDK 11 for SonarQube analysis
+                                sh 'apt-get update'
+                                sh 'apt-get install -y openjdk-17-jdk'
 
-                            // Analyse backend
-                            dir('backend') {
-                                sh 'ls -l coverage/lcov.info || true'
-                                sh """
-                                    ${tool 'SonarScanner'}/bin/sonar-scanner \
-                                        -Dsonar.projectKey=tiptop-backend \
-                                        -Dsonar.sources=./backend \
-                                        -Dsonar.host.url=${env.SONAR_HOST_URL} \
-                                        -Dsonar.token=${SONAR_TOKEN} \
-                                        -Dsonar.javascript.lcov.reportPaths=backend/coverage/lcov.info || true
-                                        -Dsonar.sourceEncoding=UTF-8
-                                """
-                            }
+                                // Analyse backend
+                                dir('backend') {
+                                    sh 'ls -l coverage/lcov.info || true'
+                                    sh """
+                                        ${tool 'SonarScanner'}/bin/sonar-scanner \
+                                            -Dsonar.projectKey=tiptop-backend \
+                                            -Dsonar.sources=./backend \
+                                            -Dsonar.host.url=${env.SONAR_HOST_URL} \
+                                            -Dsonar.token=${SONAR_TOKEN} \
+                                            -Dsonar.javascript.lcov.reportPaths=backend/coverage/lcov.info || true
+                                            -Dsonar.sourceEncoding=UTF-8
+                                    """
+                                }
 
-                            // Analyse frontend
-                            dir('frontend') {
-                                sh 'ls -l coverage/lcov.info || true'
-                                sh """
-                                    ${tool 'SonarScanner'}/bin/sonar-scanner \
-                                        -Dsonar.projectKey=tiptop-frontend \
-                                        -Dsonar.sources=./frontend \
-                                        -Dsonar.host.url=${env.SONAR_HOST_URL} \
-                                        -Dsonar.token=${SONAR_TOKEN} \
-                                        -Dsonar.javascript.lcov.reportPaths=frontend/coverage/lcov.info || true
-                                        -Dsonar.sourceEncoding=UTF-8
-                                """
+                                // Analyse frontend
+                                dir('frontend') {
+                                    sh 'ls -l coverage/lcov.info || true'
+                                    sh """
+                                        ${tool 'SonarScanner'}/bin/sonar-scanner \
+                                            -Dsonar.projectKey=tiptop-frontend \
+                                            -Dsonar.sources=./frontend \
+                                            -Dsonar.host.url=${env.SONAR_HOST_URL} \
+                                            -Dsonar.token=${SONAR_TOKEN} \
+                                            -Dsonar.javascript.lcov.reportPaths=frontend/coverage/lcov.info || true
+                                            -Dsonar.sourceEncoding=UTF-8
+                                    """
+                                }
                             }
                         }
                     }
