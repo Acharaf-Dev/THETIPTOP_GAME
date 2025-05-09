@@ -50,34 +50,42 @@ pipeline {
                     withSonarQubeEnv('SonarQube') {
                         script {
                             catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
-                                // Install OpenJDK 11 for SonarQube analysis
+                                // Installer OpenJDK 17 pour l'analyse SonarQube
                                 sh 'apt-get update'
                                 sh 'apt-get install -y openjdk-17-jdk'
 
-                                // Analyse backend
+                                // Vérifier si le fichier lcov.info existe dans le backend
                                 dir('backend') {
-                                    sh 'ls -l coverage/lcov.info || true'
+                                    sh 'ls -l coverage/lcov.info || true'  // Si le fichier n'existe pas, ne provoque pas d'erreur
+                                }
+
+                                // Analyser le backend
+                                dir('backend') {
                                     sh """
                                         ${tool 'SonarScanner'}/bin/sonar-scanner \
                                             -Dsonar.projectKey=tiptop-backend \
                                             -Dsonar.sources=./backend \
-                                            -Dsonar.host.url=${env.SONAR_HOST_URL} \
-                                            -Dsonar.token=${SONAR_TOKEN} \
-                                            -Dsonar.javascript.lcov.reportPaths=backend/coverage/lcov.info || true
+                                            -Dsonar.host.url=${env.SONAR_HOST_URL} \\
+                                            -Dsonar.token=${SONAR_TOKEN} \\
+                                            -Dsonar.javascript.lcov.reportPaths=backend/coverage/lcov.info \\
                                             -Dsonar.sourceEncoding=UTF-8
                                     """
                                 }
 
-                                // Analyse frontend
+                                // Vérifier si le fichier lcov.info existe dans le frontend
                                 dir('frontend') {
-                                    sh 'ls -l coverage/lcov.info || true'
+                                    sh 'ls -l coverage/lcov.info || true'  // Si le fichier n'existe pas, ne provoque pas d'erreur
+                                }
+
+                                // Analyser le frontend
+                                dir('frontend') {
                                     sh """
                                         ${tool 'SonarScanner'}/bin/sonar-scanner \
                                             -Dsonar.projectKey=tiptop-frontend \
                                             -Dsonar.sources=./frontend \
-                                            -Dsonar.host.url=${env.SONAR_HOST_URL} \
-                                            -Dsonar.token=${SONAR_TOKEN} \
-                                            -Dsonar.javascript.lcov.reportPaths=frontend/coverage/lcov.info || true
+                                            -Dsonar.host.url=${env.SONAR_HOST_URL} \\
+                                            -Dsonar.token=${SONAR_TOKEN} \\
+                                            -Dsonar.javascript.lcov.reportPaths=frontend/coverage/lcov.info \\
                                             -Dsonar.sourceEncoding=UTF-8
                                     """
                                 }
@@ -87,7 +95,7 @@ pipeline {
                 }
             }
         }
-
+        
         stage('Build & Push Docker Images') {
             when {
                 expression { ['develop', 'preprod', 'prod'].contains(env.BRANCH_NAME) }
