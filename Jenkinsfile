@@ -49,12 +49,12 @@ pipeline {
                 withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
                     withSonarQubeEnv('SonarQube') {
                         script {
-                            // Installer Java dans le conteneur Docker avant de lancer SonarScanner
-                            sh 'apt-get update && apt-get install -y openjdk-11-jdk'
+                            // Install OpenJDK 11 for SonarQube analysis
+                            sh 'apt-get update'
+                            sh 'apt-get install -y openjdk-11-jdk'
 
                             // Analyse backend
                             dir('backend') {
-                                // sh 'npm run test -- --coverage'
                                 sh 'ls -l coverage/lcov.info || true'
                                 sh """
                                     ${tool 'SonarScanner'}/bin/sonar-scanner \
@@ -69,7 +69,6 @@ pipeline {
 
                             // Analyse frontend
                             dir('frontend') {
-                                // sh 'npm run test -- --coverage'
                                 sh 'ls -l coverage/lcov.info || true'
                                 sh """
                                     ${tool 'SonarScanner'}/bin/sonar-scanner \
