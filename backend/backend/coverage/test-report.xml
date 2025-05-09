@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="3" failures="0" errors="0" time="1.797">
+  <testsuite name="User Auth Routes" errors="0" failures="0" skipped="0" timestamp="2025-05-09T09:31:56" time="1.716" tests="3">
+    <testcase classname="User Auth Routes ✅ should register a new user and send welcome email" name="User Auth Routes ✅ should register a new user and send welcome email" time="0.168">
+    </testcase>
+    <testcase classname="User Auth Routes ❌ should not register a user with existing email" name="User Auth Routes ❌ should not register a user with existing email" time="0.084">
+    </testcase>
+    <testcase classname="User Auth Routes ❌ should fail registration with invalid password" name="User Auth Routes ❌ should fail registration with invalid password" time="0.007">
+    </testcase>
+  </testsuite>
+</testsuites>

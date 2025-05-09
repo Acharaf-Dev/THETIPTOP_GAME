@@ -69,9 +69,10 @@
 //   });
 // });
 
+require('dotenv').config({ path: '.env.test' }); // ← charge le bon .env
 
 jest.setTimeout(60000);
-process.env.NODE_ENV = "test";
+// process.env.NODE_ENV = "test";
 
 const request = require("supertest");
 const mongoose = require("mongoose");
