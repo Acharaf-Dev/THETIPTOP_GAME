@@ -44,7 +44,7 @@ pipeline {
             }
         }
 
-        stage('SonarQube Analysis') {
+       stage('SonarQube Analysis') {
             steps {
                 withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
                     withSonarQubeEnv('SonarQube') {
@@ -53,34 +53,36 @@ pipeline {
                                 sh 'apt-get update'
                                 sh 'apt-get install -y openjdk-17-jdk'
 
+                                def scannerHome = tool 'SonarScanner'
+
                                 // Analyse Backend
                                 dir('backend') {
                                     sh 'ls -l coverage/lcov.info || echo "Pas de fichier lcov.info trouvé"'
                                     sh "sed -i 's|\\\\|/|g' coverage/lcov.info"
-                                    sh '''
-                                        ${tool 'SonarScanner'}/bin/sonar-scanner \
-                                            -Dsonar.projectKey=tiptop-backend \
-                                            -Dsonar.sources=. \
-                                            -Dsonar.host.url=${env.SONAR_HOST_URL} \
-                                            -Dsonar.token=${SONAR_TOKEN} \
-                                            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
+                                    sh """
+                                        ${scannerHome}/bin/sonar-scanner \\
+                                            -Dsonar.projectKey=tiptop-backend \\
+                                            -Dsonar.sources=. \\
+                                            -Dsonar.host.url=${env.SONAR_HOST_URL} \\
+                                            -Dsonar.token=\$SONAR_TOKEN \\
+                                            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \\
                                             -Dsonar.sourceEncoding=UTF-8
-                                    '''
+                                    """
                                 }
 
                                 // Analyse Frontend
                                 dir('frontend') {
                                     sh 'ls -l coverage/lcov.info || echo "Pas de fichier lcov.info trouvé"'
                                     sh "sed -i 's|\\\\|/|g' coverage/lcov.info"
-                                    sh '''
-                                        ${tool 'SonarScanner'}/bin/sonar-scanner \
-                                            -Dsonar.projectKey=tiptop-frontend \
-                                            -Dsonar.sources=. \
-                                            -Dsonar.host.url=${env.SONAR_HOST_URL} \
-                                            -Dsonar.token=${SONAR_TOKEN} \
-                                            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
+                                    sh """
+                                        ${scannerHome}/bin/sonar-scanner \\
+                                            -Dsonar.projectKey=tiptop-frontend \\
+                                            -Dsonar.sources=. \\
+                                            -Dsonar.host.url=${env.SONAR_HOST_URL} \\
+                                            -Dsonar.token=\$SONAR_TOKEN \\
+                                            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \\
                                             -Dsonar.sourceEncoding=UTF-8
-                                    '''
+                                    """
                                 }
                             }
                         }
@@ -88,6 +90,7 @@ pipeline {
                 }
             }
         }
+
 
         stage('Build & Push Docker Images') {
             when {
