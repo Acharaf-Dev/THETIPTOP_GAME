@@ -6,7 +6,7 @@ Ce document explique les étapes nécessaires pour configurer et déployer l'app
 
 En développement, le frontend (React) communique avec le backend (Node.js/Express) via `http://localhost:4000/api/...`. Cela fonctionne car les deux s'exécutent sur votre machine.
 
-En production, le frontend est servi via son nom de domaine public (ex: `www.dsp5-archi-f24a-15m-g8.fr`) et doit communiquer avec le backend via *son* nom de domaine public (ex: `https://www.www.backend.dsp5-archi-f24a-15m-g8.fr/api`). L'utilisation de `localhost` ne fonctionnera pas sur le serveur de production car le backend n'écoute pas sur le `localhost` *du navigateur de l'utilisateur*.
+En production, le frontend est servi via son nom de domaine public (ex: `www.dsp5-archi-f24a-15m-g8.fr`) et doit communiquer avec le backend via *son* nom de domaine public (ex: `https://www.backend.dsp5-archi-f24a-15m-g8.fr/api`). L'utilisation de `localhost` ne fonctionnera pas sur le serveur de production car le backend n'écoute pas sur le `localhost` *du navigateur de l'utilisateur*.
 
 Les problèmes d'inscription ou de connexion rencontrés précédemment en production étaient probablement dus à cette mauvaise configuration des URLs.
 
