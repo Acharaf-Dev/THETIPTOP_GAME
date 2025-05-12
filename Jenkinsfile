@@ -57,7 +57,7 @@ pipeline {
                                 dir('backend') {
                                     sh 'ls -l coverage/lcov.info || echo "Pas de fichier lcov.info trouvé"'
                                     sh "sed -i 's|\\\\|/|g' coverage/lcov.info"
-                                    sh """
+                                    sh '''
                                         ${tool 'SonarScanner'}/bin/sonar-scanner \
                                             -Dsonar.projectKey=tiptop-backend \
                                             -Dsonar.sources=. \
@@ -65,14 +65,14 @@ pipeline {
                                             -Dsonar.token=${SONAR_TOKEN} \
                                             -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
                                             -Dsonar.sourceEncoding=UTF-8
-                                    """
+                                    '''
                                 }
 
                                 // Analyse Frontend
                                 dir('frontend') {
                                     sh 'ls -l coverage/lcov.info || echo "Pas de fichier lcov.info trouvé"'
                                     sh "sed -i 's|\\\\|/|g' coverage/lcov.info"
-                                    sh """
+                                    sh '''
                                         ${tool 'SonarScanner'}/bin/sonar-scanner \
                                             -Dsonar.projectKey=tiptop-frontend \
                                             -Dsonar.sources=. \
@@ -80,7 +80,7 @@ pipeline {
                                             -Dsonar.token=${SONAR_TOKEN} \
                                             -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
                                             -Dsonar.sourceEncoding=UTF-8
-                                    """
+                                    '''
                                 }
                             }
                         }
