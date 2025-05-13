@@ -1,14 +1,50 @@
 global:
-  scrape_interval: 15s  # Scrape every 15 seconds
+  scrape_interval: 15s
+  evaluation_interval: 15s
 
 scrape_configs:
-  # Jenkins metrics
-  - job_name: 'jenkins'
-    metrics_path: '/prometheus'  # Jenkins Prometheus plugin endpoint
+  - job_name: 'prometheus'
+    metrics_path: /metrics
+    scheme: http
     static_configs:
-      - targets: ['jenkins:8080']  # Nom du conteneur Docker
+      - targets: ['www.prometheus.dsp5-archi-f24a-15m-g8.fr']
 
-  # cAdvisor metrics
   - job_name: 'cadvisor'
+    metrics_path: /metrics
+    scheme: http
     static_configs:
-      - targets: ['cadvisor:8080']  # Nom du conteneur Docker
+      - targets: ['www.cadvisor.dsp5-archi-f24a-15m-g8.fr']
+
+  - job_name: 'node-exporter'
+    metrics_path: /metrics
+    scheme: http
+    static_configs:
+      - targets: ['www.node-exporter.dsp5-archi-f24a-15m-g8.fr']
+
+  - job_name: 'jenkins'
+    metrics_path: /prometheus
+    scheme: http
+    static_configs:
+      - targets: ['www.jenkins.dsp5-archi-f24a-15m-g8.fr']
+
+  - job_name: 'sonarqube'
+    metrics_path: /api/monitoring/metrics
+    scheme: http
+    static_configs:
+      - targets: ['www.sonarqube.dsp5-archi-f24a-15m-g8.fr']
+
+
+# global:
+#   scrape_interval: 15s  # Scrape every 15 seconds
+
+# scrape_configs:
+#   # Jenkins metrics
+#   - job_name: 'jenkins'
+#     metrics_path: '/prometheus'  # Jenkins Prometheus plugin endpoint
+#     static_configs:
+#       - targets: ['jenkins:8080']  # Nom du conteneur Docker
+
+#   # cAdvisor metrics
+#   - job_name: 'cadvisor'
+#     static_configs:
+#       - targets: ['cadvisor:8080']  # Nom du conteneur Docker
